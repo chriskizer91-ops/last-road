@@ -307,3 +307,47 @@ function lrWalkUI(on){
 addEventListener('keydown',e=>{if(LRW.on)LRW.keys[e.code]=true;if(e.code==='KeyF'&&!e.repeat&&GAME.state==='drive'&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')){if(LRW.on)lrWalkEnd();else lrWalkStart();}});
 addEventListener('keyup',e=>{LRW.keys[e.code]=false;});
 window.__lr=Object.assign(window.__lr||{},{LRW,lrWalkStart,lrWalkEnd,lrWalkStep});
+
+/* ---------- THE PEOPLE AND THE JOBS (the engine's own job system: someone with work is a column of light in their
+   colour; stop beside it, Start, and the dialog has their face, from his portraits J01-J06). Two new kinds of step:
+   land (in the Heron, stopped on a given strip) and foot (on foot, at a place). The first jobs of Fable's chain:
+   First Light, The Mail, Ground Truth, Three Wells, and a side job, the Pan Wreck ---------- */
+function gtPeople(){
+  const S=WG.GTS,at=(i,u,v)=>{const s=S[i];return [s.x+s.dx*u-s.dz*v,s.z+s.dz*u+s.dx*v];},F=k=>window.LR_FACES&&LR_FACES[k]?'data:image/webp;base64,'+LR_FACES[k]:null;
+  const P=(name,short,role,xz,col,face)=>({name,short,role,x:xz[0],z:xz[1],col,img:F(face)});
+  const R=WG.GTP.find(p=>p.id==='B08'),H=WG.GTP.find(p=>p.id==='B16'),D=WG.GTP.find(p=>p.id==='D14');
+  return {dell:P('Dell Marais','Dell','owns the outfit, on the apron at Roadhead',at(0,-195,42),'#ffb347','J01'),
+    teo:P('Teo','Teo','the mechanic, at the hangar',at(0,-262,40),'#7fd1ff','J02'),
+    haugen:P('Dr Ilse Haugen','Haugen','the archaeologist, at the roadhouse',[R.x,R.z+16],'#c39bff','J03'),
+    nkem:P('Nkem Adeyemi','Nkem','the ranger, at Kettle Creek Station',[H.x+Math.sin(H.yaw)*16,H.z+Math.cos(H.yaw)*16],'#8dff5a','J06'),
+    harker:P('Lyle Harker','Harker','Meridian Resources, at the delta camp',[D.x-70,D.z+40],'#ff6b5a','J04'),
+    ruben:P('Ruben Vos','Ruben','keeps Last Well',at(11,0,40),'#e0c070','J05')};}
+function gtJobs(){
+  const Q=(id,who,title,needs,intro,steps,outro,reward,tip)=>{JOB_NAMES[id]=`${PEOPLE[who].short}'s job, ${title}`;return {id,who,title,needs,intro,steps,outro,reward,tip};};
+  const S=WG.GTS,C=WG.GTP.find(p=>p.id==='C04'),W=WG.GTP.find(p=>p.id==='C07'),K=WG.GTP.find(p=>p.id==='D05');
+  const end=[S[0].x+S[0].dx*900,S[0].z+S[0].dz*900];
+  return [
+    Q('firstlight','dell','First Light',[],
+      ['Pilot. You\'re the new contract.','The Heron\'s on the apron. Take her out past the east end of the runway, come round, and put her down again. Gently. Then come and see me.'],
+      [{t:'goto',x:end[0],z:end[1],r:250,name:'past the runway\'s east end',text:'Fly out past the east end of the runway'},{t:'land',strip:0,text:'Land at Roadhead and stop'},{t:'talk',who:'dell',text:'See Dell on the apron'}],
+      {text:'Copy. You\'ll do.'},{money:150},'Drive up to the Heron and stop: HERON gets you in. Stopped on a strip in the Heron, TRUCK gets you out to the truck waiting there.'),
+    Q('mail','dell','The Mail',['firstlight'],
+      ['Mail for Kettle Creek Station. Nkem\'s been waiting a week.','The strip\'s about twenty kilometres west, past the creek lines. Watch for cattle on it. The truck will be waiting.'],
+      [{t:'land',strip:1,text:'Fly the mail to Kettle Creek Station'},{t:'talk',who:'nkem',text:'Take it to Nkem at the homestead'}],
+      {who:'nkem',text:'About time. Tell Dell the dust is coming early this year.'},{money:300}),
+    Q('groundtruth','haugen','Ground Truth',['mail'],
+      ['Dr Ilse Haugen. I have a contract, a camera and no plane.','There is a stone tank in the savanna south-east of the station. The families call it the Cistern. I need someone to find it from the air, and then to stand in it.'],
+      [{t:'goto',x:C.x,z:C.z,r:600,name:'the Cistern',text:'Find the Cistern from the air'},{t:'land',strip:1,text:'Land at Kettle Creek'},
+       {t:'foot',x:C.x,z:C.z,r:14,name:'the Cistern',text:'Drive to the Cistern, get out and walk into it'},{t:'talk',who:'haugen',text:'Back to Haugen at the roadhouse'}],
+      {text:'Copy. I mean: what? The carving\'s hand points west? Into the dunes? Copy.'},{money:800}),
+    Q('threewells','haugen','Three Wells',['groundtruth'],
+      ['West of the station, where the grass gives out, there are three wells that have never been dry.','The station says there\'s a temple there, half under the sand. Land at the dune\'s edge and walk it.'],
+      [{t:'land',strip:3,text:'Land at Three Wells, at the dune\'s edge'},{t:'foot',x:W.x,z:W.z,r:16,name:'Three Wells',text:'Walk to the temple of the Three Wells'},{t:'talk',who:'haugen',text:'Back to Haugen'}],
+      {text:'Into the dunes. The channel runs into the dunes. Nobody builds a channel into a desert.'},{money:1000}),
+    Q('panwreck','dell','The Pan Wreck',['mail'],
+      ['A driver\'s gone out on the Pan and not come back. His truck\'s an old one.','Land on the salt at Pan Strip, take the truck out to him and see what\'s left.'],
+      [{t:'land',strip:2,text:'Land on the salt at Pan Strip'},{t:'deliver',x:K.x,z:K.z,r:18,name:'the wreck',text:'Drive out to the wreck on the Pan'},{t:'talk',who:'dell',text:'Report to Dell'}],
+      {text:'Nobody in it? Then he walked. Nkem\'ll find him. Good work.'},{money:600})];
+}
+/* (for the tests: the job system's own pieces, asked for when they exist) */
+window.__lrJ=()=>({PEOPLE,JOB,jActive,jobListen,closeJobDialog,jRec});

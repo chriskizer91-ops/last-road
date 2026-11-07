@@ -1,0 +1,106 @@
+{
+ "cargo_pod": {
+  "SIDE (HATCH CLOSED)": {
+   "iou": 0.947,
+   "turn_deg": -1.25
+  },
+  "FRONT": {
+   "iou": 0.821,
+   "turn_deg": -1.23
+  },
+  "SIDE": {
+   "iou": 0.942,
+   "turn_deg": -1.2
+  },
+  "TOP": {
+   "iou": 0.951,
+   "turn_deg": 0.06
+  },
+  "texels": {
+   "covered": 617451,
+   "seen": 522826
+  }
+ },
+ "cargo_pod_open": {
+  "SIDE (HATCH OPEN, EMPTY)": {
+   "iou": 0.947,
+   "turn_deg": -1.3
+  },
+  "texels": {
+   "covered": 286503,
+   "seen": 118632
+  }
+ },
+ "landing_lamp": {
+  "FRONT": {
+   "iou": 0.912,
+   "turn_deg": -0.47
+  },
+  "SIDE": {
+   "iou": 0.88,
+   "turn_deg": 3.13
+  },
+  "TOP": {
+   "iou": 0.952,
+   "turn_deg": -3.06
+  },
+  "texels": {
+   "covered": 709499,
+   "seen": 568732
+  }
+ },
+ "propeller_climb": {
+  "FRONT": {
+   "iou": 0.846,
+   "turn_deg": -0.09
+  },
+  "SIDE": {
+   "iou": 0.78,
+   "turn_deg": -0.15
+  },
+  "TOP": {
+   "iou": 0.71,
+   "turn_deg": -0.26
+  },
+  "texels": {
+   "covered": 439929,
+   "seen": 358456
+  }
+ },
+ "propeller_cruise": {
+  "FRONT": {
+   "iou": 0.764,
+   "turn_deg": -0.17
+  },
+  "SIDE": {
+   "iou": 0.794,
+   "turn_deg": 0.15
+  },
+  "TOP": {
+   "iou": 0.788,
+   "turn_deg": -0.42
+  },
+  "texels": {
+   "covered": 432923,
+   "seen": 358679
+  }
+ },
+ "tundra_wheel": {
+  "FRONT": {
+   "iou": 0.99,
+   "turn_deg": 0.06
+  },
+  "SIDE": {
+   "iou": 0.931,
+   "turn_deg": 0.17
+  },
+  "TOP": {
+   "iou": 0.942,
+   "turn_deg": 0.19
+  },
+  "texels": {
+   "covered": 628806,
+   "seen": 482150
+  }
+ }
+}

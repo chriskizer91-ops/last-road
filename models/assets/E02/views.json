@@ -1,0 +1,35 @@
+{
+  "objects": [
+    {
+      "name": "lantern",
+      "size_m": [0.121, 0.24, 0.124],
+      "views": [
+        {"label": "Front", "box": [124, 79, 292, 410], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Right Side", "box": [393, 78, 567, 410], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [722, 79, 893, 410], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Left Side", "box": [1033, 78, 1172, 410], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [1254, 136, 1398, 274], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "carry_hand",
+      "size_m": [0.171, 0.10, 0.141],
+      "views": [
+        {"label": "Front", "box": [158, 0, 386, 142], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Right Side", "box": [433, 0, 606, 207], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [619, 0, 742, 126], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Left Side", "box": [953, 0, 1102, 217], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [1310, 66, 1536, 302], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "free_hand",
+      "size_m": [0.077, 0.182, 0.19],
+      "views": [
+        {"label": "Front", "box": [14, 184, 102, 416], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Back", "box": [888, 194, 992, 397], "cam": [0, 0, -1], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "Small olive-green camping lantern (10 cm bar = 138 px: about 12 cm across, 20 cm body, 24 cm to the bail top) with a frosted glass globe in a rusty 8-bar cage and a front dial. It comes with a gloved right hand gripping the bail (khaki sleeve, cut off by the panel edges) and an open left glove. Each hand is centred on its own origin; userData.offsetFromLantern puts it back in place (carry about [0.05,0.19,-0.035], free about [-0.114,-0.007,0.03]). The sheet poses the hands slightly differently in each view: the top view swings the arm the other way, and in the side views the lantern hides the free hand (or the top view shows it in another pose), so free_hand lists only its front and back views."
+}

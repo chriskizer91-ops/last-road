@@ -186,12 +186,23 @@ function build(THREE) {
       c.add(m);
       return m;
     };
-    add(new THREE.CylinderGeometry(0.158, 0.158, 0.30, 24), 'metal', 0);
-    add(new THREE.CylinderGeometry(0.15, 0.15, 0.02, 24), 'metal', 0.14);
-    add(new THREE.CylinderGeometry(0.15, 0.15, 0.02, 24), 'metal', -0.14);
-    add(new THREE.CylinderGeometry(0.055, 0.068, 0.035, 16), 'metal', 0.1675);
-    add(new THREE.CylinderGeometry(0.055, 0.068, 0.035, 16), 'metal', -0.1675, true);
-    add(new THREE.CylinderGeometry(0.022, 0.022, 0.025, 8), 'metal', 0.195);
+    // rim barrel: its end caps sit inside the wheel discs (no coplanar faces)
+    add(new THREE.CylinderGeometry(0.157, 0.157, 0.25, 24), 'metal', 0);
+    // wheel discs, recessed just inside the tyre lip (z 0.123..0.147)
+    add(new THREE.CylinderGeometry(0.156, 0.156, 0.024, 24), 'metal', 0.135);
+    add(new THREE.CylinderGeometry(0.156, 0.156, 0.024, 24), 'metal', -0.135, true);
+    // hub bosses, overlapping into the discs
+    add(new THREE.CylinderGeometry(0.055, 0.068, 0.04, 16), 'metal', 0.163);
+    add(new THREE.CylinderGeometry(0.055, 0.068, 0.04, 16), 'metal', -0.163, true);
+    // axle cap
+    add(new THREE.CylinderGeometry(0.022, 0.022, 0.025, 8), 'metal', 0.192);
+    // bolt ring on the front disc
+    for (let k = 0; k < 6; k++) {
+      const a = k * Math.PI / 3 + Math.PI / 6;
+      const b = add(new THREE.CylinderGeometry(0.009, 0.009, 0.012, 6), 'metal', 0.151);
+      b.position.x = 0.1 * Math.cos(a);
+      b.position.y = 0.1 * Math.sin(a);
+    }
     return g;
   }
 
@@ -270,11 +281,12 @@ function build(THREE) {
     const bezel = mk(new THREE.TorusGeometry(0.064, 0.006, 6, 24), 'metal');
     bezel.position.set(0, cy, 0.126);
     L.add(bezel);
-    const foot = mk(new THREE.BoxGeometry(0.11, 0.012, 0.095), 'green');
-    foot.position.set(0, 0.006, 0.0025);
+    // solid pedestal under the front half of the housing, as on the sheet
+    const foot = mk(new THREE.BoxGeometry(0.11, 0.012, 0.10), 'green');
+    foot.position.set(0, 0.006, 0.015);
     L.add(foot);
-    const neck = mk(new THREE.BoxGeometry(0.05, 0.03, 0.07), 'green');
-    neck.position.set(0, 0.026, 0.0025);
+    const neck = mk(new THREE.BoxGeometry(0.06, 0.036, 0.085), 'green');
+    neck.position.set(0, 0.028, 0.015);
     L.add(neck);
     return g;
   }
@@ -285,13 +297,13 @@ function build(THREE) {
     tundra_wheel: wheel(),
     propeller_climb: propeller({
       hubR: 0.10, hubL: 0.09, shankR: 0.03, tipE: 0.5,
-      st: [[0.17, 0.08, 34, 0.028], [0.30, 0.125, 28, 0.022], [0.45, 0.145, 23, 0.017],
-           [0.60, 0.15, 19, 0.014], [0.75, 0.14, 16, 0.012], [0.84, 0.125, 14, 0.011]]
+      st: [[0.17, 0.075, 34, 0.028], [0.30, 0.115, 28, 0.022], [0.45, 0.135, 23, 0.017],
+           [0.60, 0.138, 19, 0.014], [0.75, 0.13, 16, 0.012], [0.84, 0.115, 14, 0.011]]
     }),
     propeller_cruise: propeller({
       hubR: 0.09, hubL: 0.085, shankR: 0.026, tipE: 0.9,
-      st: [[0.17, 0.07, 52, 0.024], [0.30, 0.10, 44, 0.019], [0.45, 0.115, 37, 0.015],
-           [0.60, 0.115, 32, 0.012], [0.75, 0.105, 28, 0.010], [0.84, 0.092, 25, 0.009]]
+      st: [[0.17, 0.055, 52, 0.022], [0.30, 0.078, 44, 0.018], [0.45, 0.09, 37, 0.014],
+           [0.60, 0.092, 32, 0.012], [0.75, 0.088, 28, 0.010], [0.84, 0.08, 25, 0.009]]
     }),
     landing_lamp: lamp()
   };

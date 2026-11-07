@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "gloved_hand",
+      "size_m": [0.177, 0.32, 0.32],
+      "views": [
+        {"label": "Front", "box": [235, 28, 429, 372], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Back", "box": [733, 27, 946, 372], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Right Side", "box": [548, 412, 828, 637], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [1252, 457, 1440, 640], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Right hand in a worn tan leather glove with a snap wrist strap and a rolled khaki sleeve. The palm is pressed flat on a vertical stone face (palm toward -z, back of hand toward +z, thumb on -x), and the wrist is bent back so the forearm comes toward the viewer, dipping about 12 degrees as a compromise between the Front/Back drawings and the Right Side drawing. At the scale bar (10 cm = 87 px) the hand is about 21 cm long and the model is about 32 cm overall. The boxes use the pressed-hand drawings, the ones inside the stone outlines. The Left Side drawing is left out on purpose: it shows a relaxed hand in a different pose, with the sleeve on the opposite side to this model, so painting it would put the sleeve's colours on the hand."
+}

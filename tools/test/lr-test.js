@@ -17,6 +17,11 @@ window.LRT_T = (() => {
     stick(x, y) { L.LRW.stick.x = x; L.LRW.stick.y = y; return { p: L.LRW.p.map(v => Math.round(v * 10) / 10) }; },
     face(yaw, pitch) { L.LRW.yaw = yaw; L.LRW.pitch = pitch; return 1; },
     getIn() { const ok = L.lrWalkEnd(); return { ok, on: L.LRW.on }; },
+    job() { const { JOB, jActive, jRec } = __lrJ(); const A = jActive(); return { active: A ? A.q.id + ':' + A.a.step + ' ' + (A.s ? A.s.text : '') : null, near: JOB.near ? JOB.near.who + '/' + JOB.near.q.id : null, done: Object.keys(jRec().quests || {}), state: D.GAME.state }; },
+    take() { const { JOB, jobListen } = __lrJ(); if (!JOB.near) return { err: 'nobody near' }; jobListen(JOB.near.who); const face = document.getElementById('jdFace'); const r = { title: document.getElementById('jdTitle').textContent, face: face && !face.hidden };
+      document.getElementById('jdYes').click(); return r; },
+    shut() { __lrJ().closeJobDialog(); return { state: D.GAME.state }; },
+    people() { return Object.fromEntries(Object.entries(__lrJ().PEOPLE).map(([k, p]) => [k, [Math.round(p.x), Math.round(p.z)]])); },
     props() { const P = L.LRP; return { made: P.mesh.size, tex: P.tex.size, drawn: P.drawn, tris: P.tris }; },
     air(x, z, alt, yaw, mph) { const t0 = car(); D.placeCar(x, z, yaw); const t = car(); t.p[1] += alt; const V = mph / 2.23694; t.v[0] = Math.cos(yaw) * V; t.v[2] = -Math.sin(yaw) * V; t.v[1] = 0;
       if (t.w && t.w.fill) t.w.fill(0); t.air = true; t.airT = 1; return { p: Array.from(t.p).map(v => Math.round(v)), place: D.GAME.place }; },

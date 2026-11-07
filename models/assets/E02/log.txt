@@ -1,0 +1,3 @@
+helper: done claude-opus-5-5 xhigh 623 s 3702 in 64075 out end_turn
+built {'lantern': {'tris': 2984, 'size': [0.12, 0.24, 0.123], 'min': [-0.06, 0, -0.058]}, 'carry_hand': {'tris': 1880, 'size': [0.175, 0.134, 0.157], 'min': [-0.086, -0.014, -0.084]}, 'free_hand': {'tris': 1656, 'size': [0.092, 0.187, 0.19], 'min': [-0.046, -0.003, -0.094]}}
+painted {'carry_hand': {'Front': 0.757, 'Right Side': 0.659, 'Back': 0.813, 'Left Side': 0.672, 'Top': 0.719}, 'free_hand': {'Front': 0.729, 'Back': 0.656}, 'lantern': {'Front': 0.855, 'Right Side': 0.719, 'Back': 0.871, 'Left Side': 0.749, 'Top': 0.953}} 148s

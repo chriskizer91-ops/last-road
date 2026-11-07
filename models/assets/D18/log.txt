@@ -1,0 +1,2 @@
+helper: done claude-opus-5-5 xhigh 921 s 3701 in 96000 out max_tokens
+no model in the answer

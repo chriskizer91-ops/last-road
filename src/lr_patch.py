@@ -87,14 +87,24 @@ swap("  let v=0;const I=[];\n  const put=(i,j,dy)=>{const b=(j+1)*nb+i+1,k=j*n+i
      "  if(GT)for(let j=0;j<n;j++)for(let i=0;i<n;i++){const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],ny=2*st/Math.hypot(hx,2*st,hz),sl=Math.sqrt(Math.max(0,1-ny*ny))/Math.max(ny,.05),rs=sst(.55,1.,sl)*(Wt[k*4]<0||Wt[k*4+2]<0?.6:1);\n"
      "    if(rs>Wt[k*4+1]){Wt[k*4+1]=rs;if(Wt[k*4]>0)Wt[k*4]*=1-rs*.8;}}\n"
      "  let v=0;const I=[];\n  const put=(i,j,dy)=>{const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],l=Math.hypot(hx,2*st,hz);")
+# THE PEOPLE AND THE JOBS (src/lr-game.js gtPeople, gtJobs): Ground Truth's in place of City Limits'; the steps land
+# and foot; on foot, it's where you stand that counts; their faces in the dialog
+swap("const JOB_NAMES={};", "if(typeof WG!=='undefined'&&WG.gtPlace){for(const k of Object.keys(PEOPLE))delete PEOPLE[k];Object.assign(PEOPLE,gtPeople());}\nconst JOB_NAMES={};")
+swap("const JOBS=buildJobs();", "const JOBS=(typeof WG!=='undefined'&&WG.gtPlace)?gtJobs():buildJobs();")
+swap("function jobStep(dt,car){\n  const x=car.p[0],z=car.p[2],slow=car.speed<3.5,A=jActive();", "function jobStep(dt,car){\n  const x=LRW.on?LRW.p[0]:car.p[0],z=LRW.on?LRW.p[2]:car.p[2],slow=LRW.on||car.speed<3.5,A=jActive();")
+swap("  if(s.t==='goto'||s.t==='deliver')return {x:s.x,z:s.z,name:s.name,r:s.r||10};", "  if(s.t==='goto'||s.t==='deliver'||s.t==='foot')return {x:s.x,z:s.z,name:s.name,r:s.r||10};\n  if(s.t==='land'){const S=WG.GTS[s.strip];return {x:S.x,z:S.z,name:S.name+' strip',r:Math.min(60,S.len/2)};}")
+swap("    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;", "    else if(s.t==='land')ok=!!car.rt&&!LRW.on&&car.speed<2&&lrStripAt(car.p[0],car.p[2],30)===s.strip;\n    else if(s.t==='foot')ok=LRW.on&&Math.hypot(LRW.p[0]-s.x,LRW.p[2]-s.z)<(s.r||12);\n    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;")
+swap("  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;", "  {let f=$('jdFace');if(!f){f=document.createElement('img');f.id='jdFace';f.alt='';f.style.cssText='width:76px;height:76px;border-radius:12px;float:left;margin:2px 14px 8px 0;object-fit:cover;box-shadow:0 2px 10px rgba(0,0,0,.4)';$('jdEyebrow').parentNode.insertBefore(f,$('jdEyebrow'));}f.hidden=!(p&&p.img);if(p&&p.img)f.src=p.img;}\n  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;")
+# (Salt & Sand leaves the town's jobs out each frame; Ground Truth's run: the job you're on, anyone with work beside you)
+swap("else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}}", "else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}else if(WG.gtPlace){jobStep(dt,t);syncObj();}}")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'
-import base64, os
+import base64, os, json
 HERON = os.path.join(sys.path[0], '..', 'models/heron/paint/redtail-2-heron.webp')
-heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n'
+heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_FACES=' + json.dumps({k: base64.b64encode(open(os.path.join(sys.path[0], '..', f'models/portraits/{k}.webp'), 'rb').read()).decode() for k in ['J01','J02','J03','J04','J05','J06','J07']}) + ';\n' + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n'
 s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '\n' + heron + '</script>\n' + s[i:]
 open(dst, 'w', encoding='utf-8').write(s)
 print('written', dst, len(s))
