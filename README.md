@@ -13,13 +13,12 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
 ## Where things stand (Nov 7 2026)
 
 - **The look test is made:** `docs/look-test/rock-mud-look-test.html` and its sheet. The Rock & Mud's Studio 2 is shown beside play models of 9,959, 24,898 and 49,654 triangles (see `models/rock-mud/README.md`). From the Chase camera all four look nearly the same. Up close, the 10k and 25k tyres read smooth (their tread is painted on), while the 50k has the Studio 2's own knobby tyres. **His pick, on his phone: the 50k with 1024 pictures.** He judged it good even for close inspection while driving; the 10k and 25k are good enough for a game, but the 50k looks significantly better.
-- **Fable's brainstorm:** `design/fable-brainstorm-2026-11-07.md`. Its proposals, none decided yet:
-  - the title *Ground Truth*;
+- **Fable's brainstorm:** `design/fable-brainstorm-2026-11-07.md`. **He likes all of it** (Nov 7 2026); he picked its title, *Ground Truth*, and the plane's name from its list, *Heron*. In it:
   - the story: a contract bush pilot surveying the interior for an archaeologist, finding the Old Hands' water channels that lead to a city buried in the dunes;
-  - the plane's name as your call sign (*Grasshopper*), and the town *Roadhead*;
+  - the plane's name as your radio call sign, and the town *Roadhead*;
   - a 48 km map with seven regions and 12 strips;
   - 13 story missions, about 30 pieces of gear, and about 120 pictures.
-- **The picture prompts:** `design/picture-prompts.md`, and as a page with Copy buttons: `design/picture-prompts.html` (also published as his private claude.ai page *Last Road · picture prompts*). Batch 1 doesn't depend on the story, so it can be made now. Batch 2 follows Fable's story.
+- **The picture prompts:** `design/picture-prompts.md`, and as a page with Copy buttons: `design/picture-prompts.html` (also published as his private claude.ai page *Ground Truth · picture prompts*; rebuilt by `tools/prompts_page.py` from `design/picture-prompts.json`). Batch 1 doesn't depend on the story; Batch 2 is the story's places and people, now okayed. He's making the pictures (Nov 7 2026).
 - **Paint templates:** `pictures/templates/` (the truck's five views and the plane's).
 - **The first page of the game: `builds/last-road-0.html`** (`sh build.sh`), from Salt & Sand + the plane + `src/lr_patch.py` and `src/lr-game.js`:
   - its own saves (`lr:`);
@@ -159,19 +158,16 @@ The page's job system already has people, a column of light where someone has wo
 | explore | Walk a site on foot and find something. |
 | against the clock | The existing deliver step. |
 
-Fable's brainstorm has a 13-mission chain and 15 side-job types (`design/fable-brainstorm-2026-11-07.md`, section 6), not yet approved. An earlier eight-mission draft is in salt-mini-plus's history (`beyond-the-last-road/README.md`).
+Fable's brainstorm has a 13-mission chain and 15 side-job types (`design/fable-brainstorm-2026-11-07.md`, section 6): the starting design, which he likes. An earlier eight-mission draft is in salt-mini-plus's history (`beyond-the-last-road/README.md`).
 
-## Build order (to adjust after the brainstorm)
+## Build order
 
 Each step ends with something Christopher can open on his phone, plus screenshots and simple numbers.
 
-0. **The fork.** A new page made from Salt & Sand + the plane + this game's own patches:
-   - new save keys;
-   - the Rock & Mud and the plane in Wilderness Olive;
-   - fix the plane's known faults: the car lights and gear on the HUD, the bay showing the car, the chase camera staying level.
+0. **The fork:** done (`builds/last-road-0.html`): new save keys, the 50k Rock & Mud, the Heron in Wilderness Olive, its HUD and chase camera fixed. The bay still shows the car: that's the Outfitter, step 3.
 1. **The look test:** done; he picked the 50k.
-2. **The brainstorm and the picture list:** done (`design/`). He makes the pictures: batch 1 now, batch 2 once he's okayed the story.
-3. **The town hub and the Outfitter** (the 150k models).
+2. **The brainstorm and the picture list:** done (`design/`). He's making the pictures.
+3. **The town hub and the Outfitter:** the full source models, painted as they are in the game (the Heron's redtail-1 in Wilderness Olive; the Studio 2 Rock & Mud in its chosen paint).
 4. **Landing and the waiting truck; getting out on foot.**
 5. **The world's layout:** regions, the paved road, the tracks, the strips, the painted mountains.
 6. **The first walk place** (a temple) and the first fly-through (a canyon).
