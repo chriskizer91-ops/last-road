@@ -1,0 +1,47 @@
+{
+  "objects": [
+    {
+      "name": "swag_rolled",
+      "size_m": [1.09, 0.43, 0.43],
+      "views": [
+        {"label": "rolled swag, front (buckles and flap edge), top left", "box": [18, 22, 618, 262], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "rolled swag, back (plain straps), second row", "box": [30, 280, 612, 410], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "roll end, large circle with strap ring", "box": [632, 22, 842, 258], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "roll end, small circle", "box": [652, 290, 752, 390], "cam": [1, 0, 0], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "swag_open",
+      "size_m": [2.2, 0.13, 0.66],
+      "views": [
+        {"label": "swag laid out flat, top (straps at foot end)", "box": [20, 710, 795, 945], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "stove_open",
+      "size_m": [0.64, 0.52, 0.37],
+      "views": [
+        {"label": "stove open, side (lid up, wind panel)", "box": [1300, 18, 1510, 305], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "stove_closed",
+      "size_m": [0.64, 0.135, 0.37],
+      "views": [
+        {"label": "stove closed, front", "box": [880, 318, 1232, 392], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "stove closed, side", "box": [1305, 318, 1510, 390], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "stove closed, top (lid)", "box": [895, 412, 1222, 528], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "food_box",
+      "size_m": [0.545, 0.325, 0.28],
+      "views": [
+        {"label": "food box closed, front (two latches)", "box": [1212, 557, 1512, 740], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "food box, end with handle", "box": [1158, 770, 1290, 942], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "food box, back", "box": [1305, 765, 1512, 942], "cam": [0, 0, -1], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "Camp set at 550 px = 1 m: canvas swag rolled (1.09 m long, ~0.42 m dia) and laid out, a two-burner camp stove (0.64 x 0.35 m; 0.135 m closed, 0.52 m with lid and wind panels up) and a galvanised food box (~0.55 x 0.33 x 0.26 m); open swag, open stove and open food box perspectives are left out. Unclear: the laid-out swag measures only 1.25 m by the bar, so it is modelled at 1.95 m canvas length with the drawing's proportions; the second-row roll, the small end circle, the stove top view and the food box back view are drawn at inconsistent scales and are used as back/end/top views anyway."
+}

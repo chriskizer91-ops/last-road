@@ -1,0 +1,3 @@
+helper: done claude-opus-5-5 xhigh 695 s 3712 in 68955 out end_turn
+built {'binoculars': {'tris': 1396, 'size': [0.187, 0.08, 0.157], 'min': [-0.094, 0, -0.078]}, 'gps': {'tris': 612, 'size': [0.085, 0.216, 0.054], 'min': [-0.041, 0, -0.025]}, 'radio': {'tris': 2516, 'size': [0.307, 0.207, 0.12], 'min': [-0.153, 0, -0.061]}}
+painted {'binoculars': {'top': 0.785, 'left side': 0.855, 'front (objective lenses)': 0.791}, 'gps': {'front': 0.872, 'right side': 0.861, 'top': 0.925}, 'radio': {'front (flap open)': 0.89, 'back (closed bag)': 0.855, 'top': 0.823}} 302s

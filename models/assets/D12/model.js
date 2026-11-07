@@ -44,9 +44,40 @@ function build(THREE) {
     pts.push(V(0, y1));
     return new THREE.LatheGeometry(pts, seg);
   }
+  // Eroded core with a drifting axis: keys [[y, leftEdge, rightEdge], ...] as seen in the front view.
+  // Key heights are kept exactly (so short key gaps stay sharp steps); the axis follows the edge midpoints.
+  function core(keys, seg, jit, step) {
+    const cKeys = keys.map(k => [k[0], (k[1] + k[2]) / 2]);
+    const pts = [V(0, keys[0][0])];
+    for (let i = 0; i < keys.length; i++) {
+      pts.push(V((keys[i][2] - keys[i][1]) / 2, keys[i][0]));
+      if (i < keys.length - 1) {
+        const a = keys[i], b = keys[i + 1];
+        const n = Math.max(1, Math.round((b[0] - a[0]) / step));
+        for (let j = 1; j < n; j++) {
+          const t = j / n;
+          const y = a[0] + (b[0] - a[0]) * t;
+          const r = ((a[2] - a[1]) * (1 - t) + (b[2] - b[1]) * t) / 2;
+          pts.push(V(r * (1 + jit * (rnd() - 0.6)), y));
+        }
+      }
+    }
+    pts.push(V(0, keys[keys.length - 1][0]));
+    const geo = new THREE.LatheGeometry(pts, seg);
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) pos.setX(i, pos.getX(i) + interp(cKeys, pos.getY(i)));
+    pos.needsUpdate = true;
+    return geo;
+  }
   // Direct profile [[r, y], ...] listed bottom to top
   function lathe(prof, seg) {
     return new THREE.LatheGeometry(prof.map(p => V(p[0], p[1])), seg);
+  }
+  // Thin overhanging caprock ledge between y0 and y1
+  function ledge(y0, y1, r, seg) {
+    const t = y1 - y0;
+    return lathe([[0, y0], [r - 0.3, y0], [r - 0.05, y0 + 0.3 * t], [r, y0 + 0.6 * t],
+      [r - 0.2, y1], [0, y1]], seg);
   }
   const SCREE_T = [[0, 1], [0.22, 0.95], [0.4, 0.78], [0.6, 0.45], [0.8, 0.18], [1, 0]];
   function screeY(d, R, h) { return interp(SCREE_T, Math.min(1, d / R)) * h; }
@@ -113,8 +144,9 @@ function build(THREE) {
     g.add(scree(R, h, 1));
     put(g, column([[0, 3.15], [0.8, 2.95], [1.53, 2.69], [2.74, 2.45], [4.07, 2.3], [4.45, 2.28]],
       16, 0.05, 0.35), 'banded_sandstone', 0.35, 0.1);
-    put(g, lathe([[0, 4.25], [2.2, 4.25], [2.8, 4.38], [3.1, 4.72], [3.1, 5.1], [2.9, 5.6],
-      [2.4, 6.0], [1.3, 6.2], [0, 6.25]], 12), 'caprock', 0.45, 0.2, 0.92);
+    // flat-topped slab: stays near full width almost to the top, as drawn
+    put(g, lathe([[0, 4.25], [2.2, 4.25], [2.8, 4.38], [3.1, 4.72], [3.1, 5.15], [3.0, 5.6],
+      [2.7, 6.0], [1.8, 6.2], [0, 6.25]], 12), 'caprock', 0.45, 0.2, 0.92);
     rubble(g, 14, R, h, 3.4, 4.1, 0.35, 0.8, 1);
     grass(g, 4, R, h, 4.0, 1);
     return g;
@@ -176,29 +208,31 @@ function build(THREE) {
     const g = new THREE.Group();
     const R = 7.02, h = 1.3;
     g.add(scree(R, h, 1));
-    // tier 1 (base) + ledge
-    put(g, column([[0, 6.4], [1.0, 6.3], [1.74, 6.05], [3.44, 5.55], [5.1, 5.05]], 18, 0.04, 0.4),
-      'banded_sandstone', 0.5, 0.1);
-    put(g, lathe([[0, 4.7], [4.9, 4.7], [5.2, 4.9], [5.25, 5.15], [5.0, 5.4], [0, 5.4]], 18),
-      'pale_sandstone', 0.9, 0.2);
-    // tier 2 + ledge
-    put(g, column([[5.2, 4.84], [6.83, 4.72], [7.9, 4.6]], 16, 0.04, 0.4), 'banded_sandstone', 0.85, 0.3);
-    put(g, lathe([[0, 7.6], [4.6, 7.6], [4.85, 7.8], [4.85, 8.05], [4.6, 8.3], [0, 8.3]], 16),
-      'pale_sandstone', 0.95, 0.1);
-    // tier 3 + ledge
-    put(g, column([[8.2, 3.2], [9.5, 3.17], [10.7, 3.12]], 14, 0.05, 0.4), 'banded_sandstone', 1.14, 0.2);
-    put(g, lathe([[0, 10.45], [3.1, 10.45], [3.35, 10.65], [3.35, 10.95], [3.1, 11.15], [0, 11.15]], 14),
-      'pale_sandstone', 1.23, 0.15);
-    // tier 4 + ledge
-    put(g, column([[11.0, 2.6], [13.85, 2.4], [14.6, 2.25]], 14, 0.05, 0.4), 'banded_sandstone', 1.0, 0.1);
-    put(g, lathe([[0, 14.45], [2.15, 14.45], [2.35, 14.6], [2.35, 14.8], [2.15, 14.95], [0, 14.95]], 12),
-      'pale_sandstone', 1.2, 0.25);
-    // tier 5 (summit spire) + cap
-    put(g, column([[14.8, 1.4], [16.5, 1.08], [17.25, 0.95]], 12, 0.05, 0.4), 'banded_sandstone', 1.1, 0.2);
+    // One continuous eroded core. Keys are [y, left edge, right edge] read off the sheet:
+    // the left flank is a steady slope, the right flank steps back under each ledge,
+    // so the axis drifts from +0.45 m at the ground to +1.5 m at the summit.
+    put(g, core([
+      [0, -6.1, 7.0], [1.0, -5.8, 6.75], [3.5, -5.0, 6.15], [4.2, -4.75, 6.0], [4.6, -4.6, 5.6],
+      [5.5, -4.3, 5.5], [5.9, -4.0, 5.45], [7.0, -3.7, 5.35], [7.4, -3.6, 4.45], [8.5, -3.35, 4.35],
+      [8.9, -3.05, 4.35], [10.8, -2.0, 4.2], [11.2, -1.6, 3.65], [14.5, -1.1, 3.5], [14.9, -0.5, 2.9],
+      [17.0, 0.7, 2.3], [17.25, 0.85, 2.2]
+    ], 20, 0.04, 0.4), 'banded_sandstone', 0);
+    // Harder caprock ledges, staggered as drawn: [y0, y1, centre x, radius]
+    // right @4.4, left @5.7, right @7.2, left @8.7, near-full rings @11 and @14.7
+    const LEDGES = [
+      [4.15, 4.8, 0.9, 5.4],
+      [5.4, 6.0, 0.15, 4.65],
+      [6.95, 7.55, 1.275, 4.575],
+      [8.4, 8.95, 0.125, 3.875],
+      [10.55, 11.3, 1.2, 3.5],
+      [14.4, 14.95, 1.175, 2.575]
+    ];
+    LEDGES.forEach((l, i) => put(g, ledge(l[0], l[1], l[3], 18), 'pale_sandstone', l[2], 0.3 * i));
+    // summit cap
     put(g, lathe([[0, 17.15], [0.7, 17.15], [0.87, 17.35], [0.85, 17.65], [0.6, 17.88], [0, 17.97]], 10),
       'pale_sandstone', 1.67, 0.3);
-    rubble(g, 18, R, h, 6.0, 6.35, 0.4, 0.85, 1);
-    grass(g, 5, R, h, 6.3, 1);
+    rubble(g, 18, R, h, 6.3, 6.65, 0.35, 0.75, 1);
+    grass(g, 5, R, h, 6.6, 1);
     return g;
   }
 

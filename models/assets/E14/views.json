@@ -1,0 +1,32 @@
+{
+  "objects": [
+    {
+      "name": "binoculars",
+      "size_m": [0.187, 0.08, 0.157],
+      "views": [
+        {"label": "top", "box": [108, 108, 472, 414], "cam": [0, 1, 0], "up": [0, 0, -1]},
+        {"label": "left side", "box": [148, 552, 470, 724], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "front (objective lenses)", "box": [104, 738, 438, 882], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "gps",
+      "size_m": [0.085, 0.217, 0.054],
+      "views": [
+        {"label": "front", "box": [562, 28, 727, 453], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "right side", "box": [597, 489, 664, 746], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top", "box": [559, 810, 669, 907], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "radio",
+      "size_m": [0.307, 0.207, 0.124],
+      "views": [
+        {"label": "front (flap open)", "box": [798, 33, 1446, 472], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "back (closed bag)", "box": [798, 543, 1502, 724], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "top", "box": [788, 743, 1502, 1003], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Scale bar: 10 cm is about 196 px (about 1960 px/m). The set is green rubber-armoured binoculars (about 19x8x16 cm), a handheld GPS (about 9x22x5 cm) and a manpack radio with a handset in a canvas bag (about 31x21x12 cm). The binocular strap and dangling lens caps are left out because they're drawn differently in every view. The radio's middle drawing is read as its back, but it is squashed and mirrored compared with the front (the cord and antenna swap sides). Its tall whip antenna isn't in the front or top views, so only a stub antenna is modelled and the back box stops at the handle."
+}

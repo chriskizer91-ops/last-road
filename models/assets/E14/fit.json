@@ -1,0 +1,56 @@
+{
+ "binoculars": {
+  "top": {
+   "iou": 0.785,
+   "turn_deg": 0.63
+  },
+  "left side": {
+   "iou": 0.855,
+   "turn_deg": 3.63
+  },
+  "front (objective lenses)": {
+   "iou": 0.791,
+   "turn_deg": -1.34
+  },
+  "texels": {
+   "covered": 675691,
+   "seen": 474253
+  }
+ },
+ "gps": {
+  "front": {
+   "iou": 0.872,
+   "turn_deg": -2.98
+  },
+  "right side": {
+   "iou": 0.861,
+   "turn_deg": 0.9
+  },
+  "top": {
+   "iou": 0.925,
+   "turn_deg": 0.93
+  },
+  "texels": {
+   "covered": 464044,
+   "seen": 380711
+  }
+ },
+ "radio": {
+  "front (flap open)": {
+   "iou": 0.89,
+   "turn_deg": 0.26
+  },
+  "back (closed bag)": {
+   "iou": 0.855,
+   "turn_deg": -2.9
+  },
+  "top": {
+   "iou": 0.823,
+   "turn_deg": -1.26
+  },
+  "texels": {
+   "covered": 596128,
+   "seen": 359544
+  }
+ }
+}

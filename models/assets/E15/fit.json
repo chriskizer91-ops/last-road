@@ -1,0 +1,80 @@
+{
+ "food_box": {
+  "food box closed, front (two latches)": {
+   "iou": 0.974,
+   "turn_deg": -0.08
+  },
+  "food box, end with handle": {
+   "iou": 0.938,
+   "turn_deg": 0.03
+  },
+  "food box, back": {
+   "iou": 0.948,
+   "turn_deg": -0.06
+  },
+  "texels": {
+   "covered": 537913,
+   "seen": 251021
+  }
+ },
+ "stove_closed": {
+  "stove closed, front": {
+   "iou": 0.969,
+   "turn_deg": 0.03
+  },
+  "stove closed, side": {
+   "iou": 0.96,
+   "turn_deg": 0.15
+  },
+  "stove closed, top (lid)": {
+   "iou": 0.973,
+   "turn_deg": 0.16
+  },
+  "texels": {
+   "covered": 575086,
+   "seen": 313764
+  }
+ },
+ "stove_open": {
+  "stove open, side (lid up, wind panel)": {
+   "iou": 0.824,
+   "turn_deg": -1.03
+  },
+  "texels": {
+   "covered": 616111,
+   "seen": 43311
+  }
+ },
+ "swag_open": {
+  "swag laid out flat, top (straps at foot end)": {
+   "iou": 0.957,
+   "turn_deg": 0.21
+  },
+  "texels": {
+   "covered": 595849,
+   "seen": 419992
+  }
+ },
+ "swag_rolled": {
+  "rolled swag, front (buckles and flap edge), top left": {
+   "iou": 0.972,
+   "turn_deg": 0.0
+  },
+  "rolled swag, back (plain straps), second row": {
+   "iou": 0.785,
+   "turn_deg": -0.02
+  },
+  "roll end, large circle with strap ring": {
+   "iou": 0.925,
+   "turn_deg": 0.13
+  },
+  "roll end, small circle": {
+   "iou": 0.952,
+   "turn_deg": -3.13
+  },
+  "texels": {
+   "covered": 679434,
+   "seen": 433392
+  }
+ }
+}

@@ -1,2 +1,5 @@
 helper: done claude-opus-5-5 xhigh 650 s 3707 in 68048 out end_turn
 built {'arch_wide': {'tris': 2744, 'size': [109.07, 49.054, 33.536], 'min': [-54.348, -0.762, -16.495]}, 'arch_round': {'tris': 2256, 'size': [83.857, 37.659, 22.061], 'min': [-42.069, -0.74, -10.321]}, 'arch_broken': {'tris': 2060, 'size': [62.689, 25.488, 22.387], 'min': [-31.507, -0.619, -11.571]}}
+painted {'arch_broken': {'Arch 3 front (24 m / 32 m, cracked)': 0.601, 'Arch 3 side': 0.927, 'Arch 3 top': 0.83}, 'arch_round': {'Arch 2 front (35 m / 45 m)': 0.896, 'Arch 2 side (6 m crown)': 0.931, 'Arch 2 top': 0.72}, 'arch_wide': {'Arch 1 front (45 m / 60 m)': 0.91, 'Arch 1 side': 0.904, 'Arch 1 top': 0.896}} 371s
+helper: done claude-opus-5-5 xhigh 261 s 13711 in 27120 out end_turn
+built {'arch_wide': {'tris': 2744, 'size': [109.07, 49.054, 33.536], 'min': [-54.348, -0.762, -16.495]}, 'arch_round': {'tris': 2256, 'size': [83.857, 37.659, 22.061], 'min': [-42.069, -0.74, -10.321]}, 'arch_broken': {'tris': 3472, 'size': [62.689, 25.488, 22.387], 'min': [-31.507, -0.619, -11.571]}}

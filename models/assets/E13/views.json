@@ -1,0 +1,19 @@
+{
+  "objects": [
+    {"name": "rope_coil", "size_m": [0.816, 0.082, 0.183],
+     "views": [{"label": "top (flat-lay)", "box": [60, 20, 1488, 340], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+    {"name": "harness", "size_m": [0.442, 0.026, 0.366],
+     "views": [{"label": "top (flat-lay)", "box": [36, 362, 810, 1002], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+    {"name": "carabiner_1", "size_m": [0.065, 0.02, 0.147],
+     "views": [{"label": "top (flat-lay)", "box": [874, 352, 988, 610], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+    {"name": "carabiner_2", "size_m": [0.066, 0.02, 0.147],
+     "views": [{"label": "top (flat-lay)", "box": [1022, 352, 1137, 610], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+    {"name": "carabiner_3", "size_m": [0.071, 0.02, 0.147],
+     "views": [{"label": "top (flat-lay)", "box": [1164, 352, 1289, 610], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+    {"name": "figure_eight", "size_m": [0.096, 0.012, 0.207],
+     "views": [{"label": "top (flat-lay)", "box": [955, 640, 1123, 1003], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+    {"name": "sling", "size_m": [0.117, 0.006, 0.291],
+     "views": [{"label": "top (flat-lay)", "box": [1295, 354, 1499, 864], "cam": [0, 1, 0], "up": [0, 0, -1]}]}
+  ],
+  "notes": "Worn climbing kit laid flat and shot from directly above, so each piece has one top view (image-up = -z). The pieces are a green butterfly-coiled rope with a wrapped and knotted middle, a blue-grey sit harness, three screwgate carabiners, a figure-8 descender and a red sewn sling. Scale bar: 10 cm = 175 px. At that scale the rope coil is about 0.82 x 0.18 m and the harness about 0.44 x 0.37 m. The carabiners come out at about 15 cm and the figure-8 at about 21 cm, which is large for real metalwork, but I kept the sizes to the bar. The harness is drawn with slight perspective, so both layers of the waist belt are visible. I modelled it as a flattened loop, and the exact routing of the risers is a best guess."
+}

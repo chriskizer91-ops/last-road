@@ -12,6 +12,7 @@ window.LRT_T = (() => {
       at: P ? [Math.round(P.p[0]), Math.round(P.p[1] * 10) / 10, Math.round(P.p[2])] : null, me: Array.from(t.p).map(v => Math.round(v)), strip: V.stripI }; },
     swap() { const ok = L.lrSwap(); const t = car(); return { ok, inPlane: !!t.rt, me: Array.from(t.p).map(v => Math.round(v)), place: D.GAME.place }; },
     home() { const S = __dyb.WG ? null : null; return 0; },
+    horz() { const H = L.LRH; return { tex: !!H.tex, loading: H.loading, loc: H.loc ? H.loc.map(x => !!x) : null, data: !!window.LR_HORZ }; },
     props() { const P = L.LRP; return { made: P.mesh.size, tex: P.tex.size, drawn: P.drawn, tris: P.tris }; },
     air(x, z, alt, yaw, mph) { const t0 = car(); D.placeCar(x, z, yaw); const t = car(); t.p[1] += alt; const V = mph / 2.23694; t.v[0] = Math.cos(yaw) * V; t.v[2] = -Math.sin(yaw) * V; t.v[1] = 0;
       if (t.w && t.w.fill) t.w.fill(0); t.air = true; t.airT = 1; return { p: Array.from(t.p).map(v => Math.round(v)), place: D.GAME.place }; },

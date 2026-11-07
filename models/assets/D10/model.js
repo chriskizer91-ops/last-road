@@ -171,10 +171,18 @@ function build(THREE) {
     A[0] = 0;
     for (let i = 0; i < A.length - 1; i++) {
       const a0 = A[i], a1 = A[i + 1], am = (a0 + a1) / 2;
-      if (crackLo !== null && am > crackLo && am < crackHi) continue;
-      const i0 = rayHit(inner, Cx, Cy, a0, false), o0 = rayHit(outer, Cx, Cy, a0, true);
-      const i1 = rayHit(inner, Cx, Cy, a1, false), o1 = rayHit(outer, Cx, Cy, a1, true);
+      const inCrack = crackLo !== null && am > crackLo && am < crackHi;
+      const i0 = rayHit(inner, Cx, Cy, a0, false);
+      let o0 = rayHit(outer, Cx, Cy, a0, true);
+      const i1 = rayHit(inner, Cx, Cy, a1, false);
+      let o1 = rayHit(outer, Cx, Cy, a1, true);
       if (!i0 || !o0 || !i1 || !o1) continue;
+      if (inCrack) {
+        // crack opens from the top as a notch, sealed toward the intrados (no daylight through)
+        const f = cfg.crackSeal;
+        o0 = [i0[0] + (o0[0] - i0[0]) * f, i0[1] + (o0[1] - i0[1]) * f];
+        o1 = [i1[0] + (o1[0] - i1[0]) * f, i1[1] + (o1[1] - i1[1]) * f];
+      }
       const mx = (i0[0] + o0[0] + o1[0] + i1[0]) / 4;
       const my = (i0[1] + o0[1] + o1[1] + i1[1]) / 4;
       const ph = (ys + (Math.PI - am) * R) * 0.35;
@@ -241,7 +249,7 @@ function build(THREE) {
     depth: [[0,18],[6,16],[13,13],[19,11.2],[25,10]],
     cn: 0, cnW: 1, asym: 0.15, zCrown: -1.2, nFan: 26,
     nRub: 10, rubMax: 1.0, spill: 3.0,
-    crackPx: [405, 767], crackGap: 0.011,
+    crackPx: [405, 767], crackGap: 0.011, crackSeal: 0.6,
     big: [[455,928,4.0,1.3,1.2],[472,933,6.5,1.0,1.0],[190,933,7.0,1.0,0.9],[362,937,3.5,0.9,0.8],[268,934,-3.0,1.0,1.0]],
     extra: function (g) {
       // fallen block lying tilted under the cracked crown
@@ -255,6 +263,17 @@ function build(THREE) {
       chip.position.set(-2.6, 0.6, 2.8);
       chip.rotation.set(0.1, 0.5, -0.15);
       g.add(chip);
+      // debris floor right across the opening, leg to leg (the sheet's dirt/rubble line);
+      // kept under the beam so the top view is unchanged
+      const rnd = makeRng(4242);
+      const x0 = -17.4, x1 = 12.4, n = 24;
+      for (let k = 0; k <= n; k++) {
+        const x = x0 + (x1 - x0) * k / n + (rnd() - 0.5) * 0.2;
+        const r = 0.95 + rnd() * 0.45;
+        const ry = 0.32 + rnd() * 0.22;
+        const z = -1.0 + (rnd() - 0.5) * 4.5;
+        addBoulder(g, x, ry * 0.45, z, r, ry, r, rnd() * Math.PI);
+      }
     }
   };
 

@@ -73,6 +73,14 @@ swap("gl.uniformMatrix4fv(u.uM,false,W_ID);\n  return tris+(DEVW.off.trees?0:dra
 # THE TRUCK AND THE HERON (src/lr-game.js lrPark*, lrSwap): the one you're not in, drawn where it waits, and into the shadows
 swap("let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);", "let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);lrSwapUI();tris+=lrParkedDraw(c.eye);")
 swap("if(kind!=='hl')one(GAME.car,k>=1);", "if(kind!=='hl')one(GAME.car,k>=1);if(kind!=='hl'&&lrParked())one(lrParked(),true);")
+# THE PAINTED EDGE (src/lr-game.js lrSkyBind): the sky shader looks his mountain strip up by compass and height
+swap("const SKY_FS=G.FRAME+G.NOISE+G.PACK+SKYFN+`\nin vec2 vT;layout(location=0) out vec4 oCol;", "const SKY_FS=G.FRAME+G.NOISE+G.PACK+SKYFN+`\nin vec2 vT;layout(location=0) out vec4 oCol;uniform sampler2D uHorz;uniform vec4 uHz;")
+swap("vec3 c=rutSky(d,true);\n  /* the haze toward the horizon: the fog, as far as the eye sees it */\n  if(uStudio<.5){float fogT=exp(-uFogDen*900.*saturate(1.0-d.y*2.));c=c*mix(1.0,fogT,.85)+hazeCol(d)*(1.0-fogT)*.85;}",
+     "vec3 c=rutSky(d,true);\n  /* the haze toward the horizon: the fog, as far as the eye sees it */\n  if(uStudio<.5){float fogT=exp(-uFogDen*900.*saturate(1.0-d.y*2.));c=c*mix(1.0,fogT,.85)+hazeCol(d)*(1.0-fogT)*.85;}\n"
+     "#ifndef PROBE\n  /* (Ground Truth) the painted mountains round the world's edge */\n  if(uHz.z>.5&&uStudio<.5){float el=asin(clamp(d.y,-1.,1.)),v=(el-uHz.x)/(uHz.y-uHz.x);\n"
+     "    if(v>0.&&v<1.){float az=atan(d.x,-d.z);vec4 h=textureLod(uHorz,vec2(az*.15915494,1.-v),0.);\n"
+     "      vec3 L=uAmbUp*.9+uSunCol*.16,hc=mix(h.rgb*L,hazeCol(d),.2);c=mix(c,hc,h.a);}}\n#endif")
+swap("const Ps = G.use(this.P.sky);\n      G.set(Ps, U);\n      G.fullscreen();", "const Ps = G.use(this.P.sky);\n      G.set(Ps, U);\n      if (typeof lrSkyBind !== 'undefined') lrSkyBind(G, Ps);\n      G.fullscreen();")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
@@ -80,7 +88,7 @@ i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else No
 assert i is not None, 'the plane data script'
 import base64, os
 HERON = os.path.join(sys.path[0], '..', 'models/heron/paint/redtail-2-heron.webp')
-heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read()
+heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n'
 s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '\n' + heron + '</script>\n' + s[i:]
 open(dst, 'w', encoding='utf-8').write(s)
 print('written', dst, len(s))

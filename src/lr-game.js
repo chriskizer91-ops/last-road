@@ -218,3 +218,20 @@ function lrSwapUI(){if(LRV.btn)return;const col=document.querySelector('#touch .
   b.addEventListener('click',e=>{e.preventDefault();b.blur();lrSwap();});col.insertBefore(b,col.firstChild);LRV.btn=b;}
 addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&GAME.state==='drive'&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))lrSwap();});
 window.__lr=Object.assign(window.__lr||{},{LRV,lrSwap,lrParkTick});
+
+/* ---------- THE PAINTED EDGE: his mountain layers round the world, in the sky behind the land (one picture,
+   models/horizon/strip.webp, made by tools/horizon_strip.py: north the snow peaks behind the escarpment, east the
+   mesas, south the ranges, west the dunes). Lit by the time of day's own light, a little hazed ---------- */
+const LRH={tex:null,loading:false,loc:null,locP:null};
+function lrHorzLoad(){if(LRH.tex||LRH.loading||!window.LR_HORZ)return;LRH.loading=true;const im=new Image();
+  im.onload=()=>{const t=gl.createTexture();gl.activeTexture(gl.TEXTURE12);gl.bindTexture(gl.TEXTURE_2D,t);
+    gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL,false);gl.pixelStorei(gl.UNPACK_PREMULTIPLY_ALPHA_WEBGL,false);gl.pixelStorei(gl.UNPACK_COLORSPACE_CONVERSION_WEBGL,gl.NONE);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.SRGB8_ALPHA8,gl.RGBA,gl.UNSIGNED_BYTE,im);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_S,gl.REPEAT);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_WRAP_T,gl.CLAMP_TO_EDGE);
+    gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.LINEAR);gl.activeTexture(gl.TEXTURE0);LRH.tex=t;};
+  im.src='data:image/webp;base64,'+LR_HORZ;}
+window.__lr=Object.assign(window.__lr||{},{LRH});
+function lrSkyBind(G,Ps){lrHorzLoad();const on=LRH.tex&&typeof WG!=='undefined'&&WG.gtPlace?1:0;
+  if(LRH.locP!==Ps.p){LRH.locP=Ps.p;LRH.loc=[gl.getUniformLocation(Ps.p,'uHorz'),gl.getUniformLocation(Ps.p,'uHz')];}
+  if(LRH.loc[1])gl.uniform4f(LRH.loc[1],-2.5*Math.PI/180,9.5*Math.PI/180,on,0);
+  if(on&&LRH.loc[0]){gl.activeTexture(gl.TEXTURE12);gl.bindTexture(gl.TEXTURE_2D,LRH.tex);gl.uniform1i(LRH.loc[0],12);gl.activeTexture(gl.TEXTURE0);}}

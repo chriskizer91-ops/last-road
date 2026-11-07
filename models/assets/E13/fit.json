@@ -1,0 +1,72 @@
+{
+ "carabiner_1": {
+  "top (flat-lay)": {
+   "iou": 0.089,
+   "turn_deg": 0.71
+  },
+  "texels": {
+   "covered": 454772,
+   "seen": 0
+  }
+ },
+ "carabiner_2": {
+  "top (flat-lay)": {
+   "iou": 0.607,
+   "turn_deg": 1.77
+  },
+  "texels": {
+   "covered": 521178,
+   "seen": 1
+  }
+ },
+ "carabiner_3": {
+  "top (flat-lay)": {
+   "iou": 0.077,
+   "turn_deg": -0.62
+  },
+  "texels": {
+   "covered": 382560,
+   "seen": 0
+  }
+ },
+ "figure_eight": {
+  "top (flat-lay)": {
+   "iou": 0.642,
+   "turn_deg": -0.29
+  },
+  "texels": {
+   "covered": 277781,
+   "seen": 153759
+  }
+ },
+ "harness": {
+  "top (flat-lay)": {
+   "iou": 0.626,
+   "turn_deg": 0.38
+  },
+  "texels": {
+   "covered": 327310,
+   "seen": 238909
+  }
+ },
+ "rope_coil": {
+  "top (flat-lay)": {
+   "iou": 0.851,
+   "turn_deg": -0.69
+  },
+  "texels": {
+   "covered": 239249,
+   "seen": 166754
+  }
+ },
+ "sling": {
+  "top (flat-lay)": {
+   "iou": 0.353,
+   "turn_deg": -3.31
+  },
+  "texels": {
+   "covered": 531904,
+   "seen": 0
+  }
+ }
+}
