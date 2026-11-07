@@ -9,5 +9,5 @@ cd "$(dirname "$0")"; LR=$(pwd); SMP=$(cd "${SMP:-$LR/../salt-mini-plus}" && pwd
 B=$(mktemp /tmp/lr-base.XXXXXX.html)
 (cd "$SMP" && python3 redtail/game/glb2js.py >/dev/null && python3 redtail/game/rt_patch.py salt-and-sand/salt-and-sand.html "$B" >/dev/null)
 mkdir -p builds
-python3 src/lr_patch.py "$B" "builds/$OUT.html" models/rock-mud/play/rock-mud-play-50k.js
+python3 src/lr_patch.py "$B" "builds/$OUT.html" "${TRUCK:-models/rock-mud/play/rock-mud-play-50k-station-sand.js}"
 rm -f "$B"; ls -la "builds/$OUT.html"

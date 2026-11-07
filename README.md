@@ -28,6 +28,7 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
   - a chase camera that follows the Heron's climbs, dives and banks.
 
   Tested in the test browser at phone size (`tools/test/lr-run.py`). Still the car in the bay: the Outfitter is next.
+- **`builds/last-road-2.html`** (Nov 7 2026): the truck in **Station Sand**, weathered (his picture A04, the choice his picture tool made), laid onto the 50k play model by `tools/truck_livery.py` (outline fits: sides 0.82, top 0.99, front and back 0.86), toned a little for the game's light (saturation x 0.82, brightness x 0.9).
 - **`builds/last-road-1.html`** (Nov 7 2026): the same, but laptops start on the **Low** graphics level instead of High (his laptop didn't open last-road-0; he remembers Salt & Sand opening on Low there). In the test browser a laptop-style start reached the menu in 95 s instead of 191 s. A phone still starts on Mobile, and a level picked in the menu still holds for the start it makes.
 
 ## Decided (his picks, Nov 7 2026)
