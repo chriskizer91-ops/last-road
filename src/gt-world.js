@@ -91,7 +91,15 @@ const GT_PADS=[],GT_PROPS=[];
   /* the Highlands: the Terraces temple and its seated figure, the Weir at the top of the escarpment */
   site('C21','model',28.6,37.8,3.1,22);site('C28','model',28.62,37.77,3.1,0,null,1200);site('C32','model',34.5,31.2,1.6,28);
   /* the Black Range: the Observatory Cone's stone ring */
-  site('C35','model',10,45.2,0,16);}
+  site('C35','model',10,45.2,0,16);
+  /* the Canyons: the three Arches (big enough to fly under), the Congregation (a field of hoodoos) */
+  site('D10','arch_wide',40,18,.5,75,'dirt',12000);site('D10','arch_round',41.3,19.6,1.2,60,'dirt',12000);site('D10','arch_broken',38.8,20.3,-.4,45,'dirt',9000);
+  {const H=['spire_capped','mushroom','hourglass','twin_spires','stump','stepped_tower'];
+    for(let k=0;k<40;k++){const a=hs(k,3,811)*6.283,r=.06+.5*Math.sqrt(hs(k,4,812));site('D12',H[(hs(k,5,813)*6)|0],38+Math.cos(a)*r,28+Math.sin(a)*r,hs(k,6,814)*6.283,0,null,4500);}}
+  /* the Towers either side of the Switchback, standing in the escarpment's face */
+  site('D13','tower_tall',24.7,30.55,.3,0,null,14000,true,-14);site('D13','tower_short',27.35,30.4,2.1,0,null,14000,true,-12);
+  /* the Delta: Meridian's drill rig and camp, on a levee beyond the Delta Strip */
+  site('D14','model',43.7,42.8,.7,85,'gravel',9000);}
 /* a pad's level: its own (the strip's), else the land's at its middle (made once) */
 function gtPadH(P){if(P.hv===undefined){if(P.h)P.hv=P.h();else{const o={};P.hv=gtLand(P.F.x,P.F.z,o).h;gtRoadQ(P.F.x,P.F.z,GRQ);if(Math.abs(GRQ.d)<60)P.hv=gtRoadH(GRQ.s);}}return P.hv;}
 

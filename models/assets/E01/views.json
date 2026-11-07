@@ -1,0 +1,8 @@
+{"objects": [{"name": "gloved_hands", "size_m": [0.44, 0.16, 0.44],
+  "views": [
+    {"label": "Front", "box": [35, 11, 433, 385], "cam": [0, 1, 0], "up": [0, 0, 1]},
+    {"label": "Back", "box": [499, 12, 867, 384], "cam": [0, -1, 0], "up": [0, 0, 1]},
+    {"label": "Left Side", "box": [27, 472, 433, 630], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Right Side", "box": [476, 480, 885, 630], "cam": [1, 0, 0], "up": [0, 1, 0]}
+  ]}],
+ "notes": "A pair of worn tan leather gloves with a buttoned wrist strap, a strip of bare wrist and rolled khaki sleeve cuffs. They are modelled in the horizontal resting pose: backs of the hands up, fingers toward +z, the wearer's left hand at +x. The sheet's 'Front' and 'Back' are really the straight-down view (backs of the hands) and the straight-up view (palms). 'Left Side' shows the right hand's outer side, seen from -x. 'Top' is an oblique view from behind, so it is left out along with Three-Quarter and the wearer's view. The scale bar (10 cm = 88 px) gives gloves about 30 cm long and 44 cm across both arms. That is roughly 1.25x a real hand, kept as drawn."}

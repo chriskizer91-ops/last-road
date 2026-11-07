@@ -1,0 +1,9 @@
+{"objects": [{"name": "ruben_shack", "size_m": [6.87, 3.22, 5.26],
+  "views": [
+    {"label": "Front View", "box": [1007, 17, 1525, 266], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Right View", "box": [1074, 304, 1511, 553], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back View", "box": [14, 660, 544, 913], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Left View", "box": [584, 659, 983, 913], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Top View", "box": [1037, 632, 1498, 970], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Ruben's corrugated-iron gable shack: about 5.8 x 3.1 m, eaves 2.1 m, ridge 2.7 m. It has a bush-pole veranda 1.5 m deep, a stone chimney on the -x gable to 3.2 m, a galvanised tank on a timber stand at the front -x corner, a drum rack, and a stone well with a hand pump at front right (scale bar 1 m is about 77 px). Unclear: the Right View draws the chimney on the +x gable while every other view puts it at -x, so it is modelled at -x. The Top View is squashed in depth compared with both side views and shows the well further out, so the depth is a compromise."}

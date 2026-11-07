@@ -1,2 +1,7 @@
 helper: done claude-opus-5-5 xhigh 562 s 3712 in 58740 out end_turn
 built {'winch': {'tris': 2448, 'size': [0.564, 0.268, 0.241], 'min': [-0.284, -0.013, -0.122]}, 'light_bar': {'tris': 268, 'size': [1.22, 0.182, 0.093], 'min': [-0.61, 0, -0.045]}, 'roof_rack': {'tris': 1268, 'size': [1.532, 0.236, 1.23], 'min': [-0.766, 0, -0.615]}, 'snorkel': {'tris': 2208, 'size': [0.166, 1.248, 0.708], 'min': [-0.083, 0, -0.352]}}
+painted {'light_bar': {'light bar (front)': 0.89}, 'roof_rack': {}, 'snorkel': {'snorkel (outer side, intake facing right)': 0.728}, 'winch': {'winch (front, seen slightly from above)': 0.864}} 72s
+helper: done claude-opus-5-5 xhigh 189 s 13592 in 20612 out end_turn
+built {'winch': {'tris': 2448, 'size': [0.564, 0.268, 0.241], 'min': [-0.284, -0.013, -0.122]}, 'light_bar': {'tris': 268, 'size': [1.22, 0.182, 0.093], 'min': [-0.61, 0, -0.045]}, 'roof_rack': {'tris': 1268, 'size': [1.532, 0.236, 1.23], 'min': [-0.766, 0, -0.615]}, 'snorkel': {'tris': 2352, 'size': [0.166, 1.248, 0.708], 'min': [-0.083, 0, -0.352]}}
+painted {'light_bar': {'light bar (front)': 0.89}, 'roof_rack': {}, 'snorkel': {'snorkel (outer side, intake facing right)': 0.729}, 'winch': {'winch (front, seen slightly from above)': 0.864}} 149s
+done

@@ -179,23 +179,29 @@ function build(THREE) {
                  P(1272, 610), P(1290, 690), P(1330, 742), P(1405, 735)];
     const curve = new THREE.CatmullRomCurve3(pts, false, 'centripetal');
     g.add(mesh(new THREE.TubeGeometry(curve, 56, 0.072, 12, false), 'black_plastic'));
-    // intake head (side profile extruded across x)
+
+    // intake head: ~0.17 m long, centred over the vertical top of the pipe (sheet px 1043..1152)
     const sh = new THREE.Shape();
-    sh.moveTo(-0.352, 1.04);
+    sh.moveTo(-0.352, 1.025);
     sh.lineTo(-0.352, 1.17);
-    sh.quadraticCurveTo(-0.352, 1.248, -0.3, 1.248);
-    sh.lineTo(-0.04, 1.248);
-    sh.lineTo(-0.016, 1.226);
-    sh.lineTo(-0.02, 1.085);
-    sh.lineTo(-0.15, 1.06);
-    sh.lineTo(-0.18, 1.04);
+    sh.quadraticCurveTo(-0.352, 1.238, -0.296, 1.242);
+    sh.lineTo(-0.2, 1.248);
+    sh.quadraticCurveTo(-0.182, 1.248, -0.182, 1.232);
+    sh.lineTo(-0.182, 1.095);
+    sh.lineTo(-0.2, 1.058);
+    sh.lineTo(-0.235, 1.032);
     const hg = new THREE.ExtrudeGeometry(sh, { depth: 0.16, bevelEnabled: false, curveSegments: 6 });
     hg.translate(0, 0, -0.08);
     const head = mesh(hg, 'black_plastic');
-    head.rotation.y = -Math.PI / 2;
+    head.rotation.y = -Math.PI / 2;   // shape x -> world z, extrusion -> world x
     g.add(head);
-    // grille panel on the forward face
-    box(g, 'dark_plastic', -0.066, 1.1, -0.026, 0.066, 1.222, -0.012);
+
+    // grille on the forward (+z) face of the head: dark backing + 4x2 grid of bars
+    box(g, 'dark_plastic', -0.064, 1.1, -0.184, 0.064, 1.226, -0.177);
+    const gz0 = -0.184, gz1 = -0.172;
+    for (const y of [1.1, 1.163, 1.226]) box(g, 'black_plastic', -0.068, y - 0.004, gz0, 0.068, y + 0.004, gz1);
+    for (const x of [-0.064, -0.032, 0, 0.032, 0.064]) box(g, 'black_plastic', x - 0.004, 1.096, gz0, x + 0.004, 1.23, gz1);
+
     // hose clamps
     const zAxis = new THREE.Vector3(0, 0, 1);
     for (const u of [0.067, 0.64]) {
@@ -209,13 +215,24 @@ function build(THREE) {
       hb.quaternion.copy(q);
       hb.position.set(p.x, p.y + n.y * 0.08, p.z + n.z * 0.08);
     }
+
+    // coupling sleeve where the upper pipe section joins (sheet y ~330)
+    {
+      const yAxis = new THREE.Vector3(0, 1, 0);
+      const u = 0.26;
+      const p = curve.getPointAt(u);
+      const t = curve.getTangentAt(u).normalize();
+      const s = mesh(new THREE.CylinderGeometry(0.077, 0.077, 0.05, 14, 1, true), 'black_plastic');
+      s.quaternion.setFromUnitVectors(yAxis, t); s.position.copy(p); g.add(s);
+    }
+
     // lower end: closed elbow, stub into body, mounting flange with bolts
     const end = pts[pts.length - 1];
     const sp = mesh(new THREE.SphereGeometry(0.072, 12, 8), 'black_plastic');
     sp.position.copy(end); g.add(sp);
     cylX(g, 'black_plastic', 0.066, 0, 0.065, end.y, end.z, 12, true);
-    box(g, 'black_plastic', 0.06, 0, 0.18, 0.075, 0.26, 0.356);
-    for (const y of [0.03, 0.23]) for (const z of [0.2, 0.336]) cylX(g, 'steel', 0.009, 0.052, 0.06, y, z, 6);
+    box(g, 'black_plastic', 0.06, 0, 0.15, 0.075, 0.26, 0.356);
+    for (const y of [0.03, 0.23]) for (const z of [0.18, 0.33]) cylX(g, 'steel', 0.009, 0.052, 0.06, y, z, 6);
     return g;
   }
 

@@ -1,0 +1,38 @@
+{
+ "light_bar": {
+  "light bar (front)": {
+   "iou": 0.89,
+   "turn_deg": 0.09
+  },
+  "texels": {
+   "covered": 812602,
+   "seen": 355421
+  }
+ },
+ "roof_rack": {
+  "texels": {
+   "covered": 509725,
+   "seen": 0
+  }
+ },
+ "snorkel": {
+  "snorkel (outer side, intake facing right)": {
+   "iou": 0.729,
+   "turn_deg": 4.65
+  },
+  "texels": {
+   "covered": 557913,
+   "seen": 318942
+  }
+ },
+ "winch": {
+  "winch (front, seen slightly from above)": {
+   "iou": 0.864,
+   "turn_deg": 2.31
+  },
+  "texels": {
+   "covered": 313198,
+   "seen": 71419
+  }
+ }
+}

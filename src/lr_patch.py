@@ -81,6 +81,12 @@ swap("vec3 c=rutSky(d,true);\n  /* the haze toward the horizon: the fog, as far 
      "    if(v>0.&&v<1.){float az=atan(d.x,-d.z);vec4 h=textureLod(uHorz,vec2(az*.15915494,1.-v),0.);\n"
      "      vec3 L=uAmbUp*.9+uSunCol*.16,hc=mix(h.rgb*L,hazeCol(d),.2);c=mix(c,hc,h.a);}}\n#endif")
 swap("const Ps = G.use(this.P.sky);\n      G.set(Ps, U);\n      G.fullscreen();", "const Ps = G.use(this.P.sky);\n      G.set(Ps, U);\n      if (typeof lrSkyBind !== 'undefined') lrSkyBind(G, Ps);\n      G.fullscreen();")
+# THE FAR TILES' CLIFFS: rock where the land is steep (as the near ground has it), so cliffs and canyon walls show
+# as rock from far off too (not the ground's colour)
+swap("  let v=0;const I=[];\n  const put=(i,j,dy)=>{const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],l=Math.hypot(hx,2*st,hz);",
+     "  if(GT)for(let j=0;j<n;j++)for(let i=0;i<n;i++){const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],ny=2*st/Math.hypot(hx,2*st,hz),sl=Math.sqrt(Math.max(0,1-ny*ny))/Math.max(ny,.05),rs=sst(.55,1.,sl)*(Wt[k*4]<0||Wt[k*4+2]<0?.6:1);\n"
+     "    if(rs>Wt[k*4+1]){Wt[k*4+1]=rs;if(Wt[k*4]>0)Wt[k*4]*=1-rs*.8;}}\n"
+     "  let v=0;const I=[];\n  const put=(i,j,dy)=>{const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],l=Math.hypot(hx,2*st,hz);")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)

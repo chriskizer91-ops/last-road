@@ -1,0 +1,58 @@
+{
+  "objects": [
+    {
+      "name": "cargo_pod",
+      "size_m": [0.60, 0.53, 2.40],
+      "views": [
+        {"label": "SIDE (HATCH CLOSED)", "box": [89, 56, 781, 233], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "FRONT", "box": [171, 281, 312, 393], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "SIDE", "box": [400, 292, 808, 393], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "TOP", "box": [886, 287, 1410, 404], "cam": [0, 1, 0], "up": [-1, 0, 0]}
+      ]
+    },
+    {
+      "name": "cargo_pod_open",
+      "size_m": [0.68, 0.65, 2.40],
+      "views": [
+        {"label": "SIDE (HATCH OPEN, EMPTY)", "box": [801, 28, 1509, 237], "cam": [1, 0, 0], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "tundra_wheel",
+      "size_m": [0.76, 0.76, 0.39],
+      "views": [
+        {"label": "FRONT", "box": [129, 512, 335, 699], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "SIDE", "box": [380, 502, 486, 713], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "TOP", "box": [554, 509, 663, 714], "cam": [0, 1, 0], "up": [-1, 0, 0]}
+      ]
+    },
+    {
+      "name": "propeller_climb",
+      "size_m": [1.90, 0.20, 0.115],
+      "views": [
+        {"label": "FRONT", "box": [868, 525, 1474, 591], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "SIDE", "box": [870, 619, 1472, 648], "cam": [0, -1, 0], "up": [0, 0, 1]},
+        {"label": "TOP", "box": [870, 680, 1472, 720], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "propeller_cruise",
+      "size_m": [1.90, 0.18, 0.11],
+      "views": [
+        {"label": "FRONT", "box": [121, 828, 662, 884], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "SIDE", "box": [122, 903, 661, 932], "cam": [0, -1, 0], "up": [0, 0, 1]},
+        {"label": "TOP", "box": [121, 952, 662, 994], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "landing_lamp",
+      "size_m": [0.18, 0.165, 0.265],
+      "views": [
+        {"label": "FRONT", "box": [824, 817, 963, 947], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "SIDE", "box": [1044, 823, 1241, 948], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "TOP", "box": [1278, 821, 1421, 933], "cam": [0, 1, 0], "up": [-1, 0, 0]}
+      ]
+    }
+  ],
+  "notes": "E18 plane add-ons: olive/silver belly cargo pod 2.40 m long, 0.60 m wide, with blunt nose at +z, upswept tail and a side hatch on +x. Its side views read taller than the stated 0.40 m, so the model uses a 0.44 m body plus 0.09 m strap brackets. The hatch-open side view is a separate 'cargo_pod_open' variant with an open lid and a simple interior. The other parts are a Ø0.76 m balloon tundra tyre about 0.38 m wide, and two 1.90 m two-blade props: climb has broad fine-pitch blades, cruise has narrow coarse twisted blades. On the props both 'SIDE' and 'TOP' show the full span edge-on, so they are mapped to below/above with the prop axis on z. Last is the landing lamp, with a 0.18x0.14 m face and 0.26 m long bullet housing on a foot bracket."
+}
