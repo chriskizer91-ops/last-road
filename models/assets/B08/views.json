@@ -1,0 +1,16 @@
+{
+  "objects": [
+    {
+      "name": "roadhouse",
+      "size_m": [13.85, 5.06, 14.26],
+      "views": [
+        {"label": "Front", "box": [73, 518, 648, 732], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Right", "box": [750, 518, 1353, 732], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [78, 796, 581, 974], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Left", "box": [669, 798, 1062, 974], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [1126, 744, 1499, 971], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Single-storey rendered-block roadhouse. It has a gable roof (ridge along x), a full-width front veranda on steel posts carrying the ROADHOUSE fascia sign, a cool room at the back +x end and a corrugated tank on a timber stand at the back -x end. The scale bar is about 42 px/m, which fits the Front and Right views: about 13.8 m wide, 8.5 m main block plus a 3.1 m veranda, ridge about 4.5 m. The sheet contradicts itself: the Left view omits the tank and cool room that the Right and Back views show behind the back wall, and the Top view draws them beside the -x wall with a compressed depth. I placed them per the Back and Right views."
+}

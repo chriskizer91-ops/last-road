@@ -48,10 +48,17 @@ function lrBind(){if(LRT.texN<3)return;
   for(const [loc,tx,unit] of U){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,tx);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);}
 /* while you drive the play truck, the Studio 2 isn't made or kept for the road (it's the Outfitter's) */
 const LR_S2F=s2For;
-s2For=function(i){if(GAME.state==='drive'&&LR_PLAY(GAME.car)&&GAME.car.bi===i)return null;return LR_S2F(i);};
+s2For=function(i){lrSandBuilds();if(GAME.state==='drive'&&LR_PLAY(GAME.car)&&GAME.car.bi===i)return null;return LR_S2F(i);};
 
-/* ---------- the plane in Wilderness Olive (the story plane's paint) ---------- */
-RT.paint=RT_PAINTS.findIndex(p=>p.id==='wilderness-olive');
+/* ---------- the Heron's own paint (his picture A06: olive over cream, yellow wingtips and tail band, LR-OLV,
+   "Heron" on the cowl), laid on by livery.py; Wilderness Olive if it's missing ---------- */
+if(window.LR_HERON_PAINT&&window.RT2_DATA&&RT2_DATA.paints){RT2_DATA.paints.heron=LR_HERON_PAINT;RT_PAINTS.push({id:'heron',name:'THE HERON'});}
+RT.paint=Math.max(RT_PAINTS.findIndex(p=>p.id==='heron'),RT_PAINTS.findIndex(p=>p.id==='wilderness-olive'));
+
+/* ---------- the truck in the bay (its Studio 2) in Station Sand, weathered: the colour of the play truck's baked
+   paint (the body's middle tan, #bca081), dark lower trim; the play truck itself wears the baked picture ---------- */
+const LR_SAND={paint:'#bca081',clad:'#3a3630',dirt:.35};
+function lrSandBuilds(){for(const b of BUILDS)if(b&&!b.machine&&(b.kit||b.id)==='crawler'&&!b.__lrSand){Object.assign(b,LR_SAND);b.__lrSand=1;}}
 {const st=document.createElement('style');st.textContent='#rtPaintB{display:none!important}';document.head.appendChild(st);}
 
 /* ---------- the plane's chase camera: behind it along where it's going, climbing, diving and turning with it ---------- */

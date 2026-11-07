@@ -1,0 +1,16 @@
+{
+  "objects": [
+    {
+      "name": "three_wells_temple",
+      "size_m": [8.0, 4.15, 8.7],
+      "views": [
+        {"label": "Front", "box": [972, 14, 1512, 306], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [955, 354, 1512, 599], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [438, 671, 942, 916], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [972, 679, 1512, 916], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [38, 618, 406, 978], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Half-buried square stone temple, about 6.0 x 6.9 m and 2.6 m to the cornice top (scale bar about 72 px/m). It has stepped corbels under a projecting roof slab, two string courses, a small 0.68 x 1.3 m doorway, and a square well-opening in the roof at the back right. A fig tree grows from the roof's front-left corner (crown to about 4.15 m) and hangs its roots down the facade. Sand drifts bank about 1.95 m high against the back wall and taper toward the front along both sides, all on an 8 x 8.7 m sand pad. The middle 'Side' view is the +x side (front on the left); the lower 'Side' view is the -x side. The top view and the side views disagree slightly on depth, so the depth is a compromise."
+}

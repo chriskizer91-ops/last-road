@@ -1,0 +1,50 @@
+{
+  "objects": [
+    {
+      "name": "windsock",
+      "size_m": [2.17, 3.02, 0.94],
+      "views": [
+        {"label": "profile (sock pointing right)", "box": [10, 18, 481, 746], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "end view looking into the sock mouth", "box": [488, 36, 744, 746], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top view with sock", "box": [18, 783, 503, 962], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "sawhorse",
+      "size_m": [1.30, 0.52, 0.64],
+      "views": [
+        {"label": "front (on dirt patch)", "box": [782, 100, 1080, 222], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "side (A-frame with chain)", "box": [1104, 92, 1258, 222], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top (dirt patch)", "box": [1279, 109, 1516, 221], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "drum_white",
+      "size_m": [0.64, 0.80, 0.64],
+      "views": [
+        {"label": "front", "box": [826, 283, 982, 470], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "side", "box": [1097, 289, 1238, 470], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top", "box": [1319, 300, 1474, 456], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "drum_orange",
+      "size_m": [0.64, 0.80, 0.64],
+      "views": [
+        {"label": "front", "box": [826, 521, 984, 718], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "side", "box": [1097, 525, 1238, 718], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top", "box": [1318, 566, 1476, 714], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "tire",
+      "size_m": [0.96, 0.54, 0.22],
+      "views": [
+        {"label": "front (half-buried tire face)", "box": [806, 788, 1032, 916], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "side (tread)", "box": [1126, 772, 1172, 932], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top", "box": [1288, 838, 1482, 895], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Strip-marker set; the scale bar gives 1 m = 230 px. The set holds:\n- A ~3.0 m galvanised windsock pole. Its ~1.55 m orange/white sock has its mouth centre at ~2.69 m and droops ~14 degrees. A ~0.9 m ring of whitewashed stones sits at its base.\n- A 1.12 m white timber A-frame sawhorse with a chain. Its legs splay to ~0.62 m at the feet, and it stands on a 1.3 x 0.64 m dirt patch with grass tufts. The sheet's top view of it is mostly that patch.\n- Two 0.64 x 0.8 m drums: plain white, and white with an orange lower band.\n- A ~0.96 m whitewashed tyre, half-buried upright.\nThe views are drawn at slightly different scales, so sizes are compromises. The sheet's stone ring and sock hoop are drawn in slight perspective, which the orthographic fit can't follow. The second windsock top view shows the base without the sock and is left out. Dirt patches are modelled under the windsock and the sawhorse only; the drum and tyre views are cropped to the object."
+}

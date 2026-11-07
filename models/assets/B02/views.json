@@ -1,0 +1,9 @@
+{"objects": [{"name": "hangar", "size_m": [20.3, 5.95, 14.85],
+  "views": [
+    {"label": "Front", "box": [14, 16, 857, 270], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Right", "box": [908, 55, 1523, 268], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [21, 319, 828, 557], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Left", "box": [928, 344, 1513, 556], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Top", "box": [68, 609, 520, 944], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Rusty corrugated-steel hangar. The gable faces the front (+z), with two red sliding doors on an outside track and an open front showing steel trusses and two lamps. There is a roller door on the +x side near the back, and a green lean-to office (window and door) on -x, flush with the front. Scale bar 1 m ≈ 42 px, so the main shed is about 15.8 × 14.5 m, with 4.0 m eaves and a 5.9 m ridge; the office is about 3.9 m wide with 2.6 m eaves. Two things are unclear. The side views draw a flatter roof than the front and back views; I used the front/back pitch. The office depth reads about 9.7 m in the left view but about 12 m in the top view; I used the left view."}

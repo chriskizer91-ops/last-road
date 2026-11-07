@@ -1,0 +1,15 @@
+{
+ "concrete": "#cdbea5",
+ "rendered_block": "#d4bf9f",
+ "glass": "#4b4842",
+ "aluminium": "#96948e",
+ "flyscreen_mesh": "#6e6962",
+ "galvanised_iron": "#9b9891",
+ "rusty_corrugated_iron": "#a48a76",
+ "painted_sheet_metal": "#d5bd9c",
+ "blue_grey_steel": "#6e7d8c",
+ "timber": "#8c7a64",
+ "white_sheet_metal": "#d4d2cc",
+ "white_coolroom_panel": "#d7d0c3",
+ "pvc_pipe": "#cdc8be"
+}

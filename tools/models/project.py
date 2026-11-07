@@ -36,6 +36,18 @@ def cutout(im):
     if nl > 1: sz = ndimage.sum(m, lab, range(1, nl + 1)); m = np.isin(lab, 1 + np.nonzero(sz > sz.max() * .03)[0])
     return ndimage.binary_fill_holes(ndimage.binary_closing(m, iterations=2))
 fits = {}; ID = os.path.basename(os.path.normpath(D))
+def sample(G, pts, nrms):
+    """the colour each point takes from one fitted view, and how much (facing it squarely, in sight, inside the cut-out)"""
+    x, y, z, a0, b0, K = G['x'], G['y'], G['z'], G['a0'], G['b0'], G['K']; m, me, Z = G['m'], G['me'], G['Z']
+    ta, tb, td = pts @ x, pts @ y, pts @ z
+    Xp = (ta - a0) * K * G['sx']; Yp = (b0 - tb) * K * G['sy']; c, s = np.cos(G['th']), np.sin(G['th']); u = (c * Xp - s * Yp + G['tx']) * G['ds']; v = (s * Xp + c * Yp + G['ty']) * G['ds']
+    zx = ((ta - a0) * K).round().astype(int).clip(0, G['Wd'] - 1); zy = ((b0 - tb) * K).round().astype(int).clip(0, G['Hd'] - 1)
+    vis = td >= ndimage.maximum_filter(Z, size=3)[zy, zx] - .03; face = (nrms @ z).clip(0, 1) ** 2
+    inside = (u >= 0) & (u < m.shape[1] - 1) & (v >= 0) & (v < m.shape[0] - 1)
+    ui, vi = u.clip(0, m.shape[1] - 1).round().astype(int), v.clip(0, m.shape[0] - 1).round().astype(int)
+    w = face * vis * (inside & me[vi, ui]) * (G['iou'] ** 2)
+    col = np.stack([ndimage.map_coordinates(G['A'][..., ch], [v, u], order=1, mode='nearest') for ch in range(3)], 1)
+    return col, w
 for name, faces in objs.items():
     P = np.array([[vs[c[0] - 1] for c in f] for f, m in faces]); UV = np.array([[vts[c[1] - 1] if c[1] else [0, 0] for c in f] for f, m in faces])
     NR = np.array([[vns[c[2] - 1] if c[2] else [0, 1, 0] for c in f] for f, m in faces]); MN = [m for f, m in faces]
@@ -56,7 +68,7 @@ for name, faces in objs.items():
         yy, xx = Y[m], X[m]; W = np.stack([w0[m], w1[m], w2[m]], 1)
         pos[yy, xx] = W @ P[k]; nn = W @ NR[k]; nrm[yy, xx] = nn / np.linalg.norm(nn, axis=1, keepdims=True).clip(1e-9); cov[yy, xx] = True; tm[yy, xx] = MI[k]
     py, px = np.nonzero(cov); pp = pos[py, px]; pn = nrm[py, px]
-    acc_c = np.zeros((len(pp), 3)); acc_w = np.zeros(len(pp)); fits[name] = {}
+    acc_c = np.zeros((len(pp), 3)); acc_w = np.zeros(len(pp)); fits[name] = {}; GOOD = []
     ob = next((o for o in V['objects'] if o['name'] == name), V['objects'][0] if len(V['objects']) == 1 else None)
     for vw in (ob['views'] if ob else []):
         x, y, z = axes(vw['cam'], vw['up']); K = 100.0
@@ -92,15 +104,18 @@ for name, faces in objs.items():
         q = pred(best.x) > .5; iou = float((q & (ms > .5)).sum() / ((q | (ms > .5)).sum() + 1e-9)); sx, sy, th, tx, ty = best.x
         fits[name][vw['label']] = {'iou': round(iou, 3), 'turn_deg': round(float(np.degrees(th)), 2)}; print(ID, name, vw['label'], fits[name][vw['label']], flush=True)
         if iou < .55: continue
-        ta, tb, td = pp @ x, pp @ y, pp @ z
-        Xp = (ta - a0) * K * sx; Yp = (b0 - tb) * K * sy; c, s = np.cos(th), np.sin(th); u = (c * Xp - s * Yp + tx) * ds; v = (s * Xp + c * Yp + ty) * ds
-        zx = ((ta - a0) * K).round().astype(int).clip(0, Wd - 1); zy = ((b0 - tb) * K).round().astype(int).clip(0, Hd - 1)
-        vis = td >= ndimage.maximum_filter(Z, size=3)[zy, zx] - .03; face = (pn @ z).clip(0, 1) ** 2
-        me = ndimage.binary_erosion(m, iterations=2); inside = (u >= 0) & (u < m.shape[1] - 1) & (v >= 0) & (v < m.shape[0] - 1)
-        ui, vi = u.clip(0, m.shape[1] - 1).round().astype(int), v.clip(0, m.shape[0] - 1).round().astype(int)
-        w = face * vis * (inside & me[vi, ui]) * (iou ** 2); A = lin(np.asarray(crop, np.float64) / 255)
-        col = np.stack([ndimage.map_coordinates(A[..., ch], [v, u], order=1, mode='nearest') for ch in range(3)], 1)
-        acc_c += col * w[:, None]; acc_w += w
+        G = dict(x=x, y=y, z=z, a0=a0, b0=b0, K=K, sx=sx, sy=sy, th=th, tx=tx, ty=ty, ds=ds, m=m, Z=Z, Wd=Wd, Hd=Hd, iou=iou,
+                 me=ndimage.binary_erosion(m, iterations=2), A=lin(np.asarray(crop, np.float64) / 255)); GOOD.append(G)
+        col, w = sample(G, pp, pn); acc_c += col * w[:, None]; acc_w += w
+    # (faces no view sees, the far side of a thing drawn from one side only: from the view of the near side, as if
+    #  the thing were the same both sides (the point and its facing mirrored through the middle along that view's
+    #  axis), where that mirrored point is in sight in that view)
+    un = acc_w <= .02
+    if un.any() and GOOD:
+        lo, hi = P.reshape(-1, 3).min(0), P.reshape(-1, 3).max(0); mid = (lo + hi) / 2
+        for G in GOOD:
+            k = int(np.argmax(np.abs(G['z']))); q = pp[un].copy(); qn = pn[un].copy(); q[:, k] = 2 * mid[k] - q[:, k]; qn[:, k] *= -1
+            col, w = sample(G, q, qn); w *= .6; idx = np.nonzero(un)[0]; acc_c[idx] += col * w[:, None]; acc_w[idx] += w
     colr = np.zeros((N, N, 3)); got = np.zeros((N, N), bool); seen = acc_w > .02
     colr[py[seen], px[seen]] = acc_c[seen] / acc_w[seen][:, None]; got[py[seen], px[seen]] = True
     fill = got.copy()

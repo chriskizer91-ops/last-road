@@ -1,0 +1,9 @@
+{"objects": [{"name": "radio_mast", "size_m": [10.93, 10.59, 8.67],
+  "views": [
+    {"label": "Front", "box": [42, 10, 523, 478], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Right", "box": [575, 10, 947, 478], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [1030, 10, 1509, 478], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [28, 568, 452, 958], "cam": [0, 1, 0], "up": [0, 0, -1]},
+    {"label": "Left", "box": [547, 537, 926, 970], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+  ]}],
+ "notes": "The sheet shows a guyed red and white lattice radio mast, about 10.6 m to the beacon at roughly 44 px/m from the scale bar. A corrugated-iron shed with a single-slope roof (low at the front) shares a concrete slab with it. Three guy wires run to concrete blocks, and a 4 m horizontal wire antenna arm sticks out on +x. The top view's anchor spots and arm length don't match the front, side and back views, so I used those flat views; the Left view is drawn about 7% smaller than the others."}

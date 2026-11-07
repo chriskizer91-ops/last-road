@@ -1,0 +1,92 @@
+{
+ "drum_orange": {
+  "front": {
+   "iou": 0.925,
+   "turn_deg": 0.28
+  },
+  "side": {
+   "iou": 0.929,
+   "turn_deg": -0.36
+  },
+  "top": {
+   "iou": 0.985,
+   "turn_deg": -1.11
+  },
+  "texels": {
+   "covered": 397784,
+   "seen": 291505
+  }
+ },
+ "drum_white": {
+  "front": {
+   "iou": 0.928,
+   "turn_deg": 0.26
+  },
+  "side": {
+   "iou": 0.928,
+   "turn_deg": -0.16
+  },
+  "top": {
+   "iou": 0.985,
+   "turn_deg": 0.04
+  },
+  "texels": {
+   "covered": 405441,
+   "seen": 356226
+  }
+ },
+ "sawhorse": {
+  "front (on dirt patch)": {
+   "iou": 0.467,
+   "turn_deg": 0.0
+  },
+  "side (A-frame with chain)": {
+   "iou": 0.553,
+   "turn_deg": -0.01
+  },
+  "top (dirt patch)": {
+   "iou": 0.959,
+   "turn_deg": 0.12
+  },
+  "texels": {
+   "covered": 834351,
+   "seen": 514760
+  }
+ },
+ "tire": {
+  "front (half-buried tire face)": {
+   "iou": 0.811,
+   "turn_deg": 0.86
+  },
+  "side (tread)": {
+   "iou": 0.916,
+   "turn_deg": 3.73
+  },
+  "top": {
+   "iou": 0.924,
+   "turn_deg": 0.04
+  },
+  "texels": {
+   "covered": 169308,
+   "seen": 78715
+  }
+ },
+ "windsock": {
+  "profile (sock pointing right)": {
+   "iou": 0.76,
+   "turn_deg": -0.35
+  },
+  "end view looking into the sock mouth": {
+   "iou": 0.767,
+   "turn_deg": 0.01
+  },
+  "top view with sock": {
+   "iou": 0.935,
+   "turn_deg": 1.2
+  },
+  "texels": {
+   "covered": 404105,
+   "seen": 315837
+  }
+ }
+}

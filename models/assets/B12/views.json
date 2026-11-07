@@ -1,0 +1,8 @@
+{"objects": [{"name": "weatherboard_cottage", "size_m": [9.52, 6.2, 12.22],
+  "views": [
+    {"label": "Front", "box": [99, 14, 690, 406], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [751, 14, 1507, 399], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [823, 505, 1157, 777], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [1181, 488, 1507, 817], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Weatherboard cottage on timber stumps: hip roof of rusty corrugated iron, brick chimney, front skillion verandah with four posts and three open steps, and a galvanised rain tank on an X-braced timber stand behind the back wall at the +x corner. The scale bar (about 61 px/m) fits the front and side views: about 9.5 m wide over the gutters, 7.6 m deep at the walls, 6.2 m to the chimney top. The back and top views are drawn smaller and at different proportions. The top view places the tank beside the +x wall, but the front, side and back views all place it behind the house, so it is modelled behind. The origin is the centre of the whole footprint, from the steps to the tank, so the house body sits about 0.48 m toward -z."}

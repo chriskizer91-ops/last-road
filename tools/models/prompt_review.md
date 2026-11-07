@@ -15,7 +15,8 @@ Your code and the views you gave:
 ```
 
 Look hard at the shape against the sheet: proportions, heights, missing or extra parts, parts in the wrong place,
-anything facing the wrong way, a view whose box or camera was wrong (a low overlap often means that). Then answer with:
+anything facing the wrong way, a view whose box or camera was wrong (a low overlap often means that), and any flat view
+on the sheet that's missing from the list (both sides when both are drawn: a face no view shows is painted by a guess). Then answer with:
 - A few short lines: what's wrong that matters (or that it's right).
 - If anything should change: the corrected JSON block (```json, the whole thing) when the views need fixing, and/or the
   whole corrected build function (```js). If it's right as it is, write NO CHANGES and nothing else after the lines.

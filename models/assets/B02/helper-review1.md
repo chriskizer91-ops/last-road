@@ -1,0 +1,7 @@
+- **Main shed:** the outline, eave and ridge heights, ridge position (x ≈ 2.0) and plan size all match the sheet. The front, right, back and left fits are 0.98–0.99.
+- **Openings:** I checked each one against the 1 m ≈ 41.5 px scale. The hangar opening (x −2.45 to 6.45), both red sliding doors, the office window and door, and the roller door (z −3.0 to −5.8, about 3 m high) all land where the sheet draws them.
+- **Office:** the green lean-to is on −x, flush with the front, and its pitch runs the right way in the front and back views. Nothing faces the wrong way.
+- **Lower Top fit (0.958):** this comes entirely from the office depth. The plan view's strip is about 12.3 m deep; the model's office is 9.7 m, taken from the left view. The side silhouettes can't settle it, because the lean-to sits below the main eave. Keeping 9.7 m is the safer choice: it keeps the left view's green office paint and grey shed paint on the right faces. The extra strip in the plan view just goes unused rather than painting onto the wrong surface.
+- **Dark front opening:** the black interior in the front compare comes from lighting and paint in the shadowed interior. The geometry is fine there: the trusses, back wall and floor are all present.
+
+NO CHANGES

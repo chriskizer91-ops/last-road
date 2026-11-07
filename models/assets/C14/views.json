@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "causeway_gate",
+      "size_m": [22.1, 5.7, 9.8],
+      "views": [
+        {"label": "Front", "box": [28, 16, 1073, 288], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [1096, 27, 1529, 286], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [9, 346, 929, 578], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Top", "box": [945, 405, 1508, 657], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Dry-stone causeway (two battered wings with three creek culverts) and a central battered gatehouse with a corbelled cornice. A front stair leads to a doorway that passes through the tower front to back. The scale bar is about 47 px/m on the front view, giving roughly 22 m long, 5.7 m tall and 9.8 m deep. The views disagree a little: the back view is drawn smaller and its culverts are taller, and the top and side views show a deeper tower base than the front implies. Culvert and door heights are therefore split front-half/back-half to fit both elevations."
+}

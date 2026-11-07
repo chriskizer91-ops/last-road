@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 478 s 3648 in 50164 out end_turn
+built {'model': {'tris': 4082, 'size': [10.931, 10.59, 8.674], 'min': [-5.466, 0, -4.335]}}
+painted {'model': {'Front': 0.561, 'Right': 0.636, 'Back': 0.557, 'Top': 0.945, 'Left': 0.588}} 95s
+helper: done claude-opus-5-5 xhigh 167 s 11493 in 18062 out end_turn
+built {'model': {'tris': 4082, 'size': [10.931, 10.59, 8.674], 'min': [-5.466, 0, -4.335]}}
+painted {'model': {'Front': 0.576, 'Right': 0.641, 'Back': 0.59, 'Top': 0.935, 'Left': 0.615}} 69s
+done

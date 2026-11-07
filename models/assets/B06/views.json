@@ -1,0 +1,16 @@
+{
+  "objects": [
+    {
+      "name": "fuel_bowser_and_drum_rack",
+      "size_m": [7.38, 2.37, 3.62],
+      "views": [
+        {"label": "Front", "box": [141, 473, 866, 709], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Back", "box": [141, 756, 839, 986], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [1031, 477, 1386, 707], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Side", "box": [1001, 752, 1358, 986], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [979, 65, 1501, 403], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Pad-mounted fuel bowser on a 7.4 x 3.6 x 0.18 m concrete pad (scale bar 1 m = about 98 px; about 2.4 m tall). From -x to +x it holds a pump cabinet with a hose reel, a red tank (2.8 m long, 1.45 m across) on two saddles, a hand-pump drum, and a corrugated-roof rack of 9 lying drums. The Top view does not match the other views: it draws the tank turned 90 degrees and the pad only about 5.3 m long, so it will not overlay the model and should be weighted low or skipped. The Back view is drawn about 4% narrower than the Front. The side views draw the rack drums about 1.4 m long; the model keeps that length so they match."
+}

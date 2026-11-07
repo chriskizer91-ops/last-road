@@ -1,0 +1,9 @@
+{"objects": [{"name": "cistern", "size_m": [10.6, 3.74, 19.0],
+  "views": [
+    {"label": "Front", "box": [934, 66, 1447, 249], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Right", "box": [789, 296, 1517, 452], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [939, 529, 1446, 704], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Left", "box": [869, 753, 1497, 905], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Top", "box": [28, 528, 838, 972], "cam": [0, 1, 0], "up": [-1, 0, 0]}
+  ]}],
+ "notes": "A sunken, stone-lined tank (about 6.7 x 11 m inside) cut into a slab of red earth about 10.6 x 19 m. A full-width stair goes down at the +z end, and a corbelled stone gatehouse stands at the -z end with its door facing +z into the tank. Top of the cap is about 3.7 m. Scale comes from the 1 m bar (about 47 px), which fits the front view (door about 1.1 x 1.8 m). The views disagree: the top view shows a wider gatehouse, and the side views show higher banks and sloped ends. So the widths, depths and end slopes are a compromise between the views."}

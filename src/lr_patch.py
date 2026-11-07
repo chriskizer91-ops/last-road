@@ -34,6 +34,9 @@ B = "/* ========================================================================
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'
-s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '</script>\n' + s[i:]
+import base64, os
+HERON = os.path.join(sys.path[0], '..', 'models/heron/paint/redtail-2-heron.webp')
+heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n'
+s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '\n' + heron + '</script>\n' + s[i:]
 open(dst, 'w', encoding='utf-8').write(s)
 print('written', dst, len(s))

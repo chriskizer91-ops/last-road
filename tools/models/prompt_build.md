@@ -21,7 +21,8 @@ Write two things, in this order, and nothing else:
   on +x: cam [1,0,0]; the side on -x: cam [-1,0,0] (up [0,1,0]). Top: cam [0,1,0] and up = whichever model direction
   points up the picture (e.g. [0,0,-1] when the front is at the bottom of the top view).
 - List ONLY the flat, straight-on views (front, back, sides, top). Leave out three-quarter and perspective drawings and
-  photos of the whole scene.
+  photos of the whole scene. But list EVERY flat view the sheet has: when it draws both sides, list both (one on +x,
+  one on -x); a face no view shows gets only a guess at its colour.
 
 2. A JavaScript block (```js) with exactly one function: function build(THREE) { ... } that returns a THREE.Group
    (for one object), or a plain object { <name>: THREE.Group, ... } with the same names as the JSON (for several).

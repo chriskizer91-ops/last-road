@@ -1,0 +1,42 @@
+{
+ "left-side": {
+  "iou": 0.863,
+  "scale_px_per_m": [
+   86.5,
+   87.1
+  ],
+  "turn_deg": -0.1
+ },
+ "right-side": {
+  "iou": 0.86,
+  "scale_px_per_m": [
+   86.6,
+   87.1
+  ],
+  "turn_deg": 0.12
+ },
+ "top": {
+  "iou": 0.962,
+  "scale_px_per_m": [
+   68.5,
+   68.3
+  ],
+  "turn_deg": 0.0
+ },
+ "underside": {
+  "iou": 0.963,
+  "scale_px_per_m": [
+   68.7,
+   68.3
+  ],
+  "turn_deg": 0.0
+ },
+ "front": {
+  "iou": 0.752,
+  "scale_px_per_m": [
+   40.4,
+   40.5
+  ],
+  "turn_deg": -0.03
+ }
+}

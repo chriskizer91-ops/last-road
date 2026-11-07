@@ -1,0 +1,8 @@
+{"objects": [{"name": "channel_marker_stone", "size_m": [0.51, 1.35, 0.615],
+  "views": [
+    {"label": "Front", "box": [37, 54, 263, 668], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [295, 56, 567, 651], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [597, 56, 839, 651], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [466, 749, 844, 949], "cam": [0, 1, 0], "up": [1, 0, 0]}
+  ]}],
+ "notes": "An L-shaped marker stone. It has an upright slab with a shallow gabled top and a recessed niche holding a carved hand in relief. A groove runs down from below the niche and continues forward along a footplate at the base. From the 1 m scale bar (about 440 px) it is about 1.35 m tall, 0.51 m wide and 0.62 m deep, with a footplate projecting about 0.36 m. The back face leans in slightly, 0.26 m thick at the base and 0.195 m at the shoulder. The second 'Side' view also shows the footplate pointing right, so it is a mirrored copy and cannot be the +x side; only the first is listed, as the -x side. The top view draws the footplate about twice as long as the side view does, so the model follows the front, side and back views and the scale bar."}
