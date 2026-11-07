@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 281 s 3703 in 29844 out end_turn
+built {'cathedral_mound': {'tris': 2548, 'size': [1.733, 3.221, 1.72], 'min': [-0.86, -0.026, -0.86]}, 'spired_mound': {'tris': 1141, 'size': [1.741, 1.867, 1.72], 'min': [-0.863, -0.027, -0.86]}, 'dome_mound': {'tris': 624, 'size': [1.65, 1.149, 1.64], 'min': [-0.83, 0, -0.82]}}
+painted {'cathedral_mound': {'front': 0.917}, 'dome_mound': {'front': 0.882}, 'spired_mound': {'front': 0.91}} 65s
+helper: done claude-opus-5-5 xhigh 104 s 11304 in 11472 out end_turn
+built {'cathedral_mound': {'tris': 2548, 'size': [1.733, 3.195, 1.72], 'min': [-0.86, 0, -0.86]}, 'spired_mound': {'tris': 1141, 'size': [1.741, 1.84, 1.72], 'min': [-0.863, 0, -0.86]}, 'dome_mound': {'tris': 624, 'size': [1.65, 1.149, 1.64], 'min': [-0.83, 0, -0.82]}}
+painted {'cathedral_mound': {'front': 0.918}, 'dome_mound': {'front': 0.882}, 'spired_mound': {'front': 0.911}} 307s
+done

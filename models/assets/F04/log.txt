@@ -1,3 +1,7 @@
 helper: done claude-opus-5-5 xhigh 509 s 3697 in 55768 out end_turn
 built {'bush_dense': {'tris': 1394, 'size': [3.48, 2.114, 3.032], 'min': [-1.757, -0.014, -1.539]}, 'bush_half_dead': {'tris': 1138, 'size': [2.968, 1.788, 2.45], 'min': [-1.541, -0.013, -1.27]}, 'bush_clump': {'tris': 2416, 'size': [5.011, 1.333, 1.946], 'min': [-2.52, -0.003, -0.925]}}
 painted {'bush_clump': {'Clump (three) – side': 0.694, 'Clump (three) – top': 0.858}, 'bush_dense': {'Dense – side': 0.774, 'Dense – top': 0.913}, 'bush_half_dead': {'Half-dead – side': 0.654, 'Half-dead – top': 0.774}} 335s
+helper: done claude-opus-5-5 xhigh 323 s 12767 in 33451 out end_turn
+built {'bush_dense': {'tris': 1494, 'size': [3.108, 2.128, 2.724], 'min': [-1.575, -0.028, -1.372]}, 'bush_half_dead': {'tris': 1448, 'size': [2.838, 1.788, 2.331], 'min': [-1.41, -0.013, -1.151]}, 'bush_clump': {'tris': 2792, 'size': [4.827, 1.337, 1.832], 'min': [-2.43, -0.007, -0.933]}}
+painted {'bush_clump': {'Clump (three) – side': 0.73, 'Clump (three) – top': 0.858}, 'bush_dense': {'Dense – side': 0.768, 'Dense – top': 0.911}, 'bush_half_dead': {'Half-dead – side': 0.672, 'Half-dead – top': 0.767}} 48s
+done

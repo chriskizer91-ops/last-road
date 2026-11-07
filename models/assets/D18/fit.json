@@ -46,14 +46,6 @@
   }
  },
  "table": {
-  "Front": {
-   "iou": 0.313,
-   "turn_deg": 0.0
-  },
-  "Back": {
-   "iou": 0.29,
-   "turn_deg": 0.0
-  },
   "Top": {
    "iou": 0.891,
    "turn_deg": -1.27
@@ -83,24 +75,24 @@
  },
  "wreck": {
   "Front": {
-   "iou": 0.527,
-   "turn_deg": -3.04
+   "iou": 0.673,
+   "turn_deg": -3.95
   },
   "Back": {
-   "iou": 0.499,
-   "turn_deg": 3.09
+   "iou": 0.668,
+   "turn_deg": 4.04
   },
   "Side": {
-   "iou": 0.634,
-   "turn_deg": 3.3
+   "iou": 0.648,
+   "turn_deg": 3.25
   },
   "Top": {
-   "iou": 0.627,
-   "turn_deg": -1.11
+   "iou": 0.618,
+   "turn_deg": -1.08
   },
   "texels": {
-   "covered": 244513,
-   "seen": 159579
+   "covered": 217824,
+   "seen": 154012
   }
  }
 }

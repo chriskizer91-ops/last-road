@@ -68,7 +68,7 @@ swap("fogCol:[.6,.7,.88],fogDen:.0011,fogFall:.02,", "fogCol:[.6,.7,.88],fogDen:
 swap("fogCol:[.46,.39,.34],fogDen:.0008,fogFall:.025,", "fogCol:[.46,.39,.34],fogDen:.00013,fogFall:.004,")
 swap("fogCol:[.03,.04,.07],fogDen:.0017,fogFall:.03,", "fogCol:[.03,.04,.07],fogDen:.0005,fogFall:.006,")
 # HIS MODELS IN THE WORLD (src/lr-game.js lrProps*): drawn after the chunks' own buildings, and into the sun's shadow
-swap("let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}", "let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}\n  tp+=lrPropsDraw(u,e,F,probe);")
+swap("let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}", "let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}\n  tp+=lrPropsDraw(u,e,F,probe);tp+=lraDraw(u,e,F,probe);")
 swap("gl.uniformMatrix4fv(u.uM,false,W_ID);\n  return tris+(DEVW.off.trees?0:drawTreeList(", "tris+=lrPropsShadow(u,F,e,maxD);\n  gl.uniformMatrix4fv(u.uM,false,W_ID);\n  return tris+(DEVW.off.trees?0:drawTreeList(")
 # THE TRUCK AND THE HERON (src/lr-game.js lrPark*, lrSwap): the one you're not in, drawn where it waits, and into the shadows
 swap("let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);", "let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);lrSwapUI();tris+=lrParkedDraw(c.eye);tris+=lrHandsDraw();")

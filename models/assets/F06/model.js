@@ -96,11 +96,12 @@ function build(THREE) {
     }
   }
 
-  // 1. long large boulder (~11 m loaf, high shoulder on the left, tapering tail on the right)
+  // 1. long large boulder (~11 m loaf, high shoulder on the left, smooth taper to a rounded nose on the right)
   const g1 = new THREE.Group();
   const d1 = dome(g1, 6.0, 4.3, 0.3, 24, 4);
-  g1.add(blob({ x: -0.9, yc: 1.0, R: 4.75, Rz: 3.0, up: 3.2, down: 1.3, pUp: 2.7, pDown: 4, seg: 32, nUp: 10, nDown: 4 }));
-  g1.add(blob({ x: 3.5, yc: 1.0, R: 1.85, Rz: 1.8, up: 2.15, down: 1.3, pUp: 2.0, pDown: 3, seg: 20, nUp: 8, nDown: 3 }));
+  g1.add(blob({ x: -0.9, yc: 0.95, R: 4.75, Rz: 3.0, up: 2.98, down: 1.25, pUp: 2.7, pDown: 4, seg: 32, nUp: 10, nDown: 4 }));
+  // long low tail lobe, kept under the main profile so the back falls away smoothly
+  g1.add(blob({ x: 2.3, yc: 0.95, R: 3.0, Rz: 2.3, up: 2.05, down: 1.25, pUp: 2.0, pDown: 3, seg: 24, nUp: 8, nDown: 3 }));
   grass(g1, d1, [
     [-5.75, 0.6, 0.8], [-5.4, 1.6, 0.7], [-4.7, 2.5, 0.6], [-3.8, 3.1, 0.55], [-2.2, 3.4, 0.6],
     [-0.6, 3.5, 0.5], [0.9, 3.4, 0.6], [2.4, 3.1, 0.55], [3.8, 2.6, 0.6], [5.1, 1.6, 0.6],
@@ -110,8 +111,8 @@ function build(THREE) {
   // 2. split boulder: two half-domes, the right half leaning away
   const g2 = new THREE.Group();
   const d2 = dome(g2, 3.6, 3.0, 0.2, 24, 4);
-  g2.add(halfBlob({ xCut: -0.14, tilt: 0.0, side: -1, yc: 1.0, R: 2.85, Rz: 2.3, up: 1.8, down: 1.3, pUp: 2.5, pDown: 3, seg: 16, nUp: 8, nDown: 4 }));
-  g2.add(halfBlob({ xCut: 0.0, tilt: -0.1, side: 1, yc: 1.0, R: 2.65, Rz: 2.2, up: 1.85, down: 1.3, pUp: 2.2, pDown: 3, seg: 16, nUp: 8, nDown: 4 }));
+  g2.add(halfBlob({ xCut: -0.14, tilt: 0.0, side: -1, yc: 0.95, R: 2.85, Rz: 2.3, up: 1.62, down: 1.25, pUp: 2.5, pDown: 3, seg: 16, nUp: 8, nDown: 4 }));
+  g2.add(halfBlob({ xCut: 0.0, tilt: -0.1, side: 1, yc: 0.95, R: 2.65, Rz: 2.2, up: 1.65, down: 1.25, pUp: 2.2, pDown: 3, seg: 16, nUp: 8, nDown: 4 }));
   grass(g2, d2, [
     [-3.3, 0.6, 1.0], [-2.9, 1.6, 0.8], [-2.0, 2.3, 0.6], [-0.6, 2.6, 0.5], [0.07, 1.9, 0.6],
     [1.2, 2.5, 0.7], [2.3, 2.0, 0.85], [3.0, 1.0, 0.9], [3.3, -0.2, 0.8], [-3.2, -0.9, 0.7],
@@ -121,8 +122,8 @@ function build(THREE) {
   // 3. balanced boulder: round ball resting on a flat slab
   const g3 = new THREE.Group();
   const d3 = dome(g3, 2.97, 2.6, 0.2, 24, 4);
-  g3.add(blob({ x: -0.19, yc: 0.6, R: 2.33, Rz: 1.9, up: 0.85, down: 0.9, pUp: 3, pDown: 3, seg: 32, nUp: 7, nDown: 3 }));
-  g3.add(blob({ x: 0.52, yc: 2.72, R: 1.67, Rz: 1.55, up: 1.51, down: 1.4, pUp: 2.3, pDown: 2.3, seg: 28, nUp: 8, nDown: 6 }));
+  g3.add(blob({ x: -0.19, yc: 0.5, R: 2.33, Rz: 1.9, up: 0.8, down: 0.8, pUp: 3, pDown: 3, seg: 32, nUp: 7, nDown: 3 }));
+  g3.add(blob({ x: 0.52, yc: 2.5, R: 1.67, Rz: 1.55, up: 1.47, down: 1.36, pUp: 2.3, pDown: 2.3, seg: 28, nUp: 8, nDown: 6 }));
   grass(g3, d3, [
     [-2.6, 0.5, 0.7], [-2.3, 1.4, 0.6], [-1.0, 2.1, 0.5], [0.6, 2.2, 0.55], [1.9, 1.6, 0.7],
     [2.45, 0.6, 1.1], [2.5, -0.6, 0.9], [-2.4, -1.0, 0.6], [0.3, -2.2, 0.5]
@@ -131,7 +132,7 @@ function build(THREE) {
   // 4. extra-small boulder (~1 m)
   const g4 = new THREE.Group();
   const d4 = dome(g4, 0.78, 0.7, 0.08, 16, 3);
-  g4.add(blob({ x: -0.02, yc: 0.36, R: 0.53, Rz: 0.5, up: 0.5, down: 0.45, pUp: 2.4, pDown: 3.5, seg: 20, nUp: 6, nDown: 3 }));
+  g4.add(blob({ x: -0.02, yc: 0.32, R: 0.53, Rz: 0.5, up: 0.45, down: 0.41, pUp: 2.4, pDown: 3.5, seg: 20, nUp: 6, nDown: 3 }));
   grass(g4, d4, [
     [-0.62, 0.15, 0.4], [-0.5, 0.45, 0.3], [0.6, 0.2, 0.35], [0.45, 0.48, 0.3], [0.0, 0.62, 0.22], [-0.3, -0.55, 0.3]
   ]);
@@ -139,7 +140,7 @@ function build(THREE) {
   // 5. small boulder (~1.6 m)
   const g5 = new THREE.Group();
   const d5 = dome(g5, 1.12, 0.95, 0.1, 16, 3);
-  g5.add(blob({ x: 0.06, yc: 0.6, R: 0.82, Rz: 0.75, up: 0.64, down: 0.7, pUp: 3, pDown: 3, seg: 20, nUp: 7, nDown: 3 }));
+  g5.add(blob({ x: 0.06, yc: 0.55, R: 0.82, Rz: 0.75, up: 0.6, down: 0.65, pUp: 3, pDown: 3, seg: 20, nUp: 7, nDown: 3 }));
   grass(g5, d5, [
     [-0.9, 0.2, 0.55], [-0.75, 0.6, 0.45], [0.95, 0.15, 0.5], [0.75, 0.55, 0.4], [0.1, 0.8, 0.3],
     [-0.6, -0.6, 0.4], [0.5, -0.65, 0.35]
@@ -148,7 +149,7 @@ function build(THREE) {
   // 6. medium boulder (~2.2 m)
   const g6 = new THREE.Group();
   const d6 = dome(g6, 1.44, 1.25, 0.12, 20, 3);
-  g6.add(blob({ x: -0.01, yc: 0.85, R: 1.12, Rz: 1.0, up: 0.8, down: 1.0, pUp: 2.4, pDown: 4, seg: 24, nUp: 8, nDown: 4 }));
+  g6.add(blob({ x: -0.01, yc: 0.78, R: 1.12, Rz: 1.0, up: 0.74, down: 0.93, pUp: 2.4, pDown: 4, seg: 24, nUp: 8, nDown: 4 }));
   grass(g6, d6, [
     [-1.2, 0.2, 0.75], [-1.0, 0.65, 0.6], [1.2, 0.25, 0.7], [0.95, 0.7, 0.55], [0.1, 1.05, 0.4],
     [-0.6, -0.95, 0.5], [0.7, -0.9, 0.45]
@@ -157,7 +158,7 @@ function build(THREE) {
   // 7. large loose boulder (~2.8 m)
   const g7 = new THREE.Group();
   const d7 = dome(g7, 1.88, 1.55, 0.15, 20, 3);
-  g7.add(blob({ x: 0.1, yc: 0.9, R: 1.42, Rz: 1.25, up: 1.03, down: 1.1, pUp: 2.3, pDown: 4, seg: 24, nUp: 8, nDown: 4 }));
+  g7.add(blob({ x: 0.1, yc: 0.82, R: 1.42, Rz: 1.25, up: 0.93, down: 1.02, pUp: 2.3, pDown: 4, seg: 24, nUp: 8, nDown: 4 }));
   grass(g7, d7, [
     [-1.55, 0.25, 0.9], [-1.35, 0.75, 0.7], [1.65, 0.25, 0.85], [1.45, 0.8, 0.7], [0.1, 1.3, 0.45],
     [-0.7, 1.2, 0.4], [-0.9, -1.15, 0.55], [0.9, -1.15, 0.5]

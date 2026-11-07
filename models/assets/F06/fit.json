@@ -1,72 +1,72 @@
 {
  "boulder_balanced": {
   "front": {
-   "iou": 0.789,
-   "turn_deg": -1.82
+   "iou": 0.791,
+   "turn_deg": -1.34
   },
   "texels": {
-   "covered": 695083,
-   "seen": 223712
+   "covered": 718120,
+   "seen": 213114
   }
  },
  "boulder_l": {
   "front": {
-   "iou": 0.873,
-   "turn_deg": 0.84
+   "iou": 0.87,
+   "turn_deg": 0.48
   },
   "texels": {
-   "covered": 717122,
-   "seen": 251766
+   "covered": 760569,
+   "seen": 250349
   }
  },
  "boulder_long_large": {
   "front": {
-   "iou": 0.892,
-   "turn_deg": -2.34
+   "iou": 0.898,
+   "turn_deg": -2.7
   },
   "texels": {
-   "covered": 740306,
-   "seen": 224683
+   "covered": 771976,
+   "seen": 201715
   }
  },
  "boulder_m": {
   "front": {
-   "iou": 0.909,
-   "turn_deg": -1.54
+   "iou": 0.906,
+   "turn_deg": -1.75
   },
   "texels": {
-   "covered": 731722,
-   "seen": 265972
+   "covered": 774830,
+   "seen": 261726
   }
  },
  "boulder_s": {
   "front": {
-   "iou": 0.884,
-   "turn_deg": 0.01
+   "iou": 0.888,
+   "turn_deg": -0.09
   },
   "texels": {
-   "covered": 792060,
-   "seen": 278079
+   "covered": 791274,
+   "seen": 258852
   }
  },
  "boulder_split": {
   "front": {
-   "iou": 0.892,
-   "turn_deg": -0.39
+   "iou": 0.889,
+   "turn_deg": -0.5
   },
   "texels": {
-   "covered": 628077,
-   "seen": 124089
+   "covered": 635867,
+   "seen": 119965
   }
  },
  "boulder_xs": {
   "front": {
-   "iou": 0.875,
-   "turn_deg": -0.78
+   "iou": 0.866,
+   "turn_deg": -1.16
   },
   "texels": {
-   "covered": 777527,
-   "seen": 239247
+   "covered": 790700,
+   "seen": 227601
   }
  }
 }

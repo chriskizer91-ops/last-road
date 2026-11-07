@@ -369,3 +369,58 @@ function lrHandsDraw(){
   const T=[[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]];
   for(const [loc,t,unit] of T){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);
   drawMesh(m);return m.tris;}
+
+/* ---------- LIFE AT A DISTANCE (Fable's: animals are seen far off, because they run before you're close): herds in
+   some of the 2.5 km squares round you, chosen by the land (cattle near the station, antelope on the savanna, oryx
+   and camels at the dune's edge, flamingos and cranes on the delta), grazing and drifting; come within a few hundred
+   metres (less on foot, more in the Heron) and they run from you. Vultures wheel high over the savanna. His animal
+   models (G01-G08) ---------- */
+const LRA={herds:new Map(),birds:new Map(),M:new Float32Array(16),drawn:0,tris:0};
+const LRA_KIND={cattle:{id:'G01',n:[6,14],sp:30,run:8},antelope:{id:'G02',n:[8,22],sp:55,run:15},oryx:{id:'G06',n:[4,9],sp:40,run:13},
+  camel:{id:'G07',n:[3,7],sp:35,run:7},flamingo:{id:'G05',n:[18,40],sp:70,run:0},crane:{id:'G08',n:[4,10],sp:30,run:0},cat:{id:'G04',n:[1,1],sp:0,run:10}};
+const lraHash=(a,b,s)=>{let h=Math.imul(a|0,0x27d4eb2d)^Math.imul(b|0,0x165667b1)^Math.imul(s|0,0x9e3779b1);h=Math.imul(h^(h>>>15),0x85ebca6b);h=Math.imul(h^(h>>>13),0xc2b2ae35);return ((h^(h>>>16))>>>0)/4294967296;};
+function lraObjs(id){const E=window.LR_PROPS&&LR_PROPS[id];return E?Object.keys(E):[];}
+/* what lives in a square, if anything (decided by its middle's land, the same every visit) */
+function lraHerdFor(a,b){
+  const C=2500,x=(a+.3+.4*lraHash(a,b,1))*C,z=(b+.3+.4*lraHash(a,b,2))*C,R=WG.gtRegions(x,z,{}),r=lraHash(a,b,3);let kind=null;
+  if(R.delta>.6&&!R.pans)kind=r<.55?'flamingo':r<.85?'crane':null;
+  else if(R.sav>.7){const ks=WG.GTS[1],dk=Math.hypot(x-ks.x,z-ks.z);kind=dk<7000&&r<.5?'cattle':r<.45?'antelope':r<.52?'cat':null;}
+  else if(R.dune>.3&&R.dune<.85)kind=r<.25?'oryx':r<.4?'camel':null;
+  else if(R.cany>.6)kind=r<.15?'oryx':null;
+  if(!kind||!lraObjs(LRA_KIND[kind].id).length)return null;
+  const K=LRA_KIND[kind],n=K.n[0]+Math.floor(lraHash(a,b,4)*(K.n[1]-K.n[0]+1)),obj=lraObjs(K.id),mem=[];
+  for(let k=0;k<n;k++){const an=lraHash(a*31+k,b,5)*6.283,rr=K.sp*Math.sqrt(lraHash(a,b*17+k,6));mem.push({dx:Math.cos(an)*rr,dz:Math.sin(an)*rr,yaw:lraHash(k,a,7)*6.283,obj:obj[Math.floor(lraHash(k,b,8)*obj.length)],ph:lraHash(k,a+b,9)*6.283});}
+  return {kind,K,x,z,h:lraHash(a,b,10)*6.283,mem,run:0,gone:false};}
+function lraTick(dt,P,foot,air){
+  const C=2500,ca=Math.floor(P[0]/C),cb=Math.floor(P[2]/C);
+  for(let a=ca-1;a<=ca+1;a++)for(let b=cb-1;b<=cb+1;b++){const k=a+','+b;if(!LRA.herds.has(k))LRA.herds.set(k,lraHerdFor(a,b));}
+  for(const [k,H] of LRA.herds){if(!H)continue;const d=Math.hypot(H.x-P[0],H.z-P[2]);if(d>6000){LRA.herds.delete(k);continue;}
+    /* (afraid of you inside this: on foot least, the Heron overhead most) */
+    const fear=(foot?170:air?260:320)*(H.K.run?1:.7);
+    if(d<fear&&H.K.run){const ux=(H.x-P[0])/(d||1),uz=(H.z-P[2])/(d||1);H.h=Math.atan2(uz,ux);H.run=Math.min(1,H.run+dt*1.5);}
+    else{H.run=Math.max(0,H.run-dt*.4);H.h+=(lraHash(Math.floor(performance.now()/7000),k.length,11)-.5)*dt*.2;}
+    const sp=H.run*H.K.run+.25*(1-H.run)*(H.K.run?1:.3);H.x+=Math.cos(H.h)*sp*dt;H.z+=Math.sin(H.h)*sp*dt;
+    /* (birds on the water lift off and go when you're right on them) */
+    if(!H.K.run&&d<(foot?120:200))H.gone=true;}}
+function lraDraw(u,e,F,probe){
+  if(probe||typeof WG==='undefined'||!WG.gtPlace||!window.LR_PROPS)return 0;const t=GAME.car;if(!t)return 0;
+  const P=LRW.on?LRW.p:t.p,air=!!t.rt&&t.p[1]-RANCH.W.heightAt(t.p[0],t.p[2])>20;const now=performance.now(),dt=Math.min(.1,LRA.tl?(now-LRA.tl)/1000:1/60);LRA.tl=now;lraTick(dt,P,LRW.on,air);
+  lrPropTex1();if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
+  let tris=0,n=0;const M=LRA.M,o={},tnow=performance.now()/1000;
+  const one=(key,x,y,z,yaw,lift)=>{if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}return;}const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)return;
+    if(!boxVisible(F,[x-4,y-1,z-4],[x+4,y+6,z+4]))return;const c=Math.cos(yaw),s=Math.sin(yaw);
+    M[0]=c;M[1]=0;M[2]=-s;M[3]=0;M[4]=0;M[5]=1;M[6]=0;M[7]=0;M[8]=s;M[9]=0;M[10]=c;M[11]=0;M[12]=x-RO[0];M[13]=y+lift-RO[1];M[14]=z-RO[2];M[15]=1;gl.uniformMatrix4fv(u.uM,false,M);
+    const U=[[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]];for(const [loc,tt,unit] of U){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,tt);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);
+    drawMesh(m);tris+=m.tris;n++;};
+  for(const H of LRA.herds.values()){if(!H||H.gone)continue;const d=Math.hypot(H.x-e[0],H.z-e[2]);if(d>2600)continue;
+    /* (heading: the herd's way when running, each its own while grazing; the model's front, +z, turned to it) */
+    for(const q of H.mem){const x=H.x+q.dx,z=H.z+q.dz;if(q.y===undefined||H.run>0||q.t===undefined||tnow-q.t>2){q.y=WG.sample(x,z,o).h;q.t=tnow;if(o.code===WG.SF.water&&H.K.run)continue;}
+      const yaw=H.run>.3?Math.PI/2-H.h:q.yaw,lift=H.run>.3?Math.abs(Math.sin(tnow*7+q.ph))*.12:0;one(H.K.id+'/'+q.obj,x,q.y,z,yaw,lift);}}
+  /* vultures: in some savanna squares, a few wheeling high */
+  const C=2500,ca=Math.floor(e[0]/C),cb=Math.floor(e[2]/C),V=lraObjs('G03');
+  if(V.length)for(let a=ca-1;a<=ca+1;a++)for(let b=cb-1;b<=cb+1;b++){if(lraHash(a,b,21)>.3)continue;const x0=(a+.5)*C,z0=(b+.5)*C;if(Math.hypot(x0-e[0],z0-e[2])>3500)continue;
+    const R=WG.gtRegions(x0,z0,{});if(R.sav<.6)continue;const g=WG.sample(x0,z0,o).h,nb=3+Math.floor(lraHash(a,b,22)*4);
+    for(let k=0;k<nb;k++){const r=70+60*lraHash(a,b+k,23),w=.18+.06*lraHash(a+k,b,24),an=tnow*w+k*2.1,x=x0+Math.cos(an)*r,z=z0+Math.sin(an)*r;
+      one('G03/'+V[0],x,g+150+50*lraHash(a,k,25),z,-an,0);}}
+  LRA.drawn=n;LRA.tris=tris;return tris;}
+window.__lr=Object.assign(window.__lr||{},{LRA});

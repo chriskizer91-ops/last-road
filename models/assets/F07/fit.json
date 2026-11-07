@@ -1,0 +1,32 @@
+{
+ "cathedral_mound": {
+  "front": {
+   "iou": 0.918,
+   "turn_deg": -0.03
+  },
+  "texels": {
+   "covered": 437511,
+   "seen": 105209
+  }
+ },
+ "dome_mound": {
+  "front": {
+   "iou": 0.882,
+   "turn_deg": -0.73
+  },
+  "texels": {
+   "covered": 543704,
+   "seen": 105076
+  }
+ },
+ "spired_mound": {
+  "front": {
+   "iou": 0.911,
+   "turn_deg": 0.67
+  },
+  "texels": {
+   "covered": 602885,
+   "seen": 164973
+  }
+ }
+}

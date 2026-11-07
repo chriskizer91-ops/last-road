@@ -14,8 +14,6 @@
    ]},
   {"name": "table", "size_m": [1.0, 0.62, 0.56],
    "views": [
-     {"label": "Front", "box": [589, 127, 652, 167], "cam": [0, 0, 1], "up": [0, 1, 0]},
-     {"label": "Back", "box": [173, 382, 237, 430], "cam": [0, 0, -1], "up": [0, 1, 0]},
      {"label": "Top", "box": [1255, 412, 1311, 461], "cam": [0, 1, 0], "up": [0, 0, -1]}
    ]},
   {"name": "crate", "size_m": [0.74, 0.44, 0.56],
@@ -35,4 +33,4 @@
      {"label": "Top", "box": [1362, 475, 1409, 512], "cam": [0, 1, 0], "up": [0, 0, -1]}
    ]}
  ],
- "notes": "Venn's camp: an upside-down, fabric-covered radial-engine monoplane (wheels in the air, -x wingtip crumpled), about 9.3 m span by 6.9 m long at the scale bar's ~64 px/m. Next to it are an A-frame tent (~1.7 m wide, 1.75 m high), a camp table, a crate, three jerry cans and a stone fire ring. The plane's top view is shorter in span relative to its length than the front and side views, so a compromise was used (span:length ~1.35). The crate can't be picked out in the front or back views, so only its top view is listed. None of the camp items has a side view."}
+ "notes": "Venn's camp: an upside-down, fabric-covered radial-engine monoplane (wheels in the air, -x wingtip crumpled), about 9.3 m span by 6.9 m long. Next to it are an A-frame tent, a camp table, a crate, three jerry cans and a stone fire ring. The wing lies pitched leading-edge-up with ragged fabric hanging to the ground; that is the band seen in the front and back views and the drape in the side view. The sheet's views disagree on span:length (top ~1.7, front/side ~1.0), so a compromise of ~1.35 is used. The table's front and back crops are mostly tent canvas, so only its top view is listed. The crate is hidden in the front and back views. None of the camp items has a side view."}

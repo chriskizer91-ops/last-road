@@ -21,6 +21,9 @@ window.LRT_T = (() => {
     take() { const { JOB, jobListen } = __lrJ(); if (!JOB.near) return { err: 'nobody near' }; jobListen(JOB.near.who); const face = document.getElementById('jdFace'); const r = { title: document.getElementById('jdTitle').textContent, face: face && !face.hidden };
       document.getElementById('jdYes').click(); return r; },
     markDone(id) { const d = __lrJ().jRec(); d.quests[id] = { done: true, at: Date.now() }; return Object.keys(d.quests); },
+    alias(a, b) { window.LR_PROPS[a] = window.LR_PROPS[b]; L.LRA.herds.clear(); return Object.keys(window.LR_PROPS).length; },
+    life() { const A = L.LRA; let h = 0, run = 0, near = 1e9; const t = car(); for (const H of A.herds.values()) if (H) { h++; if (H.run > .3) run++; const dd = Math.hypot(H.x - t.p[0], H.z - t.p[2]); if (dd < near) { near = dd; A.nh = H; } } const N = A.nh; return { herds: h, running: run, nearest: Math.round(near), at: N ? [Math.round(N.x), Math.round(N.z), N.kind, N.mem.length] : null, drawn: A.drawn }; },
+    nearHerd(d) { const N = L.LRA.nh; if (!N) return null; D.placeCar(N.x + d, N.z, Math.PI); D.setTestInput({ steer: 0, thr: 0, brk: 0, hb: 1, nos: false }); return [Math.round(N.x), Math.round(N.z)]; },
     shut() { __lrJ().closeJobDialog(); return { state: D.GAME.state }; },
     people() { return Object.fromEntries(Object.entries(__lrJ().PEOPLE).map(([k, p]) => [k, [Math.round(p.x), Math.round(p.z)]])); },
     props() { const P = L.LRP; return { made: P.mesh.size, tex: P.tex.size, drawn: P.drawn, tris: P.tris }; },

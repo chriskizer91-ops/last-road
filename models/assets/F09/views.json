@@ -1,0 +1,26 @@
+{"objects": [
+  {"name": "sandstone_block", "size_m": [4.52, 1.95, 2.55],
+   "views": [
+     {"label": "front", "box": [30, 14, 523, 229], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "right side", "box": [565, 17, 843, 229], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [897, 14, 1284, 243], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "leaning_slab", "size_m": [6.44, 1.72, 1.0],
+   "views": [
+     {"label": "front (long side)", "box": [30, 246, 732, 438], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "end (right)", "box": [770, 246, 889, 441], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [912, 332, 1500, 420], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "stepped_ledge", "size_m": [9.72, 1.98, 3.4],
+   "views": [
+     {"label": "front", "box": [18, 462, 1078, 682], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "left side", "box": [1118, 462, 1488, 683], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [62, 717, 1012, 980], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "boulder_large", "size_m": [1.8, 1.17, 1.13],
+   "views": [
+     {"label": "front", "box": [1075, 707, 1272, 839], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "right side", "box": [1297, 709, 1422, 839], "cam": [1, 0, 0], "up": [0, 1, 0]}]},
+  {"name": "boulder_small", "size_m": [1.42, 0.73, 1.1],
+   "views": [
+     {"label": "front", "box": [1078, 866, 1234, 950], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "right side", "box": [1283, 863, 1406, 950], "cam": [1, 0, 0], "up": [0, 1, 0]}]}
+ ],
+ "notes": "Set of five red cross-bedded sandstone pieces. The scale bar gives 1 m = 109 px. These are a squared fallen block (about 4.2 x 1.9 x 2.3 m plus rubble), a 6.4 m wedge slab leaning about 15 degrees on rubble, a 9.4 m three-step ledge (steps descend toward the front) with dry grass, and two small boulders shown as front/side pairs. Unclear: the three top views are drawn about 10 to 25% smaller than their elevations, so sizes follow the front and side views. The boulder pairing is inferred from matching heights."}

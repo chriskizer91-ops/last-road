@@ -84,8 +84,8 @@ function build(THREE) {
     const F0 = 2.72, F1 = -3.35;
     const tf = z => (F0 - z) / (F0 - F1);
     const cy = z => 0.65 + 0.325 * tf(z);
-    const hw = z => 0.5 - 0.4 * tf(z);
-    const hh = z => 0.47 - 0.375 * tf(z);
+    const hw = z => 0.5 - 0.36 * tf(z);
+    const hh = z => 0.94 * hw(z);
     const tilt = Math.atan(0.325 / (F0 - F1));
     function seg(z0, z1, name, grow) {
       const m = mk(new THREE.CylinderGeometry(Math.SQRT2 * (hw(z0) + grow), Math.SQRT2 * (hw(z1) + grow),
@@ -111,54 +111,75 @@ function build(THREE) {
     }
     for (const sy of [-1, 1]) g.add(rod(corner(-1, sy, zA), corner(1, sy, zB), 0.016, 'rusty_iron', 6));
 
-    // wings
-    const WZ = 1.79, WC = 0.89, WT = 0.12, RY = 0.56, DR = 0.085;
-    function panel(x0, x1, r0, r1, p, rot) {
-      const pg = new THREE.Group();
-      pg.position.copy(p);
-      pg.rotation.set(rot[0], rot[1], rot[2]);
+    // wings: pitched leading-edge-up, drooping to the ground at the tips
+    const WZ = 1.84, WC = 0.82, WT = 0.12, RY = 0.6, DR = 0.085, PT = -0.25;
+    function slab(x0, x1, r0, r1) {
       const m = extrude(planShape(x0, x1, WC, r0, r1), WT, 'aged_fabric');
       m.rotation.x = -Math.PI / 2;
-      pg.add(m);
-      return pg;
+      return m;
     }
-    g.add(panel(0, 4.7, 0, 0.75, V(0, RY, WZ), [0, 0, -DR]));      // +x wing, intact
-    g.add(panel(-3.0, 0, 0, 0, V(0, RY, WZ), [0, 0, DR]));          // -x inner wing
-    const p1 = V(-3.0 * Math.cos(DR), RY - 3.0 * Math.sin(DR), WZ);
-    const rotMid = [0.08, 0.06, -0.45];
-    g.add(panel(-1.0, 0, 0, 0, p1, rotMid));                        // crumpled, bent up
-    const p2 = p1.clone().add(V(-1.0, 0, 0).applyEuler(new THREE.Euler(rotMid[0], rotMid[1], rotMid[2])));
-    g.add(panel(-0.9, 0, 0.65, 0, p2, [-0.06, -0.12, 0.85]));       // tip folded down
-    const ribs = [
-      [[-2.95, 0.34, 2.3], [-3.45, 0.52, 2.55]],
-      [[-3.3, 0.48, 2.35], [-3.5, 0.9, 2.6]],
-      [[-3.6, 0.62, 1.3], [-3.75, 0.95, 1.05]],
-      [[-3.9, 0.74, 2.0], [-4.1, 0.95, 2.32]],
-      [[-4.15, 0.35, 1.6], [-4.5, 0.12, 1.3]]
+    function hinge(parent, p, rot) {
+      const h = new THREE.Group();
+      h.position.copy(p);
+      h.rotation.set(rot[0], rot[1], rot[2]);
+      parent.add(h);
+      return h;
+    }
+    const wingR = hinge(g, V(0, RY, WZ), [PT, 0, -DR]);          // +x wing, intact
+    wingR.add(slab(0, 4.7, 0, 0.75));
+    const wingL = hinge(g, V(0, RY, WZ), [PT, 0, DR]);           // -x inner wing
+    wingL.add(slab(-3.0, 0, 0, 0));
+    const wingM = hinge(wingL, V(-3.0, 0, 0), [0.25, 0.06, -0.535]); // crumpled, bent up
+    wingM.add(slab(-1.0, 0, 0, 0));
+    const wingT = hinge(wingM, V(-1.0, 0, 0), [-0.06, -0.12, 1.3]);  // tip folded down
+    wingT.add(slab(-0.9, 0, 0.65, 0));
+    const ribSets = [
+      [wingL, [[-2.75, 0.12, 0.55], [-2.95, 0.4, 0.98]]],
+      [wingL, [[-2.85, 0.12, -0.3], [-3.0, 0.36, -0.9]]],
+      [wingM, [[-0.25, 0.12, 0.45], [-0.4, 0.5, 0.95]]],
+      [wingM, [[-0.65, 0.12, -0.35], [-0.8, 0.42, -0.98]]],
+      [wingM, [[-0.95, 0.06, 0.15], [-1.3, 0.2, 0.5]]],
+      [wingT, [[-0.35, 0.12, 0.3], [-0.65, 0.45, 0.72]]],
+      [wingT, [[-0.45, 0.06, -0.35], [-0.85, 0.05, -0.7]]]
     ];
-    for (const [a, b] of ribs) g.add(rod(V(a[0], a[1], a[2]), V(b[0], b[1], b[2]), 0.018, 'rusty_iron', 6));
+    for (const [par, [a, b]] of ribSets) par.add(rod(V(a[0], a[1], a[2]), V(b[0], b[1], b[2]), 0.018, 'rusty_iron', 6));
 
-    // hanging fabric shreds along leading (+1) and trailing (-1) edges
-    const wb = x => RY - DR * Math.abs(x);
+    wingR.updateMatrix();
+    wingL.updateMatrix();
+    const onWing = (x, zc, yl) => V(x, yl, zc).applyMatrix4(x >= 0 ? wingR.matrix : wingL.matrix);
+
+    // ragged fabric hanging from leading (+1) and trailing (-1) edges to the ground
     const shreds = [
-      [1.0, 1, 0.5, 0.04, 0.1], [1.8, 1, 0.38, 0.12, -0.08], [2.7, 1, 0.55, 0.05, 0.12],
-      [3.5, 1, 0.34, 0.08, 0.05], [4.15, 1, 0.3, 0.04, 0.1],
-      [1.35, -1, 0.42, 0.06, -0.1], [2.3, -1, 0.5, 0.1, 0.08], [3.25, -1, 0.36, 0.05, -0.06],
-      [-1.1, 1, 0.45, 0.05, 0.1], [-1.9, 1, 0.4, 0.1, -0.06], [-2.6, 1, 0.5, 0.04, 0.08],
-      [-1.5, -1, 0.45, 0.06, 0.06], [-2.45, -1, 0.38, 0.1, -0.08]
+      [0.75, 1, 0.45, 0.05, 0.08], [1.3, 1, 0.4, 0.18, -0.06], [1.85, 1, 0.5, 0.04, 0.1],
+      [2.45, 1, 0.42, 0.12, -0.05], [3.0, 1, 0.5, 0.05, 0.09], [3.55, 1, 0.38, 0.14, 0.04],
+      [3.95, 1, 0.3, 0.05, 0.1],
+      [1.05, -1, 0.42, 0.08, -0.1], [1.65, -1, 0.45, 0.03, 0.08], [2.2, -1, 0.36, 0.1, -0.06],
+      [2.8, -1, 0.48, 0.04, 0.07], [3.35, -1, 0.4, 0.06, -0.08],
+      [-0.85, 1, 0.45, 0.06, 0.1], [-1.45, 1, 0.4, 0.16, -0.06], [-2.0, 1, 0.5, 0.05, 0.08],
+      [-2.6, 1, 0.4, 0.1, -0.05],
+      [-1.15, -1, 0.45, 0.05, 0.06], [-1.8, -1, 0.4, 0.12, -0.08], [-2.4, -1, 0.38, 0.05, 0.07]
     ];
     for (const [x, e, w, bot, lean] of shreds) {
-      const top = wb(x) + 0.05;
+      const p = onWing(x, e * (WC - 0.03), 0.02);
+      const top = p.y + 0.02;
       const h = top - bot;
+      if (h < 0.06) continue;
       const pg = new THREE.Group();
-      pg.position.set(x, top, WZ + e * (WC - 0.03));
+      pg.position.set(p.x, top, p.z);
       pg.rotation.set(-e * lean, 0, lean * 0.4);
       pg.add(box(w, h, 0.012, 0, -h / 2, 0, 'aged_fabric'));
       g.add(pg);
     }
+    // fabric draped down the fuselage sides under the wing root, following the wing's slope
     for (const sx of [-1, 1]) {
-      const top = RY + 0.02, bot = 0.04;
-      g.add(box(0.012, top - bot, 1.05, sx * 0.6, (top + bot) / 2, 1.87, 'aged_fabric'));
+      const xs = sx * 0.55;
+      const yb = z => onWing(xs, z - WZ, 0).y + 0.03;
+      const pts = [[2.62, 0.05], [2.62, yb(2.62)], [1.08, yb(1.08)], [1.08, 0.12],
+        [1.3, 0.04], [1.62, 0.16], [1.95, 0.05], [2.28, 0.1]];
+      const m = extrude(polyShape(pts.map(([z, y]) => [-z, y])), 0.012, 'aged_fabric');
+      m.rotation.y = Math.PI / 2;
+      m.position.x = xs - 0.006;
+      g.add(m);
     }
 
     // radial engine and cowling
@@ -206,7 +227,7 @@ function build(THREE) {
 
     // landing gear, wheels in the air
     for (const s of [-1, 1]) {
-      const hx = s * 0.78, hy = 2.0, hz = 2.3;
+      const hx = s * 0.92, hy = 2.0, hz = 2.3;
       const tire = mk(new THREE.TorusGeometry(0.22, 0.08, 8, 20), 'rubber');
       tire.position.set(hx, hy, hz);
       tire.rotation.y = Math.PI / 2;
@@ -217,15 +238,14 @@ function build(THREE) {
       cap.position.set(hx, hy, hz);
       cap.rotation.z = Math.PI / 2;
       g.add(tire, disc, cap);
-      const H1 = V(s * 0.69, 1.98, 2.31);
+      const H1 = V(s * 0.83, 1.98, 2.31);
       g.add(rod(V(s * 0.32, 1.1, 2.66), H1, 0.032, 'rusty_iron', 8));
       g.add(rod(V(s * 0.32, 1.1, 1.86), H1, 0.032, 'rusty_iron', 8));
-      g.add(rod(V(-s * 0.12, 1.12, 2.3), V(s * 0.69, 1.96, 2.3), 0.028, 'rusty_iron', 8));
+      g.add(rod(V(-s * 0.12, 1.12, 2.3), V(s * 0.83, 1.96, 2.3), 0.028, 'rusty_iron', 8));
       // flying wires from gear to wing
       const wx = s > 0 ? 3.0 : 2.6;
-      const wy = RY + WT - DR * wx;
-      g.add(rod(V(s * 0.5, 1.76, 2.3), V(s * wx, wy, 2.45), 0.008, 'rusty_iron', 4));
-      g.add(rod(V(s * 0.5, 1.76, 2.3), V(s * wx, wy, 1.15), 0.008, 'rusty_iron', 4));
+      g.add(rod(V(s * 0.55, 1.76, 2.3), onWing(s * wx, 0.55, WT), 0.008, 'rusty_iron', 4));
+      g.add(rod(V(s * 0.55, 1.76, 2.3), onWing(s * wx, -0.6, WT), 0.008, 'rusty_iron', 4));
       // bracing wires to tailplane
       g.add(rod(V(s * 0.42, 0.62, 0.95), V(s * 1.0, 1.0, -2.3), 0.008, 'rusty_iron', 4));
       g.add(rod(V(0, 1.8, -2.5), V(s * 1.1, 1.03, -2.62), 0.008, 'rusty_iron', 4));

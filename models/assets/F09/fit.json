@@ -1,0 +1,84 @@
+{
+ "boulder_large": {
+  "front": {
+   "iou": 0.925,
+   "turn_deg": -0.1
+  },
+  "right side": {
+   "iou": 0.912,
+   "turn_deg": 1.53
+  },
+  "texels": {
+   "covered": 406135,
+   "seen": 33641
+  }
+ },
+ "boulder_small": {
+  "front": {
+   "iou": 0.918,
+   "turn_deg": 0.13
+  },
+  "right side": {
+   "iou": 0.904,
+   "turn_deg": -0.52
+  },
+  "texels": {
+   "covered": 476775,
+   "seen": 50715
+  }
+ },
+ "leaning_slab": {
+  "front (long side)": {
+   "iou": 0.853,
+   "turn_deg": 0.33
+  },
+  "end (right)": {
+   "iou": 0.874,
+   "turn_deg": -1.78
+  },
+  "top": {
+   "iou": 0.914,
+   "turn_deg": 2.19
+  },
+  "texels": {
+   "covered": 430379,
+   "seen": 385294
+  }
+ },
+ "sandstone_block": {
+  "front": {
+   "iou": 0.964,
+   "turn_deg": 0.69
+  },
+  "right side": {
+   "iou": 0.947,
+   "turn_deg": -2.14
+  },
+  "top": {
+   "iou": 0.936,
+   "turn_deg": -0.02
+  },
+  "texels": {
+   "covered": 567340,
+   "seen": 508585
+  }
+ },
+ "stepped_ledge": {
+  "front": {
+   "iou": 0.961,
+   "turn_deg": -0.0
+  },
+  "left side": {
+   "iou": 0.923,
+   "turn_deg": -0.27
+  },
+  "top": {
+   "iou": 0.939,
+   "turn_deg": -0.06
+  },
+  "texels": {
+   "covered": 217486,
+   "seen": 85320
+  }
+ }
+}

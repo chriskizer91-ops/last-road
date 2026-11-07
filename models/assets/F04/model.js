@@ -30,7 +30,6 @@ function build(THREE) {
     const m = add(g, new THREE.SphereGeometry(1, 7, 4), 'foliage');
     m.position.set(x, y, z);
     m.scale.set(r, r * SQ, r);
-    m.rotation.y = rnd() * Math.PI;
     return m;
   }
   function mass(g, x, y, z, rx, ry, rz) {   // 100 tris
@@ -63,7 +62,7 @@ function build(THREE) {
     return m;
   }
 
-  // ---------- generic dome-shaped bush: inner mass + skirt ring + shoulder ring + crown + vase stems ----------
+  // ---------- generic dome-shaped bush: inner mass + skirt ring + shoulder ring + crown + broad vase of stems ----------
   function canopyBush(g, o) {
     const TAU = Math.PI * 2;
     const isDead = (p) => {
@@ -101,19 +100,22 @@ function build(THREE) {
       lump(g, o.cx + (o.topDx || 0) + (o.rx - r) * Math.cos(p) * rad, o.h - r * SQ,
         o.cz + (o.topDz || 0) + (o.rz - r) * Math.sin(p) * rad, r);
     }
-    // stems fanning out from the base like a vase
+    // stems: a broad vase - spread base, fanning out low and ending inside the skirt lumps
     for (let i = 0; i < o.nStems; i++) {
-      const p = (TAU * (i + rr(0.1, 0.6))) / o.nStems;
-      const br = rr(0.02, 0.1), mr = rr(0.38, 0.5), tr = rr(0.7, 0.85), my = rr(0.85, 1.1), ty = rr(0.9, 1.1);
+      const p = (TAU * (i + rr(0.15, 0.85))) / o.nStems;
       if (isDead(p)) continue;
       const c = Math.cos(p), s = Math.sin(p), R = o.stemR;
+      const under = o.skirt + o.rl * 0.5 + (1 - Math.abs(c)) * o.lift;
+      const br = rr(0.03, o.baseR), mr = rr(0.5, 0.68), tr = rr(0.8, 0.95);
       const b = [o.cx + c * o.rx * br, 0.03, o.cz + s * o.rz * br];
-      const m = [o.cx + c * ex * mr, o.stemMid * my, o.cz + s * ez * mr];
-      const t = [o.cx + c * ex * tr, o.stemTip * ty, o.cz + s * ez * tr];
-      stem(g, b, m, R, R * 0.65, 'bark');
-      stem(g, m, t, R * 0.65, R * 0.3, 'bark');
+      const m = [o.cx + c * ex * mr, under * rr(0.5, 0.62), o.cz + s * ez * mr];
+      const t = [o.cx + c * ex * tr, under + rr(0.0, 0.2), o.cz + s * ez * tr];
+      stem(g, b, m, R, R * 0.7, 'bark');
+      stem(g, m, t, R * 0.7, R * 0.35, 'bark');
       if (o.extra && i % 2 === 0) {
-        stem(g, m, [o.cx + c * ex * mr * 1.05, o.stemTip * 1.25, o.cz + s * ez * mr * 1.05], R * 0.5, R * 0.25, 'bark');
+        const q = p + rr(-0.35, 0.35);
+        stem(g, m, [o.cx + Math.cos(q) * ex * 0.5, o.upY * rr(0.8, 0.95), o.cz + Math.sin(q) * ez * 0.5],
+          R * 0.55, R * 0.25, 'bark');
       }
     }
   }
@@ -141,7 +143,7 @@ function build(THREE) {
   canopyBush(dense, {
     cx: 0, cz: 0, rx: 1.6, rz: 1.45, h: 2.1, rl: 0.42,
     skirt: 0.42, lift: 0.5, n1: 10, n2: 8, upR: 0.85, upY: 1.48, nTop: 2,
-    coreBottom: 0.72, nStems: 12, stemMid: 0.6, stemTip: 1.15, stemR: 0.05, extra: true
+    coreBottom: 0.72, nStems: 16, baseR: 0.3, stemR: 0.05, extra: true
   });
   pod(dense, 0.55, 1.22, 1.27);
   pod(dense, 0.58, 1.45, 1.12);
@@ -177,7 +179,11 @@ function build(THREE) {
     [[0.9, 0.7, 0.75], [1.32, 0.68, 1.0], [1.1, 1.0, 1.15], [0.4, 0.4, 0.9]],
     [[0.1, 0.9, 0.85], [0.25, 1.05, 1.17], [-0.45, 0.78, 1.12], [-0.2, 0.4, 0.9]],
     [[0.45, 1.45, -0.55], [0.75, 1.55, -1.0], [0.35, 1.72, -0.45], [0.75, 1.0, -0.95]],
-    [[1.0, 0.5, -0.4], [1.4, 0.58, -0.62], [1.22, 0.88, -0.9], [0.8, 0.3, -0.75]]
+    [[1.0, 0.5, -0.4], [1.4, 0.58, -0.62], [1.22, 0.88, -0.9], [0.8, 0.3, -0.75]],
+    [[0.8, 1.05, 0.3], [1.38, 1.02, 0.45], [1.12, 1.38, 0.2], [0.62, 0.55, 0.25]],
+    [[0.68, 0.85, -0.7], [1.15, 0.78, -0.98], [0.92, 1.22, -0.78], [0.5, 0.48, -0.95]],
+    [[0.32, 1.22, 0.72], [0.68, 1.36, 1.05], [0.08, 1.45, 0.98], [0.3, 0.68, 1.1]],
+    [[1.15, 0.72, 0.42], [1.42, 0.52, 0.62], [1.36, 0.95, 0.72], [0.95, 0.38, 0.18]]
   ];
   for (const D of deadL) {
     const t = D[0];
@@ -188,6 +194,10 @@ function build(THREE) {
     stem(half, t, D[1], 0.013, 0.006, 'dead_wood');
     stem(half, t, D[2], 0.013, 0.006, 'dead_wood');
     stem(half, m, D[3], 0.016, 0.006, 'dead_wood');
+    // a fine fork off the upper limb, filling the spray between its twigs
+    const f = [m[0] + (t[0] - m[0]) * 0.6, m[1] + (t[1] - m[1]) * 0.6, m[2] + (t[2] - m[2]) * 0.6];
+    stem(half, f, [(t[0] + D[2][0]) / 2 + 0.12, (t[1] + D[2][1]) / 2 + 0.1, (t[2] + D[1][2]) / 2],
+      0.01, 0.004, 'dead_wood');
   }
   pod(half, 0.9, 1.5, -0.12);
   pod(half, 0.96, 1.46, -0.06);
@@ -200,22 +210,26 @@ function build(THREE) {
   canopyBush(clump, {
     cx: -1.55, cz: 0.03, rx: 0.9, rz: 0.88, h: 1.33, rl: 0.3,
     skirt: 0.28, lift: 0.3, n1: 8, n2: 5, upR: 0.8, upY: 0.98, nTop: 1,
-    coreBottom: 0.5, nStems: 7, stemMid: 0.3, stemTip: 0.7, stemR: 0.035
+    coreBottom: 0.5, nStems: 9, baseR: 0.28, stemR: 0.035
   });
   // middle: full, lower
   canopyBush(clump, {
     cx: -0.07, cz: 0.1, rx: 0.7, rz: 0.82, h: 1.06, rl: 0.25,
     skirt: 0.22, lift: 0.22, n1: 8, n2: 4, upR: 0.78, upY: 0.8, nTop: 1,
-    coreBottom: 0.42, nStems: 6, stemMid: 0.25, stemTip: 0.55, stemR: 0.03
+    coreBottom: 0.42, nStems: 7, baseR: 0.28, stemR: 0.03
   });
   // right: leafy on its +x side, bare twigs toward -x / back
   canopyBush(clump, {
     cx: 1.47, cz: -0.05, rx: 0.98, rz: 0.88, h: 1.22, rl: 0.3,
     skirt: 0.22, lift: 0.25, n1: 8, n2: 5, upR: 0.78, upY: 0.92, nTop: 1,
     topDx: 0.3, topDz: 0.1, coreBottom: 0.45, coreScale: 0.72, coreDx: 0.25, coreDz: 0.12,
-    dead: [2.45, 5.15], nStems: 7, stemMid: 0.3, stemTip: 0.65, stemR: 0.035
+    dead: [2.45, 5.15], nStems: 9, baseR: 0.28, stemR: 0.035
   });
-  deadLimbs(clump, 1.47, -0.05, 0.98, 0.88, [160, 200, 240, 280], 1.24);
+  deadLimbs(clump, 1.47, -0.05, 0.98, 0.88, [145, 170, 195, 220, 245, 270, 295], 1.24);
+  // foliage bridging the bushes so the three read as one continuous hedge
+  lump(clump, -0.72, 0.6, 0.12, 0.27);
+  lump(clump, -0.78, 0.55, -0.42, 0.25);
+  lump(clump, 0.6, 0.55, 0.28, 0.25);
 
   return { bush_dense: dense, bush_half_dead: half, bush_clump: clump };
 }

@@ -1,0 +1,26 @@
+{
+  "objects": [
+    {
+      "name": "cathedral_mound",
+      "size_m": [1.8, 3.2, 1.75],
+      "views": [
+        {"label": "front", "box": [28, 18, 520, 916], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "spired_mound",
+      "size_m": [1.72, 1.85, 1.72],
+      "views": [
+        {"label": "front", "box": [556, 383, 1032, 910], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "dome_mound",
+      "size_m": [1.64, 1.17, 1.64],
+      "views": [
+        {"label": "front", "box": [1064, 572, 1512, 908], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "The sheet shows three separate red-earth termite mounds, each drawn once from the front. The scale bar gives 1 m = about 277 px. The left mound is a tall fluted cathedral mound, about 3.2 m high on a 1.4 m base. The middle mound is about 1.85 m high with two spires. The right one is a low grassy dome, about 0.75 m high, with grass reaching about 1.15 m. No side or top views are given, so depth is guessed as round (depth about equal to width)."
+}
