@@ -28,6 +28,7 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
   - a chase camera that follows the Heron's climbs, dives and banks.
 
   Tested in the test browser at phone size (`tools/test/lr-run.py`). Still the car in the bay: the Outfitter is next.
+- **`builds/last-road-1.html`** (Nov 7 2026): the same, but laptops start on the **Low** graphics level instead of High (his laptop didn't open last-road-0; he remembers Salt & Sand opening on Low there). In the test browser a laptop-style start reached the menu in 95 s instead of 191 s. A phone still starts on Mobile, and a level picked in the menu still holds for the start it makes.
 
 ## Decided (his picks, Nov 7 2026)
 

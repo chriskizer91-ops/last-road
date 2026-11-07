@@ -26,6 +26,9 @@ swap('id="rtFly" type="button">\u2708 Redtail</button>', 'id="rtFly" type="butto
 swap("const carLabel=()=>GAME.car&&GAME.car.rt?'Redtail':", "const carLabel=()=>GAME.car&&GAME.car.rt?'Heron':")
 swap("if(RT.want)say('THE REDTAIL',2);", "if(RT.want)say('THE HERON',2);")
 swap("{id:'redtail',name:'Redtail',gov:0,", "{id:'redtail',name:'Heron',gov:0,")
+# laptops start on Low (his rule for the laptop, and what he expects from Salt & Sand); a phone still starts on Mobile.
+# A tier picked in the menu still holds for the start it makes, and ?quality= still picks one
+swap("const GFX_START=matchMedia('(pointer: coarse)').matches?'mobile':'high';", "const GFX_START=matchMedia('(pointer: coarse)').matches?'mobile':'low';")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
