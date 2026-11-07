@@ -187,7 +187,7 @@ window.__lr=Object.assign(window.__lr||{},{LRP});
    and far in the thinned shape (<object>~far), each in its own picture (material 121: the plane's, tinted by the tree's
    colour). The world's seven shapes stay first; until a model is made its place holds a mesh of nothing.
    Each kind has its own reach: a bush is not drawn past 260 m, a small rock past 180 (two thirds that on a phone; the
-   world's own reach beyond) */
+   world's own reach beyond). Each is drawn in full only within 60 m (40 on a phone), in the shadows too */
 const LRF={on:false,tx:new Map(),one:null,loc:null,locP:null,made:0,D2:[]};
 {const ts0=treeShapes;treeShapes=function(){const out=ts0(),L=(typeof WG!=='undefined'&&WG.GTT)||[];if(!L.length)return out;
   const none=()=>{const m=makeMesh({pos:new Float32Array(9),nrm:new Float32Array([0,1,0,0,1,0,0,1,0]),col:new Float32Array(12),mat:new Float32Array(3),idx:new Uint16Array([0,1,2])});m.tris=0;return m;};
@@ -206,7 +206,7 @@ function lrTreeTex(tx){lrPropTex1();if(LRF.locP!==CUR.p){LRF.locP=CUR.p;LRF.loc=
 /* (for the tests: how many of each of his plants and rocks stand within r of x, z, in the chunks made so far) */
 function lrFloraNear(x,z,r){const out={},L=WG.GTT||[];for(const c of chunkList()){const T=c.st&&c.st.trees;if(!T)continue;
   for(let o=0;o<T.length;o+=12){const v=T[o+7]|0;if(v<WG.GTV0||Math.hypot(T[o]-x,T[o+2]-z)>r)continue;const k=L[v-WG.GTV0][1];out[k]=(out[k]||0)+1;}}return out;}
-window.__lr=Object.assign(window.__lr||{},{LRF,lrFloraNear,WG});
+window.__lr=Object.assign(window.__lr||{},{LRF,lrFloraNear,WG,lrStat:()=>Object.assign({},RANCH.stat,{lra:LRA.tris,lrp:LRP.tris,lrd:LRD.tris})});
 
 /* ---------- THE TRUCK AND THE HERON: you drive one, the other waits. Driving, the Heron stands where you left it
    (at first in front of the hangar at Roadhead); drive up to it, stop, and HERON (E on a keyboard) puts you in it.

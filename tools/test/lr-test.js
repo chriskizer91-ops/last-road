@@ -43,6 +43,7 @@ window.LRT_T = (() => {
       if (!best) return null; this.park(best.x + (d || 300), best.z, Math.PI); return { at: [Math.round(best.x), Math.round(best.z)], n: best.mem.length }; },
     calm(on) { L.LRA.calm = !!on; return { calm: L.LRA.calm }; },
     animals() { const A = L.LRA, P = L.LRP, out = {}; for (const [k, m] of P.mesh) if (/^G0/.test(k)) out[k] = m ? (P.tex.get(k) ? 'ready' : 'no picture') : 'failed'; return { drawn: A.drawn, tris: A.tris, meshes: out, busy: [...P.busy].filter(k => /^G0/.test(k) && !P.mesh.has(k)) }; },
+    stat() { return L.lrStat(); },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();

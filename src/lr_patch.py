@@ -104,7 +104,7 @@ B = "/* ========================================================================
 # his plants and rocks (lr-game.js: LRF): each drawn in its own picture, each kind only out to its own reach; the
 # plane's material (120) also as 121, its picture tinted by the instance's colour
 swap("const m=TREES.shapes[v][far?1:l];instBind(", "const m=TREES.shapes[v][far?1:l];if(m.tx)lrTreeTex(m.tx);instBind(")
-swap("const v=T[o+7]|0,l=nearOnly||d2<nn?0:1,cn=L.cnt[v];", "const v=T[o+7]|0;if(d2>LRF.D2[v]*(GFX.level==='mobile'?.45:1))continue;const l=nearOnly||d2<nn?0:1,cn=L.cnt[v];")
+swap("const v=T[o+7]|0,l=nearOnly||d2<nn?0:1,cn=L.cnt[v];", "const v=T[o+7]|0;if(d2>LRF.D2[v]*(GFX.level==='mobile'?.45:1))continue;const l=v>=7?(d2<Math.min(nn,GFX.level==='mobile'?1600:3600)?0:1):nearOnly||d2<nn?0:1,cn=L.cnt[v];")
 swap("  else if(m==120){\n    alb=pow(texture(uRTa,vUV).rgb,vec3(2.2));", "  else if(m==120||m==121){\n    alb=pow(texture(uRTa,vUV).rgb,vec3(2.2));if(m==121)alb*=vC.rgb;")
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
