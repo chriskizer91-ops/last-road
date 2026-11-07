@@ -153,7 +153,7 @@ async function lrPropMake(key){
     lrTexFrom(E.tex.replace(/^data:image\/webp;base64,/,''),tx=>LRP.tex.set(key,tx));}
   catch(e){console.warn('model '+key+': '+(e&&e.message||e));LRP.mesh.set(key,null);}}
 /* a placed model's matrix: turned by its yaw, stood on the ground where it is (the world's own height there) */
-function lrPropM(p){if(p.y===undefined){const o={};p.y=WG.sample(p.x,p.z,o).h;}const c=Math.cos(p.yaw),s=Math.sin(p.yaw),M=LRP.M;
+function lrPropM(p){if(p.y===undefined){const o={};p.y=WG.sample(p.x,p.z,o).h+(p.dy||0);}const c=Math.cos(p.yaw),s=Math.sin(p.yaw),M=LRP.M;
   M[0]=c;M[1]=0;M[2]=-s;M[3]=0;M[4]=0;M[5]=1;M[6]=0;M[7]=0;M[8]=s;M[9]=0;M[10]=c;M[11]=0;M[12]=p.x-RO[0];M[13]=p.y-RO[1];M[14]=p.z-RO[2];M[15]=1;return M;}
 function lrPropBox(p){if(!p.mn){const E=LR_PROPS[p.id]&&LR_PROPS[p.id][p.obj];if(!E)return null;const r=Math.hypot(Math.max(-E.min[0],E.max[0]),Math.max(-E.min[2],E.max[2]));if(p.y===undefined)lrPropM(p);
     p.mn=[p.x-r,p.y+E.min[1]-1,p.z-r];p.mx=[p.x+r,p.y+E.max[1]+1,p.z+r];}return p.mn;}

@@ -1,0 +1,25 @@
+{
+  "objects": [
+    {
+      "name": "tower_tall",
+      "size_m": [115, 110, 124],
+      "views": [
+        {"label": "Front", "box": [108, 13, 372, 266], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Back", "box": [448, 327, 758, 574], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [882, 11, 1170, 270], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [836, 344, 1130, 574], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "tower_short",
+      "size_m": [115, 90, 102],
+      "views": [
+        {"label": "Front", "box": [480, 62, 738, 266], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Back", "box": [90, 377, 348, 574], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [1203, 62, 1434, 270], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [1242, 364, 1462, 548], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Two free-standing red and ochre sandstone towers on rubble aprons, one either side of the pass. Heights come from the dimension lines (110 m and 90 m, about 2.27 px/m). The 35/30/60 m width labels don't match the drawing at that scale, so widths follow the drawn outlines. Each Side view is taken as the gap-facing side (tall seen from +x, short from -x), which the top views' summit offsets support. To set them in the pass, place tall at x≈-81 and short at x≈+81 (their front-view centres are about 163 m apart)."
+}

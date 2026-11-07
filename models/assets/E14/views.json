@@ -2,7 +2,7 @@
   "objects": [
     {
       "name": "binoculars",
-      "size_m": [0.187, 0.08, 0.157],
+      "size_m": [0.183, 0.08, 0.157],
       "views": [
         {"label": "top", "box": [108, 108, 472, 414], "cam": [0, 1, 0], "up": [0, 0, -1]},
         {"label": "left side", "box": [148, 552, 470, 724], "cam": [-1, 0, 0], "up": [0, 1, 0]},
@@ -28,5 +28,5 @@
       ]
     }
   ],
-  "notes": "Scale bar: 10 cm is about 196 px (about 1960 px/m). The set is green rubber-armoured binoculars (about 19x8x16 cm), a handheld GPS (about 9x22x5 cm) and a manpack radio with a handset in a canvas bag (about 31x21x12 cm). The binocular strap and dangling lens caps are left out because they're drawn differently in every view. The radio's middle drawing is read as its back, but it is squashed and mirrored compared with the front (the cord and antenna swap sides). Its tall whip antenna isn't in the front or top views, so only a stub antenna is modelled and the back box stops at the handle."
+  "notes": "Scale bar: 10 cm is about 196 px (about 1960 px/m). The set is green rubber-armoured binoculars (about 18x8x16 cm), a handheld GPS (about 9x22x5 cm) and a manpack radio with a handset in a canvas bag (about 31x21x12 cm). The binocular barrels sit close together (axes about 9 cm apart) with the hinge column between them. The binocular strap and dangling lens caps are left out because they're drawn differently in every view. The radio's middle drawing is read as its back, but it is squashed and mirrored compared with the front and top (the cord and antenna swap sides), so its two ends paint mirrored. Its tall whip antenna isn't in the front or top views, so only a stub antenna is modelled. The radio's carry handle is about 16 cm long."
 }

@@ -72,6 +72,26 @@ const GT_PADS=[],GT_PROPS=[];
     put('B16','model',...F.at(-300,150),F.face(0,-1));put('B17','model',...F.at(-170,250),F.face(0,-1));put('B18','model',...F.at(-410,70),F.face(0,-1));
     put('B19','model',...F.at(-140,140),F.face(1,0));put('B07','windsock',...F.at(0,28),F.face(1,0),true,900);}
 }
+/* the walk places and landmarks (Fable's map, brainstorm km), each on a small levelled pad where it needs one */
+{const put=(id,obj,x,z,yaw,solid,far)=>GT_PROPS.push({id,obj,x,z,yaw,solid:solid!==false,far:far||3000});
+  const site=(id,obj,bx,by,yaw,r,surf,far,solid,dy)=>{const x=GX(bx),z=GZ(by);put(id,obj,x,z,yaw,solid,far);if(dy)GT_PROPS[GT_PROPS.length-1].dy=dy;
+    if(r)GT_PADS.push({F:{x,z,dx:1,dz:0},u0:-r,u1:r,v0:-r,v1:r,surf:surf||'dirt',h:null});};
+  /* the Savanna: the Cistern and its marker stone, the Causeway Gate and the Map Stone in it, the Bottle Tree, the
+     Marbles, the Windmill Line (a bore every 3 km from the station north-east) */
+  site('C04','model',24,13,.4,18);site('C03','model',24.03,13.04,.4,0,null,900);
+  site('C14','model',24,21,.79,20);site('C16','model',24.003,21.004,.79,0,null,900);
+  site('D02','model',27,16,1.1,22,'dirt',9000);site('D03','model',29,20,2.2,0,null,7000);
+  for(let k=1;k<=5;k++){const t=k/6;site('D04','model',20+(31-20)*t+.3*Math.sin(k*2.1),11+(21-11)*t,k*.9,9,'dirt',2500);}
+  /* the Salt Pans: the Pan Wreck */
+  site('D05','model',6,5,2.6,0,null,2500);
+  /* the Dune Sea: Three Wells, the Caravan's cairns west from it to the Sunken City, the City's hall and tower */
+  site('C07','model',17.1,22.55,-.3,20,'sand',0,true,-1.2);
+  for(let k=1;k<=14;k++){const t=k/15;site('D07','model',17.1+(8.4-17.1)*t+.15*Math.sin(k*1.7),22.55+(26.6-22.55)*t,k*1.3,0,null,1800);}
+  site('C26','model',8,27,.2,26,'sand',0,true,-2.4);site('C28','model',8.03,27.03,3.3,0,null,1200,true,-.6);
+  /* the Highlands: the Terraces temple and its seated figure, the Weir at the top of the escarpment */
+  site('C21','model',28.6,37.8,3.1,22);site('C28','model',28.62,37.77,3.1,0,null,1200);site('C32','model',34.5,31.2,1.6,28);
+  /* the Black Range: the Observatory Cone's stone ring */
+  site('C35','model',10,45.2,0,16);}
 /* a pad's level: its own (the strip's), else the land's at its middle (made once) */
 function gtPadH(P){if(P.hv===undefined){if(P.h)P.hv=P.h();else{const o={};P.hv=gtLand(P.F.x,P.F.z,o).h;gtRoadQ(P.F.x,P.F.z,GRQ);if(Math.abs(GRQ.d)<60)P.hv=gtRoadH(GRQ.s);}}return P.hv;}
 
@@ -180,7 +200,10 @@ function gtCore(x,z,o){
       if(in2&&S.surf!=='grass'&&S.surf!=='salt'&&S.surf!=='sand'){grass*=.15;rock=0;}if(S.surf==='grass'&&in2)grass=Math.max(grass,.8);}}
   /* the pads under the buildings: level, bare */
   for(const P of GT_PADS){const F=P.F,u=(x-F.x)*F.dx+(z-F.z)*F.dz,v=-(x-F.x)*F.dz+(z-F.z)*F.dx,e=Math.max(P.u0-u,u-P.u1,P.v0-v,v-P.v1);if(e>45)continue;
-    const f=1-sst(0,40,e);h=h+(gtPadH(P)-h)*f;if(f>.3){wet=0;mud=0;}if(e<0){code=P.surf==='gravel'?SF.gravel:SF.dirt;grass*=.25;rock=0;sand*=.3;}}
+    const f=1-sst(0,40,e);h=h+(gtPadH(P)-h)*f;if(f>.3){wet=0;mud=0;}
+    /* (the bare ground fades in over a few metres, its edge wandering, so it isn't a drawn square) */
+    const eb=e+(vn(x/11,z/11,797)-.5)*14,bare=1-sst(-10,2,eb);
+    if(bare>0){if(P.surf==='sand'){if(bare>.5)code=SF.sand;}else{if(bare>.5)code=P.surf==='gravel'?SF.gravel:SF.dirt;grass*=1-.75*bare;rock*=1-bare;sand*=1-.7*bare;}}}
   h+=rimAt(x,z);
   if(wet&&h<wl){code=SF.water;}else wet=0;
   o.h=h;o.code=code;o.grass=grass;o.rock=rock;o.mud=Math.max(mud,wet?.8:0);o.salt=salt;o.sand=sand;o.ramp=0;o.wet=wet;o.wl=wet?wl:h;o.B=h;o.rk=rock;o.k=0;o.tm=0;o.tin=0;
@@ -211,7 +234,7 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
   /* the placed models that stop you: a box round each (its footprint turned to its yaw), up to its top */
   for(const p of GT_PROPS){if(!p.solid||p.x<x0-30||p.x>x1+30||p.z<z0-30||p.z>z1+30)continue;const B=GT_PROPBOX[p.id+'/'+p.obj];if(!B)continue;
     const c=Math.cos(p.yaw),sn=Math.sin(p.yaw),pts=[[B[0],B[2]],[B[3],B[2]],[B[3],B[5]],[B[0],B[5]]].map(([a,b])=>[p.x+a*c+b*sn,p.z-a*sn+b*c]);
-    const y=gtCore(p.x,p.z,{}).h;cols.push({x0:Math.min(...pts.map(q=>q[0])),z0:Math.min(...pts.map(q=>q[1])),x1:Math.max(...pts.map(q=>q[0])),z1:Math.max(...pts.map(q=>q[1])),top:y+B[4]});}
+    const y=gtCore(p.x,p.z,{}).h+(p.dy||0);cols.push({x0:Math.min(...pts.map(q=>q[0])),z0:Math.min(...pts.map(q=>q[1])),x1:Math.max(...pts.map(q=>q[0])),z1:Math.max(...pts.map(q=>q[1])),top:y+B[4]});}
   /* the trees: the savanna's flat-topped trees, scattered, thicker along the creeks; none on the road or a strip */
   const G=9,n=Math.floor(CH/G),o={};
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const r1=R(),r2=R(),r3=R(),r4=R(),r5=R();

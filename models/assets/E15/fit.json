@@ -37,12 +37,12 @@
  },
  "stove_open": {
   "stove open, side (lid up, wind panel)": {
-   "iou": 0.824,
-   "turn_deg": -1.03
+   "iou": 0.781,
+   "turn_deg": -2.44
   },
   "texels": {
-   "covered": 616111,
-   "seen": 43311
+   "covered": 609629,
+   "seen": 29833
   }
  },
  "swag_open": {
@@ -66,15 +66,15 @@
   },
   "roll end, large circle with strap ring": {
    "iou": 0.925,
-   "turn_deg": 0.13
+   "turn_deg": 0.12
   },
   "roll end, small circle": {
-   "iou": 0.952,
-   "turn_deg": -3.13
+   "iou": 0.956,
+   "turn_deg": -3.09
   },
   "texels": {
-   "covered": 679434,
-   "seen": 433392
+   "covered": 690722,
+   "seen": 450993
   }
  }
 }

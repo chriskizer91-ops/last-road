@@ -61,7 +61,7 @@ function build(THREE) {
   // ---------------- BINOCULARS (optical axis along z, objectives at +z) ----------------
   const bino = new THREE.Group();
   bino.name = 'binoculars';
-  const yc = 0.036, bx = 0.051;
+  const yc = 0.036, bx = 0.045;
   const bodyGeo = new THREE.LatheGeometry([
     V2(0.020, -0.050), V2(0.027, -0.050), V2(0.033, -0.044), V2(0.0355, -0.035),
     V2(0.036, -0.015), V2(0.036, 0.032), V2(0.035, 0.046), V2(0.034, 0.052), V2(0.020, 0.052)
@@ -80,11 +80,11 @@ function build(THREE) {
     add(bino, eyeGeo, 'rubber_black', [s * bx, yc, 0], [HALF_PI, 0, 0]);
     add(bino, rimGeo, 'rubber_black', [s * bx, yc, 0], [HALF_PI, 0, 0]);
     add(bino, lensGeo, 'glass', [s * bx, yc, 0.0705], [HALF_PI, 0, 0]);
-    add(bino, lugGeo, 'steel', [s * 0.088, 0.044, -0.011], [HALF_PI, 0, 0]);
-    add(bino, tabGeo, 'webbing', [s * 0.0915, 0.030, -0.011]);
+    add(bino, lugGeo, 'steel', [s * 0.086, 0.044, -0.011], [HALF_PI, 0, 0]);
+    add(bino, tabGeo, 'webbing', [s * 0.0895, 0.030, -0.011]);
   });
-  // centre bridge / hinge and focus wheel
-  add(bino, new THREE.BoxGeometry(0.048, 0.022, 0.09), 'rubber_black', [0, 0.054, -0.003]);
+  // centre hinge column filling the gap between the barrels, and focus wheel
+  add(bino, new THREE.BoxGeometry(0.026, 0.046, 0.09), 'rubber_black', [0, 0.043, -0.003]);
   add(bino, new THREE.CylinderGeometry(0.013, 0.013, 0.03, 16), 'rubber_black', [0, 0.067, -0.03], [0, 0, HALF_PI]);
 
   // ---------------- GPS (standing upright, screen faces +z) ----------------
@@ -136,9 +136,9 @@ function build(THREE) {
     add(r, dRingGeo, 'steel', [s * 0.1445, 0.135, 0.012]);
   });
 
-  // carry handle on top (flat canvas strap arch)
+  // carry handle on top (flat canvas strap arch), about 16 cm long
   const hs = new THREE.Shape();
-  const ha = 0.068, hb = 0.027, ht = 0.008, hn = 10;
+  const ha = 0.079, hb = 0.027, ht = 0.008, hn = 12;
   for (let i = 0; i <= hn; i++) {
     const ang = Math.PI - Math.PI * i / hn;
     const x = ha * Math.cos(ang), y = hb * Math.sin(ang);
@@ -148,7 +148,7 @@ function build(THREE) {
     const ang = Math.PI * i / hn;
     hs.lineTo((ha - ht) * Math.cos(ang), (hb - ht) * Math.sin(ang));
   }
-  add(r, slab(hs, 0.026), 'canvas', [-0.006, 0.18, -0.0125]);
+  add(r, slab(hs, 0.026), 'canvas', [-0.009, 0.18, -0.0125]);
 
   // antenna pocket and stub antenna on the +x end
   add(r, new THREE.BoxGeometry(0.014, 0.08, 0.035), 'canvas', [0.145, 0.07, -0.022]);

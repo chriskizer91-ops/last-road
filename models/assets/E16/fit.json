@@ -1,0 +1,40 @@
+{
+ "drop_crate": {
+  "crate, front (top left)": {
+   "iou": 0.947,
+   "turn_deg": -0.17
+  },
+  "crate, top (bottom left)": {
+   "iou": 0.935,
+   "turn_deg": 0.0
+  },
+  "texels": {
+   "covered": 749676,
+   "seen": 314140
+  }
+ },
+ "parachute_canopy": {
+  "deployed parachute, front (right; canopy and lines down to the ring)": {
+   "iou": 0.894,
+   "turn_deg": -1.18
+  },
+  "texels": {
+   "covered": 390152,
+   "seen": 107241
+  }
+ },
+ "rigged_crate": {
+  "crate with packed chute and harness, front (top middle)": {
+   "iou": 0.866,
+   "turn_deg": 0.35
+  },
+  "crate with packed chute and harness, top (bottom middle)": {
+   "iou": 0.935,
+   "turn_deg": 0.08
+  },
+  "texels": {
+   "covered": 581126,
+   "seen": 256842
+  }
+ }
+}

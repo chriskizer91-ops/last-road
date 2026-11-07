@@ -1,0 +1,3 @@
+helper: done claude-opus-5-5 xhigh 454 s 3696 in 45780 out end_turn
+built {'drop_crate': {'tris': 768, 'size': [1.623, 1.2, 1.544], 'min': [-0.811, 0, -0.772]}, 'rigged_crate': {'tris': 2448, 'size': [1.623, 2.477, 1.56], 'min': [-0.811, 0, -0.78]}, 'parachute_canopy': {'tris': 2304, 'size': [6.44, 6.631, 6.44], 'min': [-3.22, -0.011, -3.22]}}
+painted {'drop_crate': {'crate, front (top left)': 0.947, 'crate, top (bottom left)': 0.935}, 'parachute_canopy': {'deployed parachute, front (right; canopy and lines down to the ring)': 0.894}, 'rigged_crate': {'crate with packed chute and harness, front (top middle)': 0.866, 'crate with packed chute and harness, top (bottom middle)': 0.935}} 569s

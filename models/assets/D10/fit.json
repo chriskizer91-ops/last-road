@@ -1,0 +1,56 @@
+{
+ "arch_broken": {
+  "Arch 3 front (24 m / 32 m, cracked)": {
+   "iou": 0.613,
+   "turn_deg": 0.0
+  },
+  "Arch 3 side": {
+   "iou": 0.929,
+   "turn_deg": -0.46
+  },
+  "Arch 3 top": {
+   "iou": 0.829,
+   "turn_deg": -0.57
+  },
+  "texels": {
+   "covered": 201883,
+   "seen": 52785
+  }
+ },
+ "arch_round": {
+  "Arch 2 front (35 m / 45 m)": {
+   "iou": 0.896,
+   "turn_deg": -0.0
+  },
+  "Arch 2 side (6 m crown)": {
+   "iou": 0.931,
+   "turn_deg": 0.54
+  },
+  "Arch 2 top": {
+   "iou": 0.72,
+   "turn_deg": -4.38
+  },
+  "texels": {
+   "covered": 203360,
+   "seen": 58741
+  }
+ },
+ "arch_wide": {
+  "Arch 1 front (45 m / 60 m)": {
+   "iou": 0.91,
+   "turn_deg": -0.09
+  },
+  "Arch 1 side": {
+   "iou": 0.904,
+   "turn_deg": -0.37
+  },
+  "Arch 1 top": {
+   "iou": 0.896,
+   "turn_deg": -2.27
+  },
+  "texels": {
+   "covered": 181149,
+   "seen": 26311
+  }
+ }
+}

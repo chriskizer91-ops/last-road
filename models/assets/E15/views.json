@@ -19,7 +19,7 @@
     },
     {
       "name": "stove_open",
-      "size_m": [0.64, 0.52, 0.37],
+      "size_m": [0.64, 0.475, 0.37],
       "views": [
         {"label": "stove open, side (lid up, wind panel)", "box": [1300, 18, 1510, 305], "cam": [-1, 0, 0], "up": [0, 1, 0]}
       ]
@@ -43,5 +43,5 @@
       ]
     }
   ],
-  "notes": "Camp set at 550 px = 1 m: canvas swag rolled (1.09 m long, ~0.42 m dia) and laid out, a two-burner camp stove (0.64 x 0.35 m; 0.135 m closed, 0.52 m with lid and wind panels up) and a galvanised food box (~0.55 x 0.33 x 0.26 m); open swag, open stove and open food box perspectives are left out. Unclear: the laid-out swag measures only 1.25 m by the bar, so it is modelled at 1.95 m canvas length with the drawing's proportions; the second-row roll, the small end circle, the stove top view and the food box back view are drawn at inconsistent scales and are used as back/end/top views anyway."
+  "notes": "Camp set at 550 px = 1 m: canvas swag rolled (1.09 m long, ~0.42 m dia) and laid out, a two-burner camp stove (0.64 x 0.35 m; 0.13 m closed; open: 0.095 m base with the lid standing to ~0.475 m and short sloped wind panels reaching only to mid-depth) and a galvanised food box (~0.55 x 0.33 x 0.26 m); open swag perspective, open stove front perspective and open food box are left out. Unclear: the laid-out swag measures only 1.25 m by the bar, so it is modelled at 1.95 m canvas length with the drawing's proportions; the second-row roll, the small end circle, the stove top view and the food box back view are drawn at inconsistent scales and are used as back/end/top views anyway."
 }

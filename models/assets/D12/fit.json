@@ -1,0 +1,62 @@
+{
+ "hourglass": {
+  "front": {
+   "iou": 0.899,
+   "turn_deg": -0.37
+  },
+  "texels": {
+   "covered": 673708,
+   "seen": 145461
+  }
+ },
+ "mushroom": {
+  "front": {
+   "iou": 0.849,
+   "turn_deg": 0.37
+  },
+  "texels": {
+   "covered": 666185,
+   "seen": 108942
+  }
+ },
+ "spire_capped": {
+  "front": {
+   "iou": 0.886,
+   "turn_deg": -0.28
+  },
+  "texels": {
+   "covered": 627117,
+   "seen": 153957
+  }
+ },
+ "stepped_tower": {
+  "front": {
+   "iou": 0.797,
+   "turn_deg": 0.16
+  },
+  "texels": {
+   "covered": 468587,
+   "seen": 78394
+  }
+ },
+ "stump": {
+  "front": {
+   "iou": 0.876,
+   "turn_deg": 0.78
+  },
+  "texels": {
+   "covered": 665573,
+   "seen": 174447
+  }
+ },
+ "twin_spires": {
+  "front": {
+   "iou": 0.928,
+   "turn_deg": -0.43
+  },
+  "texels": {
+   "covered": 642727,
+   "seen": 150465
+  }
+ }
+}

@@ -61,11 +61,11 @@ function build(THREE) {
     // outer canvas layer ending in the flap edge on the lower front
     const flap = add(g, new THREE.CylinderGeometry(R + 0.005, R + 0.005, L - 0.16, 16, 1, true, -2.85, 2.27), 'canvas', 0, Y, 0);
     flap.rotation.z = Math.PI / 2;
-    // two leather straps with buckles high on the front
+    // two leather straps with buckles a little above centre on the front
     [-0.27, 0.29].forEach(function (sx) {
       const st = add(g, new THREE.CylinderGeometry(RS, RS, 0.065, 28), 'leather', sx, Y, 0);
       st.rotation.z = Math.PI / 2;
-      const a = 0.5;
+      const a = 0.27;
       const rb = RS + 0.004;
       const b = box(g, 'brass', 0.055, 0.05, 0.01, sx, Y + rb * Math.sin(a), rb * Math.cos(a));
       b.rotation.x = -a;
@@ -125,52 +125,54 @@ function build(THREE) {
   function stoveOpen() {
     const g = new THREE.Group();
     g.name = 'stove_open';
-    const W = 0.625, D = 0.345, H = 0.145, t = 0.006;
-    // base tray
+    const W = 0.625, D = 0.345, H = 0.095, t = 0.006;
+    // base tray (same body as the closed stove)
     slab(g, 'paint_green', W, D, 0.012, 0.02, 0);
     box(g, 'paint_green', W, H, t, 0, H / 2, D / 2 - t / 2);
     box(g, 'paint_green', W, H, t, 0, H / 2, -D / 2 + t / 2);
     box(g, 'paint_green', t, H, D - 2 * t, -W / 2 + t / 2, H / 2, 0);
     box(g, 'paint_green', t, H, D - 2 * t, W / 2 - t / 2, H / 2, 0);
-    box(g, 'rusty_iron', W - 2 * t, 0.005, D - 2 * t, 0, 0.095, 0);
+    box(g, 'rusty_iron', W - 2 * t, 0.005, D - 2 * t, 0, 0.055, 0);
     // burners
     [-0.15, 0.15].forEach(function (x) {
-      add(g, new THREE.CylinderGeometry(0.048, 0.052, 0.025, 16), 'brass', x, 0.11, -0.01);
-      add(g, new THREE.CylinderGeometry(0.03, 0.03, 0.012, 12), 'brass', x, 0.128, -0.01);
+      add(g, new THREE.CylinderGeometry(0.048, 0.052, 0.022, 16), 'brass', x, 0.069, -0.01);
+      add(g, new THREE.CylinderGeometry(0.03, 0.03, 0.012, 12), 'brass', x, 0.086, -0.01);
     });
-    // wire grate
-    const gy = H + 0.004, r = 0.006, gw = W - 0.03, gd = D - 0.03;
-    box(g, 'rusty_iron', gw, r, r, 0, gy, gd / 2);
-    box(g, 'rusty_iron', gw, r, r, 0, gy, -gd / 2);
-    box(g, 'rusty_iron', r, r, gd, -gw / 2, gy, 0);
-    box(g, 'rusty_iron', r, r, gd, gw / 2, gy, 0);
-    [-0.06, 0.06].forEach(function (z) { box(g, 'rusty_iron', gw, r, r, 0, gy, z); });
+    // wire grate on the rim, in front of the lid tray
+    const gy = H + 0.004, r = 0.006, gw = W - 0.03;
+    const gz0 = -0.122, gz1 = D / 2 - 0.015, gd = gz1 - gz0, gzc = (gz0 + gz1) / 2;
+    box(g, 'rusty_iron', gw, r, r, 0, gy, gz1);
+    box(g, 'rusty_iron', gw, r, r, 0, gy, gz0);
+    box(g, 'rusty_iron', r, r, gd, -gw / 2, gy, gzc);
+    box(g, 'rusty_iron', r, r, gd, gw / 2, gy, gzc);
+    [-0.055, 0.055].forEach(function (dz) { box(g, 'rusty_iron', gw, r, r, 0, gy, gzc + dz); });
     for (let i = 1; i <= 8; i++) {
-      box(g, 'rusty_iron', r, r, gd, -gw / 2 + i * gw / 9, gy, 0);
+      box(g, 'rusty_iron', r, r, gd, -gw / 2 + i * gw / 9, gy, gzc);
     }
-    // lid standing up at the back: a shallow tray open to the front
-    const LH = 0.377, LW = 0.64, LD = 0.049, lt = 0.007, zb = -D / 2;
-    box(g, 'paint_green', LW, LH, lt, 0, H + LH / 2, zb + lt / 2);
-    box(g, 'sooty_steel', LW - 2 * lt, LH - lt, 0.003, 0, H + (LH - lt) / 2, zb + lt + 0.0015);
-    box(g, 'paint_green', lt, LH, LD, -LW / 2 + lt / 2, H + LH / 2, zb + LD / 2);
-    box(g, 'paint_green', lt, LH, LD, LW / 2 - lt / 2, H + LH / 2, zb + LD / 2);
-    box(g, 'paint_green', LW, lt, LD, 0, H + LH - lt / 2, zb + LD / 2);
-    // wind panels folded forward from the lid sides
+    // lid standing up at the back, hinged just below the rim: a shallow tray open to the front
+    const LH = 0.385, LW = 0.64, LD = 0.045, lt = 0.007, zb = -D / 2, yb = 0.09;
+    box(g, 'paint_green', LW, LH, lt, 0, yb + LH / 2, zb + lt / 2);
+    box(g, 'sooty_steel', LW - 2 * lt, LH - lt, 0.003, 0, yb + (LH - lt) / 2, zb + lt + 0.0015);
+    box(g, 'paint_green', lt, LH, LD, -LW / 2 + lt / 2, yb + LH / 2, zb + LD / 2);
+    box(g, 'paint_green', lt, LH, LD, LW / 2 - lt / 2, yb + LH / 2, zb + LD / 2);
+    box(g, 'paint_green', LW, lt, LD, 0, yb + LH - lt / 2, zb + LD / 2);
+    // wind panels folded forward from the lid sides, sloping down to the rim at mid-depth
+    const zf = zb + LD;
     const ps = new THREE.Shape();
-    ps.moveTo(-0.1235, H + 0.002);
-    ps.lineTo(0.105, H + 0.002);
-    ps.lineTo(0.105, 0.165);
-    ps.lineTo(-0.1235, 0.387);
+    ps.moveTo(zf, H + 0.002);
+    ps.lineTo(0.05, H + 0.002);
+    ps.lineTo(0.05, H + 0.02);
+    ps.lineTo(zf, 0.33);
     [-1, 1].forEach(function (sd) {
       const p = add(g, new THREE.ExtrudeGeometry(ps, { depth: 0.004, bevelEnabled: false }), 'paint_green', sd > 0 ? 0.32 : -0.316, 0, 0);
       p.rotation.y = -Math.PI / 2;
     });
     // knobs and front latch
     [-0.16, 0.16].forEach(function (x) {
-      const k = add(g, new THREE.CylinderGeometry(0.028, 0.028, 0.026, 16), 'bakelite', x, 0.08, D / 2 + 0.013);
+      const k = add(g, new THREE.CylinderGeometry(0.028, 0.028, 0.026, 16), 'bakelite', x, 0.05, D / 2 + 0.013);
       k.rotation.x = Math.PI / 2;
     });
-    box(g, 'rusty_iron', 0.05, 0.035, 0.01, 0, H - 0.02, D / 2 + 0.005);
+    box(g, 'rusty_iron', 0.05, 0.03, 0.01, 0, H - 0.017, D / 2 + 0.005);
     return g;
   }
 
