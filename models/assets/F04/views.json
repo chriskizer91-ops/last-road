@@ -1,0 +1,18 @@
+{"objects": [
+  {"name": "bush_dense", "size_m": [3.2, 2.1, 2.9],
+   "views": [
+     {"label": "Dense – side", "box": [28, 14, 480, 316], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Dense – top", "box": [522, 16, 856, 316], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "bush_half_dead", "size_m": [2.85, 1.78, 2.34],
+   "views": [
+     {"label": "Half-dead – side", "box": [58, 385, 462, 638], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Half-dead – top", "box": [525, 372, 852, 640], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "bush_clump", "size_m": [4.9, 1.34, 1.9],
+   "views": [
+     {"label": "Clump (three) – side", "box": [28, 740, 726, 930], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Clump (three) – top", "box": [778, 670, 1452, 932], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]}
+ ],
+ "notes": "Arid scrub bush in three variants: olive-grey leaves on a grey, vase-shaped bundle of stems, a few tan seed pods, and a patch of red soil and leaf litter. The 1 m scale bar is about 142 px, giving: dense ≈3.2 m wide × 2.1 m tall; half-dead ≈2.85 × 1.8 m with bare twigs toward +x/+z; clump of three ≈4.9 × 1.35 m. The top views are drawn smaller than the side views, so depths come from their proportions. Each 'side' view is used as the front (+z), and the dense three-quarter view is left out."}

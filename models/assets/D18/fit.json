@@ -1,0 +1,106 @@
+{
+ "crate": {
+  "Top": {
+   "iou": 0.877,
+   "turn_deg": 4.24
+  },
+  "texels": {
+   "covered": 805273,
+   "seen": 210340
+  }
+ },
+ "fire_ring": {
+  "Front": {
+   "iou": 0.898,
+   "turn_deg": -0.08
+  },
+  "Back": {
+   "iou": 0.882,
+   "turn_deg": -1.19
+  },
+  "Top": {
+   "iou": 0.77,
+   "turn_deg": 3.64
+  },
+  "texels": {
+   "covered": 545167,
+   "seen": 364601
+  }
+ },
+ "jerry_cans": {
+  "Front": {
+   "iou": 0.98,
+   "turn_deg": -0.09
+  },
+  "Back": {
+   "iou": 0.917,
+   "turn_deg": -0.13
+  },
+  "Top": {
+   "iou": 0.853,
+   "turn_deg": -3.16
+  },
+  "texels": {
+   "covered": 891043,
+   "seen": 457578
+  }
+ },
+ "table": {
+  "Front": {
+   "iou": 0.313,
+   "turn_deg": 0.0
+  },
+  "Back": {
+   "iou": 0.29,
+   "turn_deg": 0.0
+  },
+  "Top": {
+   "iou": 0.891,
+   "turn_deg": -1.27
+  },
+  "texels": {
+   "covered": 862833,
+   "seen": 190421
+  }
+ },
+ "tent": {
+  "Front": {
+   "iou": 0.833,
+   "turn_deg": 0.41
+  },
+  "Back": {
+   "iou": 0.827,
+   "turn_deg": -0.02
+  },
+  "Top": {
+   "iou": 0.74,
+   "turn_deg": 4.21
+  },
+  "texels": {
+   "covered": 723887,
+   "seen": 356113
+  }
+ },
+ "wreck": {
+  "Front": {
+   "iou": 0.527,
+   "turn_deg": -3.04
+  },
+  "Back": {
+   "iou": 0.499,
+   "turn_deg": 3.09
+  },
+  "Side": {
+   "iou": 0.634,
+   "turn_deg": 3.3
+  },
+  "Top": {
+   "iou": 0.627,
+   "turn_deg": -1.11
+  },
+  "texels": {
+   "covered": 244513,
+   "seen": 159579
+  }
+ }
+}

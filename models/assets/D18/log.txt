@@ -1,2 +1,5 @@
 helper: done claude-opus-5-5 xhigh 921 s 3701 in 96000 out max_tokens
 no model in the answer
+helper: done claude-opus-5-5 xhigh 899 s 3701 in 94380 out end_turn
+built {'wreck': {'tris': 3040, 'size': [9.367, 2.324, 6.91], 'min': [-4.674, -0.024, -3.45]}, 'tent': {'tris': 356, 'size': [2.808, 1.906, 2.712], 'min': [-1.404, -0.036, -1.356]}, 'table': {'tris': 120, 'size': [1.007, 0.624, 0.567], 'min': [-0.504, -0.004, -0.284]}, 'crate': {'tris': 132, 'size': [0.75, 0.44, 0.56], 'min': [-0.375, 0, -0.28]}, 'jerry_cans': {'tris': 168, 'size': [1.089, 0.509, 0.289], 'min': [-0.543, 0, -0.14]}, 'fire_ring': {'tris': 1040, 'size': [1.104, 0.205, 1.078], 'min': [-0.557, -0.032, -0.545]}}
+painted {'crate': {'Top': 0.877}, 'fire_ring': {'Front': 0.898, 'Back': 0.882, 'Top': 0.77}, 'jerry_cans': {'Front': 0.98, 'Back': 0.917, 'Top': 0.853}, 'table': {'Front': 0.313, 'Back': 0.29, 'Top': 0.891}, 'tent': {'Front': 0.833, 'Back': 0.827, 'Top': 0.74}, 'wreck': {'Front': 0.527, 'Back': 0.499, 'Side': 0.634, 'Top': 0.627}} 299s

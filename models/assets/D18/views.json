@@ -1,0 +1,38 @@
+{"objects": [
+  {"name": "wreck", "size_m": [9.3, 2.3, 6.9],
+   "views": [
+     {"label": "Front", "box": [36, 18, 612, 171], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Back", "box": [237, 276, 842, 437], "cam": [0, 0, -1], "up": [0, 1, 0]},
+     {"label": "Side", "box": [910, 21, 1478, 167], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "Top", "box": [897, 233, 1390, 518], "cam": [0, 1, 0], "up": [0, 0, 1]}
+   ]},
+  {"name": "tent", "size_m": [2.8, 1.87, 2.7],
+   "views": [
+     {"label": "Front", "box": [612, 50, 790, 166], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Back", "box": [66, 302, 240, 436], "cam": [0, 0, -1], "up": [0, 1, 0]},
+     {"label": "Top", "box": [1320, 316, 1502, 447], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "table", "size_m": [1.0, 0.62, 0.56],
+   "views": [
+     {"label": "Front", "box": [589, 127, 652, 167], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Back", "box": [173, 382, 237, 430], "cam": [0, 0, -1], "up": [0, 1, 0]},
+     {"label": "Top", "box": [1255, 412, 1311, 461], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "crate", "size_m": [0.74, 0.44, 0.56],
+   "views": [
+     {"label": "Top", "box": [1317, 452, 1363, 488], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "jerry_cans", "size_m": [1.12, 0.48, 0.32],
+   "views": [
+     {"label": "Front", "box": [760, 139, 832, 169], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Back", "box": [62, 403, 138, 437], "cam": [0, 0, -1], "up": [0, 1, 0]},
+     {"label": "Top", "box": [1431, 462, 1486, 484], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "fire_ring", "size_m": [1.1, 0.17, 1.1],
+   "views": [
+     {"label": "Front", "box": [668, 151, 760, 171], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Back", "box": [150, 419, 236, 438], "cam": [0, 0, -1], "up": [0, 1, 0]},
+     {"label": "Top", "box": [1362, 475, 1409, 512], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]}
+ ],
+ "notes": "Venn's camp: an upside-down, fabric-covered radial-engine monoplane (wheels in the air, -x wingtip crumpled), about 9.3 m span by 6.9 m long at the scale bar's ~64 px/m. Next to it are an A-frame tent (~1.7 m wide, 1.75 m high), a camp table, a crate, three jerry cans and a stone fire ring. The plane's top view is shorter in span relative to its length than the front and side views, so a compromise was used (span:length ~1.35). The crate can't be picked out in the front or back views, so only its top view is listed. None of the camp items has a side view."}

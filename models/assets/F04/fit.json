@@ -1,0 +1,44 @@
+{
+ "bush_clump": {
+  "Clump (three) \u2013 side": {
+   "iou": 0.694,
+   "turn_deg": 3.08
+  },
+  "Clump (three) \u2013 top": {
+   "iou": 0.858,
+   "turn_deg": 0.77
+  },
+  "texels": {
+   "covered": 250108,
+   "seen": 98581
+  }
+ },
+ "bush_dense": {
+  "Dense \u2013 side": {
+   "iou": 0.774,
+   "turn_deg": 0.22
+  },
+  "Dense \u2013 top": {
+   "iou": 0.913,
+   "turn_deg": -0.83
+  },
+  "texels": {
+   "covered": 354121,
+   "seen": 116094
+  }
+ },
+ "bush_half_dead": {
+  "Half-dead \u2013 side": {
+   "iou": 0.654,
+   "turn_deg": 0.17
+  },
+  "Half-dead \u2013 top": {
+   "iou": 0.774,
+   "turn_deg": 3.0
+  },
+  "texels": {
+   "covered": 336986,
+   "seen": 151318
+  }
+ }
+}

@@ -62,23 +62,25 @@ function build(THREE) {
     const top = (r) => interp(pr.r, pr.top, r);
     const bot = (r) => interp(pr.r, pr.bot, r);
 
-    // ---- crown: flattened foliage clumps over an elliptical disc ----
-    function clump(u, v, k, center) {
+    // ---- crown: dense, overlapping flattened clumps over an elliptical disc ----
+    function clump(u, v, k, jitter, spin) {
       const rr = Math.min(Math.sqrt(u * u + v * v), 1);
       const t = top(rr), b = bot(rr);
       let ry = Math.max((t - b) / 2, p.minRy);
       let cy = t - ry;
-      if (!center) {
+      if (jitter) {
         cy -= R() * 0.12 * ry;
         ry *= 0.92 + 0.08 * R();
       }
-      const m = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 5), mat('foliage'));
+      // 8 x 6: vertices sit exactly on the x/z extremes and on the equator
+      const m = new THREE.Mesh(new THREE.SphereGeometry(1, 8, 6), mat('foliage'));
       m.name = 'foliage';
       m.scale.set(k * hx, ry, k * hz);
+      if (spin) m.rotation.y = R() * Math.PI;
       m.position.set(u * hx, cy, v * hz);
       g.add(m);
     }
-    clump(0, 0, p.rh, true);
+    clump(0, 0, p.rh, false, false);
     for (let i = 0; i < p.rings.length; i++) {
       const rf = p.rings[i][0], n = p.rings[i][1];
       const outer = i === p.rings.length - 1;
@@ -89,7 +91,7 @@ function build(THREE) {
         const a = off + (j + (fixed ? 0 : (R() - 0.5) * 0.4)) * Math.PI * 2 / n;
         const k = p.rh * (0.9 + 0.2 * R());
         const r = outer ? 1 - k : rf + (R() - 0.5) * 0.04;
-        clump(Math.cos(a) * r, Math.sin(a) * r, k, false);
+        clump(Math.cos(a) * r, Math.sin(a) * r, k, true, !fixed);
       }
     }
 
@@ -103,7 +105,7 @@ function build(THREE) {
     const TM = new THREE.Vector3(p.tx + p.lean[0] * 0.4, (p.fh * 0.6 + p.hs) / 2, p.tz + p.lean[1] * 0.4);
     chain(g, [T0, TM, S], p.rB, p.rT, 2, p.tRad, 'bark');
 
-    // ---- limbs: rise steeply, then spread under the flat crown ----
+    // ---- limbs: split low, fan out in a V, then spread under the flat crown ----
     function grow(start, th, lvl) {
       const L = p.levels[lvl];
       const jit = lvl === p.levels.length - 1 ? 0.05 : 0.1;
@@ -152,36 +154,36 @@ function build(THREE) {
 
   return {
     tree_young: tree({
-      seed: 11, W: 5.1, D: 4.85, rh: 0.22, minRy: 0.25,
-      rings: [[0.4, 7], [0.78, 12]],
+      seed: 11, W: 5.1, D: 4.85, rh: 0.24, minRy: 0.25,
+      rings: [[0.4, 8], [0.76, 12]],
       prof: { r: [0, 0.4, 0.8], top: [3.0, 2.85, 2.65], bot: [1.95, 2.0, 2.2] },
-      tx: 0.05, tz: 0, lean: [0.03, 0], hs: 1.25, rB: 0.085, rT: 0.065, fr: 0.13, fh: 0.15, tRad: 8,
+      tx: 0.05, tz: 0, lean: [0.03, 0], hs: 0.95, rB: 0.1, rT: 0.075, fr: 0.15, fh: 0.15, tRad: 8,
       angles: [0.4, 2.0, 3.5, 5.0],
       levels: [
-        { rf: 0.4, yf: -0.1, hf: 0.3, vf: 0.7, r0: 0.045, r1: 0.028, segs: 3, rad: 6 },
-        { n: 2, spread: 0.7, rf: 0.75, yf: 0.3, hf: 0.5, vf: 0.55, r0: 0.025, r1: 0.01, segs: 2, rad: 5 }
+        { rf: 0.45, yf: -0.15, hf: 0.42, vf: 0.58, r0: 0.055, r1: 0.032, segs: 3, rad: 6 },
+        { n: 2, spread: 0.6, rf: 0.78, yf: 0.3, hf: 0.5, vf: 0.5, r0: 0.03, r1: 0.012, segs: 2, rad: 5 }
       ]
     }),
     tree_mature: tree({
-      seed: 23, W: 12.4, D: 11.6, rh: 0.18, minRy: 0.4,
-      rings: [[0.28, 6], [0.55, 11], [0.82, 16]],
+      seed: 23, W: 12.4, D: 11.6, rh: 0.2, minRy: 0.4,
+      rings: [[0.25, 6], [0.5, 12], [0.8, 20]],
       prof: { r: [0, 0.28, 0.55, 0.82], top: [6.3, 6.05, 5.75, 5.35], bot: [4.35, 4.3, 4.4, 4.65] },
-      tx: -0.3, tz: 0, lean: [0.08, 0.04], hs: 2.3, rB: 0.33, rT: 0.26, fr: 0.52, fh: 0.5, tRad: 10,
+      tx: -0.3, tz: 0, lean: [0.08, 0.04], hs: 2.0, rB: 0.4, rT: 0.3, fr: 0.58, fh: 0.5, tRad: 10,
       angles: [0.3, 1.35, 2.4, 3.45, 4.5, 5.55],
       levels: [
-        { rf: 0.45, yf: -0.12, hf: 0.3, vf: 0.7, r0: 0.17, r1: 0.09, segs: 3, rad: 7 },
-        { n: 2, spread: 0.5, rf: 0.8, yf: 0.3, hf: 0.5, vf: 0.55, r0: 0.08, r1: 0.025, segs: 3, rad: 5 }
+        { rf: 0.45, yf: -0.15, hf: 0.42, vf: 0.58, r0: 0.2, r1: 0.11, segs: 3, rad: 7 },
+        { n: 2, spread: 0.5, rf: 0.8, yf: 0.3, hf: 0.5, vf: 0.55, r0: 0.1, r1: 0.03, segs: 3, rad: 5 }
       ]
     }),
     tree_old: tree({
-      seed: 37, W: 23.0, D: 20.2, rh: 0.14, minRy: 0.6,
-      rings: [[0.22, 6], [0.43, 10], [0.645, 15], [0.86, 24]],
+      seed: 37, W: 23.0, D: 20.2, rh: 0.16, minRy: 0.6,
+      rings: [[0.2, 6], [0.42, 12], [0.63, 18], [0.84, 28]],
       prof: { r: [0, 0.3, 0.6, 0.86], top: [9.9, 9.55, 8.85, 8.15], bot: [6.6, 6.4, 6.6, 7.0] },
-      tx: -0.7, tz: 0.8, lean: [0.1, 0], hs: 3.4, rB: 0.75, rT: 0.6, fr: 1.25, fh: 0.9, tRad: 12,
+      tx: -0.7, tz: 1.2, lean: [0.1, 0], hs: 2.7, rB: 0.85, rT: 0.65, fr: 1.25, fh: 0.9, tRad: 12,
       angles: [0.15, 1.75, 3.25, 4.75],
       levels: [
-        { rf: 0.32, yf: -0.12, hf: 0.3, vf: 0.7, r0: 0.42, r1: 0.24, segs: 4, rad: 8 },
-        { n: 3, spread: 0.5, rf: 0.62, yf: 0.0, hf: 0.5, vf: 0.55, r0: 0.2, r1: 0.1, segs: 3, rad: 6 },
+        { rf: 0.36, yf: -0.35, hf: 0.45, vf: 0.55, r0: 0.46, r1: 0.27, segs: 4, rad: 8 },
+        { n: 3, spread: 0.5, rf: 0.64, yf: -0.1, hf: 0.55, vf: 0.45, r0: 0.22, r1: 0.1, segs: 3, rad: 6 },
         { n: 2, spread: 0.26, rf: 0.88, yf: 0.35, hf: 0.5, vf: 0.5, r0: 0.09, r1: 0.03, segs: 2, rad: 5 }
       ],
       dead: true

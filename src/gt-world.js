@@ -29,6 +29,8 @@ const GT_NAMES=[['Roadhead',32.4,7.4,900],['The End',34,7,250],['Kettle Creek St
   ['The Arches',40,18,1500],['The Lake',44.5,45,3000],['The Delta',42,42,2500],['The Pan',8,6,6000]]
   .map(([n,bx,by,r])=>({n,x:GX(bx),z:GZ(by),r}));
 
+/* the Causeway's line (brainstorm km 17.5,13.6 to 30.6,28.6) */
+const GT_CAUSE=(()=>{const ax=GX(17.5),az=GZ(13.6),bx=GX(30.6),bz=GZ(28.6),len=Math.hypot(bx-ax,bz-az);return {ax,az,bx,bz,len,dx:(bx-ax)/len,dz:(bz-az)/len};})();
 /* ---------- Last Road: a smooth line from the south edge to Roadhead, then 2 km east to the End ---------- */
 const GT_ROAD=(()=>{
   const K=[[22,-1.2],[22.3,1.2],[23.6,2.9],[25.8,4.2],[28.4,5.5],[30.6,6.5],[32,6.95],[34.05,7.05]].map(([a,b])=>[GX(a),GZ(b)]);
@@ -204,6 +206,11 @@ function gtCore(x,z,o){
   gtRoadQ(x,z,GRQ);const R=GT_ROAD;
   if(Math.abs(GRQ.d)<40){const ad=Math.abs(GRQ.d),e=R.hw+R.sh,rh=gtRoadH(GRQ.s),corr=1-sst(e+1,e+22,ad);h=h+(rh-h)*corr;
     if(ad<e+1.5){wet=0;mud=0;}if(ad<R.hw){code=SF.asphalt;grass=0;rock=0;sand=0;salt=0;}else if(ad<e){code=SF.gravel;grass*=.3;rock=0;sand*=.3;}else if(ad<e+3){grass*=.6;}}
+  /* the Causeway: the Old Hands' raised stone road, dead straight 30 km across the savanna from the dune's edge to
+     the escarpment's foot (through the Gate), 9 m across, a metre and a half up, edged with stone */
+  {const C=GT_CAUSE,ux=x-C.ax,uz=z-C.az,t=(ux*C.dx+uz*C.dz)/C.len;if(t>-.01&&t<1.01){const d=Math.abs(ux*C.dz-uz*C.dx);if(d<14){
+    const e=Math.max(0,t<0?-t*C.len:t>1?(t-1)*C.len:0),top=1-sst(4.3,6.8,d+e*2),wear=.75+.25*vn(x/23,z/23,799);h+=1.45*top*wear;
+    if(top>.5){code=SF.gravel;rock=Math.max(rock,.75*top);grass*=1-.85*top;sand*=.3;mud=0;wet=0;}else if(d<9)grass*=.7;}}}
   /* the strips: flat, and their own ground */
   const Q=gtStripQ(x,z);if(Q){const S=Q.S,sh=gtStripH(S),f=1-sst(0,55,Q.e);h=h+(sh-h)*f;if(f>.3){wet=0;mud*=1-f;}
     if(Q.e<0){const in2=Math.abs(Q.ac)<S.hw;
@@ -254,6 +261,7 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
     const c=Math.abs(fbm(x/2400+7,z/2400-3,3,721)-.5),creek=c<.03&&c>.011?.5:0,clump=sst(.55,.75,fbm(x/700+9,z/700-4,2,795));
     const p=(.012+.12*clump+creek*.6)*sav;if(r3>p)continue;
     gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<14)continue;const Q=gtStripQ(x,z);if(Q&&Q.e<20)continue;
+    {const C=GT_CAUSE,ux=x-C.ax,uz=z-C.az,t=(ux*C.dx+uz*C.dz)/C.len;if(t>-.01&&t<1.01&&Math.abs(ux*C.dz-uz*C.dx)<10)continue;}
     let onPad=false;for(const P of GT_PADS){const F=P.F,u=(x-F.x)*F.dx+(z-F.z)*F.dz,v=-(x-F.x)*F.dz+(z-F.z)*F.dx;if(Math.max(P.u0-u,u-P.u1,P.v0-v,v-P.v1)<25){onPad=true;break;}}if(onPad)continue;
     gtCore(x,z,o);if(o.code===SF.water||o.code===SF.asphalt||o.rock>.5||o.h>300)continue;
     const sc=.8+r4*.9,v=r5*3|0,j1=hs(Math.round(x*7),Math.round(z*7),631),t=[74+(j1-.5)*16,84+(r5-.5)*14,40];
@@ -264,6 +272,7 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
 function gtPlace(x,z){
   gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<12)return GRQ.s>GT_ROAD.len-80?'The End of Last Road':'Last Road';
   const Q=gtStripQ(x,z);if(Q&&Q.e<0)return Q.S.name+' strip';
+  {const C=GT_CAUSE,ux=x-C.ax,uz=z-C.az,t=(ux*C.dx+uz*C.dz)/C.len;if(t>0&&t<1&&Math.abs(ux*C.dz-uz*C.dx)<10)return 'The Causeway';}
   let best=null,bd=1e9;for(const N of GT_NAMES){const d=Math.hypot(x-N.x,z-N.z);if(d<N.r&&d/N.r<bd){bd=d/N.r;best=N.n;}}if(best)return best;
   if(Math.max(Math.abs(x),Math.abs(z))>HALF-900)return 'The edge of the map';
   const R=gtRegions(x,z,GR);let b='The Savanna',w=R.sav;for(const r of GT_REG)if(R[r[0]]>w){w=R[r[0]];b=r[1];}return b;}

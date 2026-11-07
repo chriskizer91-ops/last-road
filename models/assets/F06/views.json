@@ -1,0 +1,40 @@
+{
+  "objects": [
+    {
+      "name": "boulder_long_large",
+      "size_m": [12.0, 4.23, 8.6],
+      "views": [{"label": "front", "box": [15, 2, 1238, 433], "cam": [0, 0, 1], "up": [0, 1, 0]}]
+    },
+    {
+      "name": "boulder_split",
+      "size_m": [7.2, 2.86, 6.0],
+      "views": [{"label": "front", "box": [100, 478, 835, 770], "cam": [0, 0, 1], "up": [0, 1, 0]}]
+    },
+    {
+      "name": "boulder_balanced",
+      "size_m": [5.95, 4.23, 5.2],
+      "views": [{"label": "front", "box": [898, 345, 1505, 776], "cam": [0, 0, 1], "up": [0, 1, 0]}]
+    },
+    {
+      "name": "boulder_xs",
+      "size_m": [1.57, 0.86, 1.4],
+      "views": [{"label": "front", "box": [113, 888, 273, 976], "cam": [0, 0, 1], "up": [0, 1, 0]}]
+    },
+    {
+      "name": "boulder_s",
+      "size_m": [2.25, 1.25, 1.9],
+      "views": [{"label": "front", "box": [333, 850, 562, 978], "cam": [0, 0, 1], "up": [0, 1, 0]}]
+    },
+    {
+      "name": "boulder_m",
+      "size_m": [2.88, 1.67, 2.5],
+      "views": [{"label": "front", "box": [620, 811, 914, 981], "cam": [0, 0, 1], "up": [0, 1, 0]}]
+    },
+    {
+      "name": "boulder_l",
+      "size_m": [3.76, 1.95, 3.1],
+      "views": [{"label": "front", "box": [958, 785, 1342, 984], "cam": [0, 0, 1], "up": [0, 1, 0]}]
+    }
+  ],
+  "notes": "Set of seven lichen-covered granite boulders (Devils Marbles style): a long 11 m loaf, a split dome, a ball balanced on a slab, and four loose boulders about 1-2.8 m wide. Each sits on a red-dirt patch with dry grass. Scale bar: 1 m is about 102 px. Each boulder is drawn only once, as a near-level, slightly elevated view, so I treated each drawing as its front view. All depths (z) are guesses at about 0.55-0.9 of the width."
+}

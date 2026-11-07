@@ -1,0 +1,44 @@
+{
+ "tree_mature": {
+  "Mature \u2013 Side": {
+   "iou": 0.748,
+   "turn_deg": -1.2
+  },
+  "Mature \u2013 Top": {
+   "iou": 0.924,
+   "turn_deg": 0.56
+  },
+  "texels": {
+   "covered": 299796,
+   "seen": 83475
+  }
+ },
+ "tree_old": {
+  "Old \u2013 Side": {
+   "iou": 0.73,
+   "turn_deg": -0.32
+  },
+  "Old \u2013 Top": {
+   "iou": 0.87,
+   "turn_deg": -2.85
+  },
+  "texels": {
+   "covered": 199878,
+   "seen": 47521
+  }
+ },
+ "tree_young": {
+  "Young \u2013 Side": {
+   "iou": 0.65,
+   "turn_deg": -0.96
+  },
+  "Young \u2013 Top": {
+   "iou": 0.858,
+   "turn_deg": 2.6
+  },
+  "texels": {
+   "covered": 500347,
+   "seen": 173882
+  }
+ }
+}

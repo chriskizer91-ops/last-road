@@ -1,0 +1,72 @@
+{
+ "boulder_balanced": {
+  "front": {
+   "iou": 0.789,
+   "turn_deg": -1.82
+  },
+  "texels": {
+   "covered": 695083,
+   "seen": 223712
+  }
+ },
+ "boulder_l": {
+  "front": {
+   "iou": 0.873,
+   "turn_deg": 0.84
+  },
+  "texels": {
+   "covered": 717122,
+   "seen": 251766
+  }
+ },
+ "boulder_long_large": {
+  "front": {
+   "iou": 0.892,
+   "turn_deg": -2.34
+  },
+  "texels": {
+   "covered": 740306,
+   "seen": 224683
+  }
+ },
+ "boulder_m": {
+  "front": {
+   "iou": 0.909,
+   "turn_deg": -1.54
+  },
+  "texels": {
+   "covered": 731722,
+   "seen": 265972
+  }
+ },
+ "boulder_s": {
+  "front": {
+   "iou": 0.884,
+   "turn_deg": 0.01
+  },
+  "texels": {
+   "covered": 792060,
+   "seen": 278079
+  }
+ },
+ "boulder_split": {
+  "front": {
+   "iou": 0.892,
+   "turn_deg": -0.39
+  },
+  "texels": {
+   "covered": 628077,
+   "seen": 124089
+  }
+ },
+ "boulder_xs": {
+  "front": {
+   "iou": 0.875,
+   "turn_deg": -0.78
+  },
+  "texels": {
+   "covered": 777527,
+   "seen": 239247
+  }
+ }
+}
