@@ -105,8 +105,8 @@ Each vehicle and asset is made detailed first and baked down. These figures are 
 ## The phone's budget
 
 - Salt & Sand draws about **850,000 triangles a frame**, 808,000 of them the SUV's Studio 2. Christopher judges that about the most his phone can draw smoothly.
-- With the play models at about 10,000 triangles each, almost all of the budget goes to the world.
-- **The look test comes first.** Bake the Rock & Mud at 10,000 triangles (and at 25,000 and 50,000, to compare) and show them beside its Studio 2, from the same cameras, on his phone: Chase, Wheel cam, Tracking car. Then he picks.
+- With the truck's play model at about 50,000 triangles (his pick) and the plane at 60,000, about 740,000 of the 850,000 is left for the world: roughly six times what Salt & Sand gives it today.
+- **The look test (done Nov 7 2026):** the Rock & Mud baked at 10,000, 25,000 and 50,000 triangles beside its Studio 2, from the same cameras (Chase, Wheel cam, Tracking car). He picked the 50,000 with 1024 pictures on his phone.
 - Why test: in the traffic test the 5,000-triangle baked Coupe was judged plenty good at traffic distance. But in early Nov 2026 he judged the game's own 51,000-triangle mesh wearing the Studio surface to look worse than the Studio models up close. Up close, the outline (round tyres, struts, the plane's wires) is what a low count shows first.
 - The world's share:
   - trees, rocks and animals drawn many at once, one draw for each kind;
@@ -146,7 +146,7 @@ The page's job system already has people, a column of light where someone has wo
 | explore | Walk a site on foot and find something. |
 | against the clock | The existing deliver step. |
 
-An eight-mission draft for the bush pilot jobs was written earlier. It's kept in this file's history in git (`git log -p beyond-the-last-road/README.md`). The brainstorm will redo it with exploration in mind.
+Fable's brainstorm has a 13-mission chain and 15 side-job types (`design/fable-brainstorm-2026-11-07.md`, section 6), not yet approved. An earlier eight-mission draft is in salt-mini-plus's history (`beyond-the-last-road/README.md`).
 
 ## Build order (to adjust after the brainstorm)
 
@@ -156,8 +156,8 @@ Each step ends with something Christopher can open on his phone, plus screenshot
    - new save keys;
    - the Rock & Mud and the plane in Wilderness Olive;
    - fix the plane's known faults: the car lights and gear on the HUD, the bay showing the car, the chase camera staying level.
-1. **The look test:** the Rock & Mud at 10k, 25k and 50k beside its Studio 2. He picks the play model.
-2. **The brainstorm and the picture list** (with the API key); he makes the pictures.
+1. **The look test:** done; he picked the 50k.
+2. **The brainstorm and the picture list:** done (`design/`). He makes the pictures: batch 1 now, batch 2 once he's okayed the story.
 3. **The town hub and the Outfitter** (the 150k models).
 4. **Landing and the waiting truck; getting out on foot.**
 5. **The world's layout:** regions, the paved road, the tracks, the strips, the painted mountains.
