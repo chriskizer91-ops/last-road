@@ -10,6 +10,19 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
 
 > "I think the game should be mainly SUV exploration, and you get out and walk around a temple or something, and then … a significant portion of exploration is by plane … open world where you can fly, but you can't land … we fill in the end gaps of close-up exploring stuff on foot … a lot of travel between walking around spaces … a central little town hub."
 
+## Where things stand (Nov 7 2026)
+
+- **The look test is made:** `docs/look-test/rock-mud-look-test.html` and its sheet. The Rock & Mud's Studio 2 is shown beside play models of 9,959, 24,898 and 49,654 triangles (see `models/rock-mud/README.md`). From the Chase camera all four look nearly the same. Up close, the 10k and 25k tyres read smooth (their tread is painted on), while the 50k has the Studio 2's own knobby tyres. **His pick, on his phone: the 50k with 1024 pictures.** He judged it good even for close inspection while driving; the 10k and 25k are good enough for a game, but the 50k looks significantly better.
+- **Fable's brainstorm:** `design/fable-brainstorm-2026-11-07.md`. Its proposals, none decided yet:
+  - the title *Ground Truth*;
+  - the story: a contract bush pilot surveying the interior for an archaeologist, finding the Old Hands' water channels that lead to a city buried in the dunes;
+  - the plane's name as your call sign (*Grasshopper*), and the town *Roadhead*;
+  - a 48 km map with seven regions and 12 strips;
+  - 13 story missions, about 30 pieces of gear, and about 120 pictures.
+- **The picture prompts:** `design/picture-prompts.md`, and as a page with Copy buttons: `design/picture-prompts.html` (also published as his private claude.ai page *Last Road · picture prompts*). Batch 1 doesn't depend on the story, so it can be made now. Batch 2 follows Fable's story.
+- **Paint templates:** `pictures/templates/` (the truck's five views and the plane's).
+- **A point Fable raised for him:** in the Outfitter, the Studio 2 itself (built from code, so tiny in the file) may be better than a 150k bake. The Outfitter is a closed room with one vehicle in it, and the phone already draws one Studio 2 that way in Salt & Sand.
+
 ## Decided (his picks, Nov 7 2026)
 
 ### The game
@@ -48,7 +61,7 @@ Each vehicle and asset is made detailed first and baked down. These figures are 
 | --- | --- | --- |
 | **Source** | as detailed as it comes (the Rock & Mud's Studio 2 is 790,531; redtail-1 is 241,278) | **Kept in the repo only**, with a viewer page to look at it. Not in the game. |
 | **Outfitter** | about 150,000, with the source baked onto it | **In the game's garage bay (the Outfitter)**, where you look at the vehicle and outfit it for a trip. |
-| **Play** | about 10,000, with the source baked onto it | **In the game, driving and flying.** |
+| **Play** | **about 50,000** for the truck (his pick after the look test, Nov 7 2026; his first target was 10,000), with the source baked onto it | **In the game, driving and flying.** Pictures at 1024 on the phone (24 MB of graphics memory), 2048 on the laptop (96 MB). |
 
 - **The Outfitter is part of the game,** a little technical: some engine modification, rigging, prepping and gearing up for a trip.
 - **Pictures:** the vehicles get the sharpest, because they're what you travel in (2048). Landmarks get 1024, small gear 512. Each picture is compressed according to how close you'll see it, and pictures are shared where they can be.
@@ -75,7 +88,6 @@ Each vehicle and asset is made detailed first and baked down. These figures are 
 - **Fuel** for the plane and the truck: yes or no.
 - **People:** a radio voice with a portrait card and short lines of text is suggested, rather than 3D people.
 - **Where the truck can go:** everywhere off-road inside driving areas, kept out of fly-over-only lands by cliffs, deep rivers or thick bush? Or roads and tracks only?
-- **Whether 10,000 triangles looks good enough in play.** See the look test below.
 
 ## What it's built from (in `chriskizer91-ops/salt-mini-plus`)
 
