@@ -68,16 +68,32 @@ function build(THREE) {
       m.scale.y = k;
       g.add(m);
     }
-    const h0 = 0.0025, h1 = 0.0072, h2 = 0.0118;
+    const h0 = 0.0025, h1 = 0.0068, h2 = 0.0115;
     // outer C of the coil, from the upper splice round to the lower splice
     band([[645, 98], [580, 74], [480, 62], [360, 58], [240, 60], [140, 76], [75, 112], [48, 172],
           [62, 236], [115, 282], [210, 302], [320, 308], [420, 312], [490, 318]], h0, false, 70);
-    // inner loops lying on top
-    const B = [[470, 298], [505, 240], [495, 172], [435, 122], [320, 102], [200, 108], [122, 142], [102, 200],
-               [140, 252], [240, 272], [350, 268], [425, 232], [438, 180], [388, 146], [295, 140], [215, 160],
-               [190, 205], [240, 232], [320, 228], [362, 196]];
-    const hB = B.map((p, i) => (i <= 9 ? h1 : i === 10 ? 0.0088 : i === 11 ? 0.0104 : h2));
-    band(B, hB, false, 110);
+    // inner turns, packed edge to edge, closing round the small opening near the top middle
+    const B = [[470, 300], [505, 262], [518, 200], [505, 140], [460, 95], [380, 68], [280, 62], [180, 68],
+               [118, 95], [98, 150], [110, 205], [160, 240], [250, 252], [345, 248], [420, 228], [452, 180],
+               [440, 128], [395, 90], [320, 72], [240, 72], [180, 92], [162, 128], [180, 165], [240, 182],
+               [310, 182], [362, 165], [378, 130]];
+    const hB = B.map((p, i) => (i <= 15 ? h1 : i === 16 ? 0.0092 : h2));
+    band(B, hB, false, 130);
+    // thin webbing layer under the coil so the packed layers read solid (opening left at the sheet's hole)
+    const fillPts = [[600, 82], [580, 74], [480, 62], [360, 58], [240, 60], [140, 76], [75, 112], [48, 172],
+                     [62, 236], [115, 282], [210, 302], [320, 308], [420, 312], [490, 318], [505, 262],
+                     [515, 200], [505, 140], [525, 108], [575, 88]];
+    const fs = new THREE.Shape();
+    fillPts.forEach((p, i) => {
+      const x = (p[0] - cx) * S, y = -(p[1] - cy) * S;
+      if (i === 0) fs.moveTo(x, y); else fs.lineTo(x, y);
+    });
+    const fh = new THREE.Path();
+    fh.absellipse((265 - cx) * S, -(126 - cy) * S, 78 * S, 30 * S, 0, Math.PI * 2, true);
+    fs.holes.push(fh);
+    const fill = mesh(new THREE.ExtrudeGeometry(fs, { depth: 0.002, bevelEnabled: false, curveSegments: 16 }), 'webbing');
+    fill.rotation.x = -Math.PI / 2;
+    g.add(fill);
     // eye loops
     band([[752, 112], [800, 95], [850, 112], [880, 155], [875, 195], [840, 205], [795, 180], [760, 148]], h0, true, 40);
     band([[645, 298], [700, 268], [790, 262], [862, 285], [866, 330], [800, 354], [700, 352], [645, 330]], h0, true, 44);

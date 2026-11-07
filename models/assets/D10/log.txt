@@ -1,0 +1,2 @@
+helper: done claude-opus-5-5 xhigh 650 s 3707 in 68048 out end_turn
+built {'arch_wide': {'tris': 2744, 'size': [109.07, 49.054, 33.536], 'min': [-54.348, -0.762, -16.495]}, 'arch_round': {'tris': 2256, 'size': [83.857, 37.659, 22.061], 'min': [-42.069, -0.74, -10.321]}, 'arch_broken': {'tris': 2060, 'size': [62.689, 25.488, 22.387], 'min': [-31.507, -0.619, -11.571]}}

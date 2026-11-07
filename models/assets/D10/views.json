@@ -1,0 +1,21 @@
+{"objects": [
+  {"name": "arch_wide", "size_m": [108.7, 48.3, 31.0],
+   "views": [
+     {"label": "Arch 1 front (45 m / 60 m)", "box": [52, 15, 758, 331], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Arch 1 side", "box": [771, 24, 962, 331], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "Arch 1 top", "box": [987, 105, 1522, 288], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "arch_round", "size_m": [83.6, 36.9, 24.0],
+   "views": [
+     {"label": "Arch 2 front (35 m / 45 m)", "box": [106, 411, 686, 669], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Arch 2 side (6 m crown)", "box": [709, 428, 869, 669], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "Arch 2 top", "box": [931, 491, 1456, 618], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "arch_broken", "size_m": [61.8, 24.9, 23.0],
+   "views": [
+     {"label": "Arch 3 front (24 m / 32 m, cracked)", "box": [154, 755, 632, 949], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "Arch 3 side", "box": [684, 755, 857, 951], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "Arch 3 top", "box": [940, 797, 1352, 932], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]}
+ ],
+ "notes": "Three red-sandstone arches: wide blocky arch (~109x48 m; the drawn opening is ~52 m against the 60 m label), round arch (~84x37 m, 45 m opening, ~6.5 m crown), and a broken arch (~62x25 m, 32 m opening, see-through crack at the crown, fallen block underneath). The rows aren't drawn to one common scale (10 m bar = ~62 px), so each row is scaled by its own dimension labels. Side views are read as the -x side, so they agree with how the top views shift."}

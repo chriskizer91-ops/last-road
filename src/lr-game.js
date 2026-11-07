@@ -174,3 +174,47 @@ function lrPropsShadow(u,F,e,maxD){
     gl.uniformMatrix4fv(u.uM,false,lrPropM(p));drawMesh(m);tris+=m.tris;}
   return tris;}
 window.__lr=Object.assign(window.__lr||{},{LRP});
+
+/* ---------- THE TRUCK AND THE HERON: you drive one, the other waits. Driving, the Heron stands where you left it
+   (at first in front of the hangar at Roadhead); drive up to it, stop, and HERON (E on a keyboard) puts you in it.
+   Flying, the truck is waiting beside the runway at the strip nearest you; land there, stop, and TRUCK puts you in
+   it, the Heron left standing where you stopped. The button shows only when the swap can happen ---------- */
+const LRV={parked:null,stripI:-1,btn:null,planePose:null,can:''};
+const lrYaw=t=>Math.atan2(-t.M[6],t.M[0]);
+function lrStripAt(x,z,m){const G=WG.GTS;for(let i=0;i<G.length;i++){const S=G[i],u=(x-S.x)*S.dx+(z-S.z)*S.dz,v=-(x-S.x)*S.dz+(z-S.z)*S.dx;if(Math.abs(u)<S.len/2+m&&Math.abs(v)<S.hw+m)return i;}return -1;}
+function lrTruckSpot(S){const u=-S.len/2+70,v=S.hw+14;return {x:S.x+S.dx*u-S.dz*v,z:S.z+S.dz*u+S.dx*v,yaw:Math.atan2(-S.dz,S.dx)};}
+function lrPlaneHome(){const S=WG.GTS[0],u=-150,v=36;return {x:S.x+S.dx*u-S.dz*v,z:S.z+S.dz*u+S.dx*v,yaw:Math.atan2(-S.dz,S.dx)};}
+/* a vehicle made only to stand somewhere: the truck, or the Heron (the game's own maker, with the plane asked for) */
+function lrStandIn(plane,pose){const w=RT.want;RT.want=plane;let o=null;
+  try{o=makeCar(APP.bi,RANCH.world,simOpts(),plusK(BUILDS[APP.bi].car),plusG(BUILDS[APP.bi].car));}catch(e){console.warn('stand-in',e);}finally{RT.want=w;}
+  if(o)lrStand(o,pose);return o;}
+function lrStand(o,pose){const y=RANCH.W.heightAt(pose.x,pose.z);o.place([pose.x,y+.05,pose.z],pose.yaw);for(const w of o.wheels){w.comp=.35*(w.travel||.12);w.ang=0;w.w=0;}}
+const lrParked=()=>GAME.state==='drive'&&LRV.parked?LRV.parked:null;
+function lrNearStrip(x,z,r){const G=WG.GTS;let b=-1,bd=r;for(let i=0;i<G.length;i++){const d=Math.hypot(G[i].x-x,G[i].z-z)-G[i].len/2;if(d<bd){bd=d;b=i;}}return b;}
+function lrParkTick(){
+  const t=GAME.car;if(!t||GAME.state!=='drive'||typeof WG==='undefined'||!WG.GTS)return;
+  if(t.rt){const i=lrNearStrip(t.p[0],t.p[2],6000);
+    if(i>=0&&i!==LRV.stripI){LRV.stripI=i;const sp=lrTruckSpot(WG.GTS[i]);if(LRV.parked&&!LRV.parked.rt)lrStand(LRV.parked,sp);else LRV.parked=lrStandIn(false,sp);}
+    if(i<0&&LRV.parked&&!LRV.parked.rt&&Math.hypot(LRV.parked.p[0]-t.p[0],LRV.parked.p[2]-t.p[2])>9000)LRV.parked=null,LRV.stripI=-1;}
+  else if(!LRV.parked||!LRV.parked.rt)LRV.parked=lrStandIn(true,LRV.planePose||lrPlaneHome());
+  /* can you swap now? */
+  const sp=Math.hypot(t.v[0],t.v[1],t.v[2]);let can='';
+  if(t.rt){const h=t.p[1]-RANCH.W.heightAt(t.p[0],t.p[2]);if(sp<3&&h<3&&lrStripAt(t.p[0],t.p[2],40)>=0)can='TRUCK';}
+  else{const P=LRV.parked;if(P&&P.rt&&sp<3&&Math.hypot(P.p[0]-t.p[0],P.p[2]-t.p[2])<45)can='HERON';}
+  LRV.can=can;if(LRV.btn){LRV.btn.hidden=!can;if(can&&LRV.btn.textContent!==can)LRV.btn.textContent=can;}}
+function lrSwap(){
+  const t=GAME.car;if(!t||GAME.state!=='drive')return false;lrParkTick();
+  if(LRV.can==='TRUCK'){const i=lrStripAt(t.p[0],t.p[2],40),P=lrTruckSpot(WG.GTS[i]),keep=t;LRV.planePose={x:t.p[0],z:t.p[2],yaw:lrYaw(t)};
+    rtFly(false);placeCar(P.x,P.z,P.yaw);LRV.parked=keep;LRV.stripI=-1;say('THE TRUCK',1.6);return true;}
+  if(LRV.can==='HERON'){const P=LRV.parked,keep=t,pose={x:P.p[0],z:P.p[2],yaw:lrYaw(P)};
+    rtFly(true);placeCar(pose.x,pose.z,pose.yaw);LRV.parked=keep;LRV.stripI=lrNearStrip(pose.x,pose.z,6000);LRV.planePose=null;return true;}
+  say(t.rt?'LAND AT A STRIP AND STOP':'DRIVE UP TO THE HERON AND STOP',2);return false;}
+function lrParkedDraw(eye){
+  lrParkTick();const P=lrParked();if(!P)return 0;const d=Math.hypot(P.p[0]-eye[0],P.p[2]-eye[2]);if(d>900)return 0;
+  return drawWorldCar(P,null,0,d>260,false)||0;}
+/* the button, on the phone's right-hand column, at the top; E on a keyboard */
+function lrSwapUI(){if(LRV.btn)return;const col=document.querySelector('#touch .tside.R');if(!col)return;
+  const b=document.createElement('button');b.className='tb';b.id='lrSwap';b.type='button';b.hidden=true;b.textContent='HERON';
+  b.addEventListener('click',e=>{e.preventDefault();b.blur();lrSwap();});col.insertBefore(b,col.firstChild);LRV.btn=b;}
+addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&GAME.state==='drive'&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))lrSwap();});
+window.__lr=Object.assign(window.__lr||{},{LRV,lrSwap,lrParkTick});

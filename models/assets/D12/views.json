@@ -1,0 +1,15 @@
+{"objects": [
+  {"name": "spire_capped", "size_m": [7.58, 10.73, 7.58],
+   "views": [{"label": "front", "box": [25, 17, 338, 460], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "mushroom", "size_m": [9.37, 6.25, 9.37],
+   "views": [{"label": "front", "box": [365, 195, 752, 453], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "hourglass", "size_m": [7.72, 9.54, 7.72],
+   "views": [{"label": "front", "box": [783, 64, 1102, 458], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "twin_spires", "size_m": [11.67, 10.05, 8.41],
+   "views": [{"label": "front", "box": [30, 491, 512, 906], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "stump", "size_m": [9.10, 7.17, 9.10],
+   "views": [{"label": "front", "box": [530, 604, 906, 900], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "stepped_tower", "size_m": [14.04, 17.97, 14.04],
+   "views": [{"label": "front", "box": [925, 160, 1505, 902], "cam": [0, 0, 1], "up": [0, 1, 0]}]}
+ ],
+ "notes": "Six free-standing banded red/orange/cream hoodoos (capped spire, mushroom, hourglass, twin spires, flat stump, stepped tower), each on a scree apron. Scale bar 413 px = 10 m (41.3 px/m), so heights run from 6.3 to 18 m. Each is drawn only once, as a near-front view seen slightly from above. Depth is unknown: footprints are assumed round (depth = apron width), except the twin spires, whose apron is flattened to 0.72 of its width."}

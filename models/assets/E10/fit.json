@@ -31,12 +31,12 @@
  },
  "tow_strap": {
   "top (strap lying coiled, sewn eyes to the right)": {
-   "iou": 0.814,
+   "iou": 0.825,
    "turn_deg": -1.35
   },
   "texels": {
-   "covered": 556340,
-   "seen": 460714
+   "covered": 495276,
+   "seen": 430187
   }
  },
  "tyre_repair_kit": {
