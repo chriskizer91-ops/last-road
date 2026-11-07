@@ -36,7 +36,7 @@ for ID in sys.argv[1:]:
         size = (P.max(0) - P.min(0)).tolist()
         tex = Image.open(D + f'{name}_albedo_ao.webp').convert('RGB'); px = 1024 if max(size) >= 3 else 512
         if tex.width > px: tex = tex.resize((px, px), Image.LANCZOS)
-        b = io.BytesIO(); tex.save(b, 'WEBP', quality=80, method=6)
+        b = io.BytesIO(); tex.save(b, 'WEBP', quality=int(os.environ.get('PROPQ', 72)), method=6)
         lo, hi = P.min(0), P.max(0); q = np.round((P - lo) / np.maximum(hi - lo, 1e-6) * 65535).astype(np.uint16)
         nq = np.round(np.clip(N / np.maximum(np.linalg.norm(N, axis=1, keepdims=True), 1e-9), -1, 1) * 127).astype(np.int8); nq = np.concatenate([nq, np.zeros((len(nq), 1), np.int8)], 1)
         uq = np.round(np.clip(UV, 0, 1) * 65535).astype(np.uint16)
