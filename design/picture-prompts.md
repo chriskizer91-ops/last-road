@@ -1,4 +1,4 @@
-# Last Road · picture prompts
+# Ground Truth · picture prompts
 
 ## How to use this
 
@@ -8,7 +8,7 @@
 - **Keep the little ID label in the bottom-left corner** (A01, B03 …). That's how Claude sorts your zip.
 - For **PAINT** prompts, attach the template picture Claude sent: `rock-mud-paint-template.png` for the truck, `plane-paint-template.png` for the plane.
 - Save the pictures as they come. One zip per batch is perfect. Folders by section letter help, but they aren't needed.
-- **Batch 1** doesn't depend on the story: make it now. **Batch 2** follows Fable's proposed story: wait until you've okayed the story.
+- **Batch 1** doesn't depend on the story: make it now. **Batch 2** follows the story you okayed (Fable's): make it after Batch 1's first 20.
 
 ## STYLE (paste this first in every chat)
 
@@ -57,15 +57,15 @@ Attach rock-mud-paint-template.png and the picture of your pick (A01, A02 or A03
 ```
 
 **A05 · Outfit badge and plane lettering** · SET
-The outfit's door badge and the plane's lettering. Change OUTFIT NAME and PLANE NAME once the names are picked.
+The outfit's door badge and the plane's lettering. Change OUTFIT NAME once the outfit has a name.
 ```
-Layout: SET, but these are flat decals: show each one face-on only, with a 10 cm scale bar. 1) The outfit's door decal, 45 cm across: a round badge with a windsock blowing over a straight road to a low horizon, and OUTFIT NAME curved round the top in plain bold capitals. Two colours only: bone white on faded olive green. 2) The registration LR-OLV in plain black capitals, 30 cm tall. 3) PLANE NAME in hand-painted cream script, 8 cm tall, on a strip of olive green. Each slightly sun-faded, with worn edges. Put the label A05 small in the bottom-left corner.
+Layout: SET, but these are flat decals: show each one face-on only, with a 10 cm scale bar. 1) The outfit's door decal, 45 cm across: a round badge with a windsock blowing over a straight road to a low horizon, and OUTFIT NAME curved round the top in plain bold capitals. Two colours only: bone white on faded olive green. 2) The registration LR-OLV in plain black capitals, 30 cm tall. 3) HERON in hand-painted cream script, 8 cm tall, on a strip of olive green. Each slightly sun-faded, with worn edges. Put the label A05 small in the bottom-left corner.
 ```
 
 **A06 · The plane's markings and wear** · PAINT
-The plane's markings and wear, baked onto its model. Redo with the real name once it's picked.
+The plane's markings and wear, baked onto its model. The plane is the Heron.
 ```
-Attach plane-paint-template.png. Layout: PAINT. Paint the plane in Wilderness Olive: sun-faded olive green all over, with a weathered yellow band across the tail. Add the registration LR-OLV in black capitals 30 cm tall on both sides of the rear fuselage, reading normally, and PLANE NAME in small cream script under the side windows on both sides. Then the wear: chalky, paler top surfaces; leading edges of wings, struts and tail rubbed to grey primer; a sooty exhaust stain along the belly; oil streaks back from the cowl; fuel stains round the wing filler caps; red dust low on the fuselage. Put the label A06 small in the bottom-left corner.
+Attach plane-paint-template.png. Layout: PAINT. Paint the plane in Wilderness Olive: sun-faded olive green all over, with a weathered yellow band across the tail. Add the registration LR-OLV in black capitals 30 cm tall on both sides of the rear fuselage, reading normally, and HERON in small cream script under the side windows on both sides. Then the wear: chalky, paler top surfaces; leading edges of wings, struts and tail rubbed to grey primer; a sooty exhaust stain along the belly; oil streaks back from the cowl; fuel stains round the wing filler caps; red dust low on the fuselage. Put the label A06 small in the bottom-left corner.
 ```
 
 **A07 · The truck's dashboard** · SCENE
@@ -662,9 +662,9 @@ The dust storm that slides in from the west on storm days and in the night-drive
 Layout: PANORAMA. Layer: storm, a single layer that slides in from the west in front of the far layers. A towering wall of dust about 20 km away and 1.5 km tall, rolling toward the viewer across flat desert. Billowing rounded heads along the top are lit warm ochre and tan by the sun, darkening through rust to dense dark brown at the base, where it swallows the ground completely. No land shows through it. It fills the lower two thirds of the picture. Above its top, a flat plain pale blue sky, so the outline can be cut out. The left and right edges join seamlessly. Put the label I17 small in the bottom-left corner.
 ```
 
-## Batch 2 · after you okay the story
+## Batch 2 · the story's places and people
 
-These follow Fable's proposed story (the Old Hands, Venn and the radio voices), so they may change once you've decided.
+These follow the story you okayed (Fable's: the Old Hands, Venn and the radio voices). Make them after Batch 1's first 20.
 
 ### C · Temples and ruins
 
@@ -1045,4 +1045,4 @@ A made-up person, the one exception to the no-people rule. A black-and-white pho
 | 1 | A 7, B 19, E 18, F 14, G 8, H 20, I 17 | 103 |
 | 2 | C 35, D 19, J 7 | 61 |
 
-**The first 20 to make** (enough for the first playable piece: the town, the truck and plane in their paint, driving and flying round the savanna near town): A01, A02, A03, A04, A06, B01, B02, B04, B06, B07, B15, F01, F03, H01, H02, H03, H04, I01, I02, I03.
+**The first 20 to make** (enough for the first playable piece): A01, A02, A03, A04, A06, B01, B02, B04, B06, B07, B15, F01, F03, H01, H02, H03, H04, I01, I02, I03.

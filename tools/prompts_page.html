@@ -1,0 +1,62 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Ground Truth · picture prompts</title>
+<style>
+:root{--bg:#f4f1ea;--card:#fffdf8;--ink:#2a2622;--mut:#7a7066;--line:#e2dccf;--acc:#6b7a3a;--acc2:#b4532a}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 -apple-system,system-ui,"Segoe UI",Roboto,sans-serif}
+header{padding:18px 16px 8px;max-width:760px;margin:0 auto}h1{font-size:21px;margin:0 0 4px}h1 span{color:var(--acc)}.sub{color:var(--mut);font-size:13px}
+main{max-width:760px;margin:0 auto;padding:0 12px 80px}
+details.box{background:var(--card);border:1px solid var(--line);border-radius:12px;margin:10px 0;padding:10px 14px}details.box summary{font-weight:600;cursor:pointer}
+details.box ul{margin:8px 0 2px;padding-left:18px}details.box li{margin:4px 0}
+.tabs{position:sticky;top:0;z-index:5;background:var(--bg);display:flex;gap:6px;padding:10px 0;overflow-x:auto}
+.tabs button{flex:0 0 auto;border:1px solid var(--line);background:var(--card);border-radius:999px;padding:7px 13px;font:inherit;font-size:14px;color:var(--ink)}
+.tabs button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+h2{font-size:16px;margin:22px 4px 8px;color:var(--mut);font-weight:600}
+.p{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin:10px 0}
+.p.done{opacity:.55}.top{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}.id{font-weight:700;color:var(--acc2)}.t{font-weight:600}
+.lay{font-size:11px;letter-spacing:.05em;color:var(--mut);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+.first{font-size:11px;color:#fff;background:var(--acc);border-radius:6px;padding:1px 6px}
+.why{color:var(--mut);font-size:13px;margin:4px 0 8px}
+pre{white-space:pre-wrap;word-wrap:break-word;background:#f7f3ea;border:1px solid var(--line);border-radius:8px;padding:10px;margin:0;font:13px/1.45 ui-monospace,Menlo,Consolas,monospace;user-select:all}
+.row{display:flex;gap:8px;margin-top:8px}.row button{font:inherit;font-size:14px;border-radius:8px;padding:8px 14px;border:1px solid var(--line);background:var(--card);color:var(--ink)}
+.row .copy{background:var(--acc);border-color:var(--acc);color:#fff;font-weight:600}.row .copy.ok{background:var(--ink);border-color:var(--ink)}
+.count{color:var(--mut);font-size:13px;margin:2px 4px}
+.note{background:#fbf1df;border:1px solid #ecd9b3;border-radius:10px;padding:10px 12px;font-size:14px;margin:10px 0}
+</style></head><body>
+<header><h1>Ground Truth <span>· picture prompts</span></h1><div class="sub">%COUNT% prompts for ChatGPT · copy one, paste it, save the picture</div></header>
+<main>
+<details class="box" open><summary>How to use this</summary><ul>
+<li>One ChatGPT chat per section (A, B, E …). Paste the <b>STYLE</b> line first, then the prompts one at a time.</li>
+<li>Tap <b>Copy</b> on a prompt, then paste it into ChatGPT.</li>
+<li>Make the picture again if it breaks the rules: perspective in a flat view, writing you didn't ask for, a busy background, wrong proportions or a missing view.</li>
+<li><b>Keep the little ID label</b> in the bottom-left corner (A01, B03 …). That's how Claude sorts your zip.</li>
+<li><b>PAINT</b> prompts: attach the template Claude sent: <i>rock-mud-paint-template.png</i> for the truck, <i>plane-paint-template.png</i> for the plane.</li>
+<li><b>Batch 1</b> doesn't depend on the story: make it now. <b>Batch 2</b> is the story's places and people: make it after Batch 1's first 20.</li>
+<li>Tap <b>Made it</b> to tick a prompt off (only on this phone).</li></ul></details>
+<div class="p"><div class="top"><span class="id">STYLE</span><span class="t">Paste this first in every chat</span></div><pre id="style"></pre><div class="row"><button class="copy" data-copy="style">Copy</button></div></div>
+<details class="box"><summary>The layouts the prompts name</summary><ul>%LAYOUTS%</ul></details>
+<div class="tabs" id="tabs"><button data-f="first" class="on">First 20</button><button data-f="b1">Batch 1</button><button data-f="b2">Batch 2</button><button data-f="all">All</button></div>
+<div class="count" id="count"></div>
+<div id="list"></div>
+</main>
+<script>
+const D=%DATA%;
+const $=s=>document.querySelector(s);let made={};try{made=JSON.parse(localStorage.getItem('lr-made')||'{}')}catch(e){}
+const save=()=>{try{localStorage.setItem('lr-made',JSON.stringify(made))}catch(e){}};
+$('#style').textContent=D.style;
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function render(f){const all=[...D.b1.map(x=>({...x,b:1})),...D.b2.map(x=>({...x,b:2}))];
+  const L=f==='first'?D.first.map(id=>all.find(x=>x.id===id)).filter(Boolean):f==='b1'?all.filter(x=>x.b===1):f==='b2'?all.filter(x=>x.b===2):all;
+  let h='',sec=null,n=0;for(const x of L){if(f!=='first'&&x.sec!==sec){sec=x.sec;h+=`<h2>${esc(sec)}</h2>`;}
+    if(made[x.id])n++;
+    h+=`<div class="p${made[x.id]?' done':''}" id="p-${x.id}"><div class="top"><span class="id">${x.id}</span><span class="t">${esc(x.title)}</span><span class="lay">${x.lay}</span>${D.first.includes(x.id)&&f!=='first'?'<span class="first">first 20</span>':''}${x.b===2?'<span class="lay">story</span>':''}</div>
+    <div class="why">${esc(x.why)}</div><pre>${esc(x.p)}</pre><div class="row"><button class="copy" data-copy="${x.id}">Copy</button><button data-made="${x.id}">${made[x.id]?'✓ Made':'Made it'}</button></div></div>`;}
+  if(f==='b2')h='<div class="note">'+esc(D.b2note)+'</div>'+h;
+  $('#list').innerHTML=h;$('#count').textContent=`${L.length} prompts · ${n} made`;}
+let cur='first';render(cur);
+$('#tabs').onclick=e=>{const b=e.target.closest('button');if(!b)return;cur=b.dataset.f;document.querySelectorAll('#tabs button').forEach(x=>x.classList.toggle('on',x===b));render(cur);};
+document.body.addEventListener('click',async e=>{const c=e.target.closest('[data-copy]'),m=e.target.closest('[data-made]');
+  if(c){const id=c.dataset.copy,all=[...D.b1,...D.b2],t=id==='style'?D.style:all.find(x=>x.id===id).p;
+    try{await navigator.clipboard.writeText(t);c.textContent='Copied ✓';c.classList.add('ok');setTimeout(()=>{c.textContent='Copy';c.classList.remove('ok')},1600);}
+    catch(err){const pre=c.closest('.p').querySelector('pre'),r=document.createRange();r.selectNodeContents(pre);const s=getSelection();s.removeAllRanges();s.addRange(r);c.textContent='Selected: copy it';}}
+  if(m){const id=m.dataset.made;made[id]=!made[id];if(!made[id])delete made[id];save();render(cur);}});
+</script></body></html>

@@ -1,6 +1,6 @@
-# Beyond the Last Road (working title)
+# Ground Truth
 
-*A story and exploration game by Christopher. You explore a huge wild country, mostly in an off-road truck, partly from a bush plane, and on foot wherever there's something to see up close: temples, ruins, canyons. The plane can fly over everything but can land only on a few dirt strips. The truck reaches what the plane can't, and your own feet reach what the truck can't.*
+*A story and exploration game by Christopher (earlier working title: Beyond the Last Road). You explore a huge wild country, mostly in an off-road truck, partly from a bush plane, and on foot wherever there's something to see up close: temples, ruins, canyons. The plane can fly over everything but can land only on a few dirt strips. The truck reaches what the plane can't, and your own feet reach what the truck can't.*
 
 This file is the plan. It's written so that a fresh Claude session (or this one) can pick the game up and build it with Christopher, step by step. The game's code, builds, pictures and models go in this repo. Before changing anything, read **How to work with Christopher** at the bottom. Keep this file up to date as he decides things.
 
@@ -21,15 +21,23 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
   - 13 story missions, about 30 pieces of gear, and about 120 pictures.
 - **The picture prompts:** `design/picture-prompts.md`, and as a page with Copy buttons: `design/picture-prompts.html` (also published as his private claude.ai page *Last Road · picture prompts*). Batch 1 doesn't depend on the story, so it can be made now. Batch 2 follows Fable's story.
 - **Paint templates:** `pictures/templates/` (the truck's five views and the plane's).
-- **A point Fable raised for him:** in the Outfitter, the Studio 2 itself (built from code, so tiny in the file) may be better than a 150k bake. The Outfitter is a closed room with one vehicle in it, and the phone already draws one Studio 2 that way in Salt & Sand.
+- **The first page of the game: `builds/last-road-0.html`** (`sh build.sh`), from Salt & Sand + the plane + `src/lr_patch.py` and `src/lr-game.js`:
+  - its own saves (`lr:`);
+  - the Rock & Mud you drive is the 50k play model, its pictures at 1024 on a phone and 2048 on a laptop; the whole frame on the road is about 94,000 to 134,000 triangles (Salt & Sand: about 850,000);
+  - the Heron in Wilderness Olive;
+  - the plane's HUD without the car's TC, ABS and ESC lights or a gear number;
+  - a chase camera that follows the Heron's climbs, dives and banks.
+
+  Tested in the test browser at phone size (`tools/test/lr-run.py`). Still the car in the bay: the Outfitter is next.
 
 ## Decided (his picks, Nov 7 2026)
 
 ### The game
 
-- **Its name is not decided.** "Beyond the Last Road" is a working title only; he wants to brainstorm names. "Redline" and "Redtail" stay with his racing game.
+- **Its name is Ground Truth** (his pick from Fable's brainstorm, Nov 7 2026). The paved road is Last Road, and the repo is `last-road`. "Redline" and "Redtail" stay with his racing game.
+- **He likes everything he's seen in Fable's brainstorm** (`design/fable-brainstorm-2026-11-07.md`). It's the starting design: the survey story, the Old Hands, the voices, the gear, the Outfitter, the side jobs. Change it with him as it's built.
 - **It's mainly exploration by truck.** You get out and walk around temples, ruins and other close-up places. A significant part of it is exploring by plane, though less than half. There should be a lot of travel between the places you walk around.
-- **Story:** bush pilot jobs (supply runs, rescues, counts) were his first pick. The story now has to sit alongside the exploration; brainstorm how.
+- **Story: a bunch of different jobs** (his words, Nov 7 2026): a whole survey arc, materials deliveries, rescues (the higher-stakes moments), and plenty of mundane back-and-forth tasks. They give a reason to travel and make it exciting.
 - **How it plays:** an open map plus a story chain: you roam freely, with the main story as a chain of missions and side jobs in between.
 - **A central little town hub.**
 - **Two regions to start: sandy dunes and savanna**, plus ruins, temples, canyons and mountains to explore. Making new digital assets is fine.
@@ -39,7 +47,7 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
 ### Getting around
 
 - **The truck is the SUV Rock & Mud** (the game's build id is `crawler`), with a new paint (a skin).
-- **The plane is the bush plane (redtail-2) in Wilderness Olive**: "the green bush plane". Its name in the story isn't picked yet.
+- **The plane is the Heron** (his pick from Fable's list, Nov 7 2026): the bush plane (redtail-2) in Wilderness Olive, "the green bush plane". **It can land in shallow water as well:** a river sandbar right at the surface, or a flat beach.
 - **Both keep the racing game's real physics and its Digital Engine sound.** How the plane and the truck perform stays the racing game's.
 - **On foot: first person.** You see only your gloved hands and what you're holding, so no person has to be modelled. Gear, supplies and materials are modelled instead.
 - **The plane can fly over everything you can explore,** but it can touch down only on certain strips.
@@ -48,7 +56,13 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
 
 ### The world
 
-- **Massive.** It should be significantly bigger than 16 km square: 25 miles square (40 km) or more. The engine already makes Road Not Found's world 40 miles square, in 128 m chunks round the camera at the detail each distance needs, with 512 m far tiles out to the horizon and a floating origin so nothing shakes far from the start.
+- **One giant seamless world** (his preference, Nov 7 2026): **about 40 by 40 miles, made of four environmental zones of about 20 by 20 miles each.** Crossing from one to the next changes the environment. 60 by 60 miles if it works. No loading screens: the engine makes the land around you as you go.
+- **A first draft of the four zones** (Fable's seven regions grouped into four; to settle with him):
+  - **south:** the savanna and salt pans, with the town hub and Last Road;
+  - **west:** the Dune Sea (Three Wells, the Sunken City);
+  - **east:** the canyons, the gorge, the river delta and the lake (sandbars and beaches for the Heron);
+  - **north:** the highlands and the black volcanic range.
+- Earlier note: it should be significantly bigger than 16 km square: 25 miles square (40 km) or more. The engine already makes Road Not Found's world 40 miles square, in 128 m chunks round the camera at the detail each distance needs, with 512 m far tiles out to the horizon and a floating origin so nothing shakes far from the start.
 - **Not everywhere has to be somewhere you can go.** Much of the land is made to look right from the air or from a road, and is empty up close.
 - **A few layers of painted mountains** in the distance that you can never reach.
 - **Animals at a distance only, which is cheap to draw and true to life:** in real life animals run away before you get close. Add their sounds up close: birdsong, and rustling in the leaves as something runs off unseen.
@@ -60,7 +74,7 @@ Each vehicle and asset is made detailed first and baked down. These figures are 
 | Version | Triangles | Where it's used |
 | --- | --- | --- |
 | **Source** | as detailed as it comes (the Rock & Mud's Studio 2 is 790,531; redtail-1 is 241,278) | **Kept in the repo only**, with a viewer page to look at it. Not in the game. |
-| **Outfitter** | about 150,000, with the source baked onto it | **In the game's garage bay (the Outfitter)**, where you look at the vehicle and outfit it for a trip. |
+| **Outfitter** | **the full source model itself** (his call, Nov 7 2026), painted exactly as it looks in the game: the Studio 2 Rock & Mud in its chosen paint, the plane's full redtail-1 in Wilderness Olive | **In the game's garage bay (the Outfitter)**, where you look at the vehicle and outfit it for a trip. (His first idea was a 150k bake.) |
 | **Play** | **about 50,000** for the truck (his pick after the look test, Nov 7 2026; his first target was 10,000), with the source baked onto it | **In the game, driving and flying.** Pictures at 1024 on the phone (24 MB of graphics memory), 2048 on the laptop (96 MB). |
 
 - **The Outfitter is part of the game,** a little technical: some engine modification, rigging, prepping and gearing up for a trip.
@@ -82,9 +96,8 @@ Each vehicle and asset is made detailed first and baked down. These figures are 
 
 ## Still to decide (ask him, one at a time, when it comes up)
 
-- **The game's name** (brainstorm), the **plane's name** (ideas so far: Bateleur, Kestrel, Hornbill), the **outfit's name**, and **who you are**.
+- The **outfit's name**, and **who you are**.
 - **The truck's paint.**
-- **The story,** and how the bush pilot jobs sit alongside the exploration.
 - **Fuel** for the plane and the truck: yes or no.
 - **People:** a radio voice with a portrait card and short lines of text is suggested, rather than 3D people.
 - **Where the truck can go:** everywhere off-road inside driving areas, kept out of fly-over-only lands by cliffs, deep rivers or thick bush? Or roads and tracks only?
