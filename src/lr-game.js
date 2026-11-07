@@ -149,14 +149,16 @@ function lrPropTex1(){if(LRP.one)return;const mk=(r,g,b)=>{const t=gl.createText
   LRP.one={n:mk(128,128,255),o:mk(255,218,0)};gl.activeTexture(gl.TEXTURE0);}
 async function lrPropMake(key){
   const [id,obj]=key.split('/'),E=window.LR_PROPS&&LR_PROPS[id]&&LR_PROPS[id][obj];if(!E){LRP.mesh.set(key,null);return;}
-  try{const bin=Uint8Array.from(atob(E.z),c=>c.charCodeAt(0));
-    const buf=new Uint8Array(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
-    const nv=E.nv,q=new Uint16Array(buf.buffer,0,nv*3),nq=new Int8Array(buf.buffer,nv*6,nv*4),uq=new Uint16Array(buf.buffer,nv*10,nv*2),ib=buf.slice(nv*14).buffer;
-    const pos=new Float32Array(nv*3),nrm=new Float32Array(nv*3),uv=new Float32Array(nv*2),col=new Float32Array(nv*4).fill(1),mat=new Float32Array(nv).fill(120);
-    for(let k=0;k<nv;k++){for(let c=0;c<3;c++){pos[k*3+c]=E.min[c]+q[k*3+c]/65535*(E.max[c]-E.min[c]);nrm[k*3+c]=nq[k*4+c]/127;}uv[k*2]=uq[k*2]/65535;uv[k*2+1]=uq[k*2+1]/65535;col[k*4+3]=0;}
-    const idx=E.i32?new Uint32Array(ib):new Uint16Array(ib),m=makeMesh({pos,nrm,col,mat,idx,uv});m.tris=E.n/3;LRP.mesh.set(key,m);
-    lrTexFrom(E.tex.replace(/^data:image\/webp;base64,/,''),tx=>LRP.tex.set(key,tx));}
+  try{const m=await lrDecode(E,120);LRP.mesh.set(key,m);
+    lrTexFrom((E.tex||LR_PROPS[id][E.texOf].tex).replace(/^data:image\/webp;base64,/,''),tx=>LRP.tex.set(key,tx));}
   catch(e){console.warn('model '+key+': '+(e&&e.message||e));LRP.mesh.set(key,null);}}
+/* a packed object (tools/props_pack.py) made a mesh: its block unzipped, its points across its box, in material mt */
+async function lrDecode(E,mt){const bin=Uint8Array.from(atob(E.z),c=>c.charCodeAt(0));
+  const buf=new Uint8Array(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+  const nv=E.nv,q=new Uint16Array(buf.buffer,0,nv*3),nq=new Int8Array(buf.buffer,nv*6,nv*4),uq=new Uint16Array(buf.buffer,nv*10,nv*2),ib=buf.slice(nv*14).buffer;
+  const pos=new Float32Array(nv*3),nrm=new Float32Array(nv*3),uv=new Float32Array(nv*2),col=new Float32Array(nv*4).fill(1),mat=new Float32Array(nv).fill(mt);
+  for(let k=0;k<nv;k++){for(let c=0;c<3;c++){pos[k*3+c]=E.min[c]+q[k*3+c]/65535*(E.max[c]-E.min[c]);nrm[k*3+c]=nq[k*4+c]/127;}uv[k*2]=uq[k*2]/65535;uv[k*2+1]=uq[k*2+1]/65535;col[k*4+3]=0;}
+  const idx=E.i32?new Uint32Array(ib):new Uint16Array(ib),m=makeMesh({pos,nrm,col,mat,idx,uv});m.tris=E.n/3;return m;}
 /* a placed model's matrix: turned by its yaw, stood on the ground where it is (the world's own height there) */
 function lrPropM(p){if(p.y===undefined){const o={};p.y=WG.sample(p.x,p.z,o).h+(p.dy||0);}const c=Math.cos(p.yaw),s=Math.sin(p.yaw),M=LRP.M;
   M[0]=c;M[1]=0;M[2]=-s;M[3]=0;M[4]=0;M[5]=1;M[6]=0;M[7]=0;M[8]=s;M[9]=0;M[10]=c;M[11]=0;M[12]=p.x-RO[0];M[13]=p.y-RO[1];M[14]=p.z-RO[2];M[15]=1;return M;}
@@ -179,6 +181,32 @@ function lrPropsShadow(u,F,e,maxD){
     gl.uniformMatrix4fv(u.uM,false,lrPropM(p));drawMesh(m);tris+=m.tris;}
   return tris;}
 window.__lr=Object.assign(window.__lr||{},{LRP});
+
+/* ---------- HIS PLANTS AND ROCKS (F01 trees, F04 bushes, F07 termite mounds, F06 boulders): where each stands is the
+   world's (gt-world.js: GT_TSH, in the chunks' trees), drawn as the world draws its own trees, instanced, near in full
+   and far in the thinned shape (<object>~far), each in its own picture (material 121: the plane's, tinted by the tree's
+   colour). The world's seven shapes stay first; until a model is made its place holds a mesh of nothing.
+   Each kind has its own reach: a bush is not drawn past 260 m, a small rock past 180 (two thirds that on a phone; the
+   world's own reach beyond) */
+const LRF={on:false,tx:new Map(),one:null,loc:null,locP:null,made:0,D2:[]};
+{const ts0=treeShapes;treeShapes=function(){const out=ts0(),L=(typeof WG!=='undefined'&&WG.GTT)||[];if(!L.length)return out;
+  const none=()=>{const m=makeMesh({pos:new Float32Array(9),nrm:new Float32Array([0,1,0,0,1,0,0,1,0]),col:new Float32Array(12),mat:new Float32Array(3),idx:new Uint16Array([0,1,2])});m.tris=0;return m;};
+  if(out.length!==WG.GTV0)console.warn('the world has '+out.length+' tree shapes, not '+WG.GTV0+': his plants will be wrong');
+  L.forEach((t,i)=>{out.push([none(),none()]);const v=out.length-1,E=window.LR_PROPS&&LR_PROPS[t[0]]&&LR_PROPS[t[0]][t[1]];
+    LRF.D2[v]=t[3]?t[3]*t[3]:1e10;
+    if(!E)return;const F=LR_PROPS[t[0]][t[1]+'~far']||E;
+    (async()=>{try{const near=await lrDecode(E,121),far=F===E?near:await lrDecode(F,121);
+      lrTexFrom(E.tex.replace(/^data:image\/webp;base64,/,''),tx=>{near.tx=far.tx=tx;TREES.shapes[v]=[near,far];LRF.made++;});}
+      catch(e){console.warn('plant '+t.join('/')+': '+(e&&e.message||e));}})();});
+  LRF.on=true;return out;};}
+/* (each shape's picture, before its instanced draw: in the shadow passes there is no picture to bind to, harmlessly) */
+function lrTreeTex(tx){lrPropTex1();if(LRF.locP!==CUR.p){LRF.locP=CUR.p;LRF.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
+  if(!LRF.loc[0])return;const U=[[LRF.loc[0],tx,13],[LRF.loc[1],LRP.one.n,14],[LRF.loc[2],LRP.one.o,15]];
+  for(const [loc,t,unit] of U){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);}
+/* (for the tests: how many of each of his plants and rocks stand within r of x, z, in the chunks made so far) */
+function lrFloraNear(x,z,r){const out={},L=WG.GTT||[];for(const c of chunkList()){const T=c.st&&c.st.trees;if(!T)continue;
+  for(let o=0;o<T.length;o+=12){const v=T[o+7]|0;if(v<WG.GTV0||Math.hypot(T[o]-x,T[o+2]-z)>r)continue;const k=L[v-WG.GTV0][1];out[k]=(out[k]||0)+1;}}return out;}
+window.__lr=Object.assign(window.__lr||{},{LRF,lrFloraNear,WG});
 
 /* ---------- THE TRUCK AND THE HERON: you drive one, the other waits. Driving, the Heron stands where you left it
    (at first in front of the hangar at Roadhead); drive up to it, stop, and HERON (E on a keyboard) puts you in it.
@@ -376,10 +404,10 @@ function lrHandsDraw(){
    metres (less on foot, more in the Heron) and they run from you. Vultures wheel high over the savanna. His animal
    models (G01-G08) ---------- */
 const LRA={herds:new Map(),birds:new Map(),M:new Float32Array(16),drawn:0,tris:0};
-const LRA_KIND={cattle:{id:'G01',n:[6,14],sp:30,run:8},antelope:{id:'G02',n:[8,22],sp:55,run:15},oryx:{id:'G06',n:[4,9],sp:40,run:13},
+const LRA_KIND={cattle:{id:'G01',n:[6,14],sp:30,run:8},antelope:{id:'G02',n:[8,22],sp:55,run:15,sc:1.35},oryx:{id:'G06',n:[4,9],sp:40,run:13},
   camel:{id:'G07',n:[3,7],sp:35,run:7},flamingo:{id:'G05',n:[18,40],sp:70,run:0},crane:{id:'G08',n:[4,10],sp:30,run:0},cat:{id:'G04',n:[1,1],sp:0,run:10}};
 const lraHash=(a,b,s)=>{let h=Math.imul(a|0,0x27d4eb2d)^Math.imul(b|0,0x165667b1)^Math.imul(s|0,0x9e3779b1);h=Math.imul(h^(h>>>15),0x85ebca6b);h=Math.imul(h^(h>>>13),0xc2b2ae35);return ((h^(h>>>16))>>>0)/4294967296;};
-function lraObjs(id){const E=window.LR_PROPS&&LR_PROPS[id];return E?Object.keys(E):[];}
+function lraObjs(id){const E=window.LR_PROPS&&LR_PROPS[id];return E?Object.keys(E).filter(k=>k.indexOf('~')<0):[];}
 /* what lives in a square, if anything (decided by its middle's land, the same every visit) */
 function lraHerdFor(a,b){
   const C=2500,x=(a+.3+.4*lraHash(a,b,1))*C,z=(b+.3+.4*lraHash(a,b,2))*C,R=WG.gtRegions(x,z,{}),r=lraHash(a,b,3);let kind=null;
@@ -388,34 +416,44 @@ function lraHerdFor(a,b){
   else if(R.dune>.3&&R.dune<.85)kind=r<.25?'oryx':r<.4?'camel':null;
   else if(R.cany>.6)kind=r<.15?'oryx':null;
   if(!kind||!lraObjs(LRA_KIND[kind].id).length)return null;
-  const K=LRA_KIND[kind],n=K.n[0]+Math.floor(lraHash(a,b,4)*(K.n[1]-K.n[0]+1)),obj=lraObjs(K.id),mem=[];
+  const K=LRA_KIND[kind],n=K.n[0]+Math.floor(lraHash(a,b,4)*(K.n[1]-K.n[0]+1)),all=lraObjs(K.id),fly=all.find(q=>/flying/.test(q)),obj=all.filter(q=>!/flying/.test(q)),mem=[];
+  if(!obj.length)return null;
+  /* (the lioness: on the top of a kopje in the square, if there is one, watching; none if there isn't) */
+  let X=x,Z=z;if(kind==='cat'){const o={};let best=-1;for(let i=0;i<10;i++)for(let j=0;j<10;j++){const px=(a+(i+.5)/10)*C,pz=(b+(j+.5)/10)*C;WG.sample(px,pz,o);if(o.rock>.6&&o.h>best){best=o.h;X=px;Z=pz;}}
+    if(best<0)return null;for(let k=0;k<30;k++){let bh=-1e9,bx=X,bz=Z;for(const [dx,dz] of [[12,0],[-12,0],[0,12],[0,-12]]){const h=WG.sample(X+dx,Z+dz,o).h;if(h>bh){bh=h;bx=X+dx;bz=Z+dz;}}
+      if(bh<=WG.sample(X,Z,o).h+.05)break;X=bx;Z=bz;}}
   for(let k=0;k<n;k++){const an=lraHash(a*31+k,b,5)*6.283,rr=K.sp*Math.sqrt(lraHash(a,b*17+k,6));mem.push({dx:Math.cos(an)*rr,dz:Math.sin(an)*rr,yaw:lraHash(k,a,7)*6.283,obj:obj[Math.floor(lraHash(k,b,8)*obj.length)],ph:lraHash(k,a+b,9)*6.283});}
-  return {kind,K,x,z,h:lraHash(a,b,10)*6.283,mem,run:0,gone:false};}
+  return {kind,K,x:X,z:Z,h:lraHash(a,b,10)*6.283,mem,run:0,gone:false,fly,up:0};}
 function lraTick(dt,P,foot,air){
   const C=2500,ca=Math.floor(P[0]/C),cb=Math.floor(P[2]/C);
   for(let a=ca-1;a<=ca+1;a++)for(let b=cb-1;b<=cb+1;b++){const k=a+','+b;if(!LRA.herds.has(k))LRA.herds.set(k,lraHerdFor(a,b));}
   for(const [k,H] of LRA.herds){if(!H)continue;const d=Math.hypot(H.x-P[0],H.z-P[2]);if(d>6000){LRA.herds.delete(k);continue;}
     /* (afraid of you inside this: on foot least, the Heron overhead most) */
     const fear=(foot?170:air?260:320)*(H.K.run?1:.7);
-    if(d<fear&&H.K.run){const ux=(H.x-P[0])/(d||1),uz=(H.z-P[2])/(d||1);H.h=Math.atan2(uz,ux);H.run=Math.min(1,H.run+dt*1.5);}
+    if(d<fear&&H.K.run&&!LRA.calm){const ux=(H.x-P[0])/(d||1),uz=(H.z-P[2])/(d||1);H.h=Math.atan2(uz,ux);H.run=Math.min(1,H.run+dt*1.5);}
     else{H.run=Math.max(0,H.run-dt*.4);H.h+=(lraHash(Math.floor(performance.now()/7000),k.length,11)-.5)*dt*.2;}
     const sp=H.run*H.K.run+.25*(1-H.run)*(H.K.run?1:.3);H.x+=Math.cos(H.h)*sp*dt;H.z+=Math.sin(H.h)*sp*dt;
-    /* (birds on the water lift off and go when you're right on them) */
-    if(!H.K.run&&d<(foot?120:200))H.gone=true;}}
+    /* (birds on the water lift off when you're right on them, and fly away, climbing, out of sight) */
+    if(!H.K.run&&!H.up&&d<(foot?120:200)){H.up=.01;H.h=Math.atan2(H.z-P[2],H.x-P[0]);}
+    if(H.up){H.up+=dt;const v=Math.min(1,H.up/3)*13;H.x+=Math.cos(H.h)*v*dt;H.z+=Math.sin(H.h)*v*dt;if(H.up>45||!H.fly)H.gone=true;}}}
 function lraDraw(u,e,F,probe){
   if(probe||typeof WG==='undefined'||!WG.gtPlace||!window.LR_PROPS)return 0;const t=GAME.car;if(!t)return 0;
   const P=LRW.on?LRW.p:t.p,air=!!t.rt&&t.p[1]-RANCH.W.heightAt(t.p[0],t.p[2])>20;const now=performance.now(),dt=Math.min(.1,LRA.tl?(now-LRA.tl)/1000:1/60);LRA.tl=now;lraTick(dt,P,LRW.on,air);
   lrPropTex1();if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
   let tris=0,n=0;const M=LRA.M,o={},tnow=performance.now()/1000;
-  const one=(key,x,y,z,yaw,lift)=>{if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}return;}const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)return;
+  const one=(key,x,y,z,yaw,lift,sc)=>{
+    /* (past 250 m, its thinned shape, if it has one) */
+    if(Math.hypot(x-e[0],y-e[1],z-e[2])>250){const [i,ob]=key.split('/');if(LR_PROPS[i]&&LR_PROPS[i][ob+'~far'])key+='~far';}
+    if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}return;}const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)return;
     if(!boxVisible(F,[x-4,y-1,z-4],[x+4,y+6,z+4]))return;const c=Math.cos(yaw),s=Math.sin(yaw);
-    M[0]=c;M[1]=0;M[2]=-s;M[3]=0;M[4]=0;M[5]=1;M[6]=0;M[7]=0;M[8]=s;M[9]=0;M[10]=c;M[11]=0;M[12]=x-RO[0];M[13]=y+lift-RO[1];M[14]=z-RO[2];M[15]=1;gl.uniformMatrix4fv(u.uM,false,M);
+    sc=sc||1;M[0]=c*sc;M[1]=0;M[2]=-s*sc;M[3]=0;M[4]=0;M[5]=sc;M[6]=0;M[7]=0;M[8]=s*sc;M[9]=0;M[10]=c*sc;M[11]=0;M[12]=x-RO[0];M[13]=y+lift-RO[1];M[14]=z-RO[2];M[15]=1;gl.uniformMatrix4fv(u.uM,false,M);
     const U=[[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]];for(const [loc,tt,unit] of U){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,tt);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);
     drawMesh(m);tris+=m.tris;n++;};
   for(const H of LRA.herds.values()){if(!H||H.gone)continue;const d=Math.hypot(H.x-e[0],H.z-e[2]);if(d>2600)continue;
     /* (heading: the herd's way when running, each its own while grazing; the model's front, +z, turned to it) */
-    for(const q of H.mem){const x=H.x+q.dx,z=H.z+q.dz;if(q.y===undefined||H.run>0||q.t===undefined||tnow-q.t>2){q.y=WG.sample(x,z,o).h;q.t=tnow;if(o.code===WG.SF.water&&H.K.run)continue;}
-      const yaw=H.run>.3?Math.PI/2-H.h:q.yaw,lift=H.run>.3?Math.abs(Math.sin(tnow*7+q.ph))*.12:0;one(H.K.id+'/'+q.obj,x,q.y,z,yaw,lift);}}
+    for(const q of H.mem){const x=H.x+q.dx,z=H.z+q.dz;if(q.y===undefined||H.run>0||q.t===undefined||tnow-q.t>2){q.y=WG.sample(x,z,o).h;q.t=tnow;if(o.code===WG.SF.water){if(H.K.run)continue;q.y=Math.max(q.y,o.wl-.3);}}
+      if(H.up&&H.fly){const u=Math.max(0,H.up-q.ph*.15);one(H.K.id+'/'+H.fly,x,q.y,z,Math.PI/2-H.h,Math.min(u,3)*.6+Math.max(0,u-3)*2.2+Math.sin(tnow*2+q.ph)*.4,H.K.sc);continue;}
+      const yaw=H.run>.3?Math.PI/2-H.h:q.yaw,lift=H.run>.3?Math.abs(Math.sin(tnow*7+q.ph))*.12:0;one(H.K.id+'/'+q.obj,x,q.y,z,yaw,lift,H.K.sc);}}
   /* vultures: in some savanna squares, a few wheeling high */
   const C=2500,ca=Math.floor(e[0]/C),cb=Math.floor(e[2]/C),V=lraObjs('G03');
   if(V.length)for(let a=ca-1;a<=ca+1;a++)for(let b=cb-1;b<=cb+1;b++){if(lraHash(a,b,21)>.3)continue;const x0=(a+.5)*C,z0=(b+.5)*C;if(Math.hypot(x0-e[0],z0-e[2])>3500)continue;
@@ -423,4 +461,4 @@ function lraDraw(u,e,F,probe){
     for(let k=0;k<nb;k++){const r=70+60*lraHash(a,b+k,23),w=.18+.06*lraHash(a+k,b,24),an=tnow*w+k*2.1,x=x0+Math.cos(an)*r,z=z0+Math.sin(an)*r;
       one('G03/'+V[0],x,g+150+50*lraHash(a,k,25),z,-an,0);}}
   LRA.drawn=n;LRA.tris=tris;return tris;}
-window.__lr=Object.assign(window.__lr||{},{LRA});
+window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});

@@ -1,0 +1,36 @@
+{
+ "cattle_cream": {
+  "front, standing (top left)": {
+   "iou": 0.788,
+   "turn_deg": 1.52
+  },
+  "side, standing, large (top centre)": {
+   "iou": 0.723,
+   "turn_deg": 2.5
+  },
+  "texels": {
+   "covered": 507197,
+   "seen": 303400
+  }
+ },
+ "cattle_grey": {
+  "side, grey colourway (right, middle)": {
+   "iou": 0.701,
+   "turn_deg": 2.03
+  },
+  "texels": {
+   "covered": 507197,
+   "seen": 235069
+  }
+ },
+ "cattle_red": {
+  "side, red colourway (top right)": {
+   "iou": 0.713,
+   "turn_deg": 2.71
+  },
+  "texels": {
+   "covered": 507197,
+   "seen": 237582
+  }
+ }
+}

@@ -76,6 +76,12 @@ const GT_PADS=[],GT_PROPS=[];
   /* Last Well: Ruben's shack beside his strip, the far outstation; a windsock */
   {const S=GT_STRIPS[11],F=frame(S.x,S.z,S.dx,S.dz);pad(F,-110,-10,30,95,'sand',()=>gtStripH(S));
     put('D16','model',...F.at(-60,62),F.face(0,-1),true,4000);put('B07','windsock',...F.at(40,26),F.face(1,0),true,900);}
+  /* the Old Survey Strip: Venn's wreck, nose down past the strip's far end where it ran out, and the camp beside it
+     (his tent, the table and crate, the jerry cans, the fire ring), on the sand */
+  {const S=GT_STRIPS.find(q=>q.name==='Old Survey Strip'),F=frame(S.x,S.z,S.dx,S.dz),e=S.len/2;pad(F,e-5,e+70,18,66,'sand',()=>gtStripH(S));
+    put('D18','wreck',...F.at(e+42,33),F.face(1,0)+.45,true,5000);put('D18','tent',...F.at(e+24,52),F.face(0,-1),true,2500);
+    put('D18','table',...F.at(e+20,45),F.face(0,-1)+.2,true,900);put('D18','crate',...F.at(e+23.5,46.5),F.face(0,-1)-.3,true,900);
+    put('D18','jerry_cans',...F.at(e+30,48),F.face(-1,0),true,900);put('D18','fire_ring',...F.at(e+16,40),0,false,900);}
 }
 /* the walk places and landmarks (Fable's map, brainstorm km), each on a small levelled pad where it needs one */
 {const put=(id,obj,x,z,yaw,solid,far)=>GT_PROPS.push({id,obj,x,z,yaw,solid:solid!==false,far:far||3000});
@@ -229,6 +235,17 @@ function gtCore(x,z,o){
 /* the road base (for ribbons laid over the land) */
 function gtBase(x,z){gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<40)return gtRoadH(GRQ.s)+rimAt(x,z);const o={};return gtCore(x,z,o).h;}
 
+/* his plants and rocks, drawn as the world draws its trees (src/lr-game.js puts them after its own seven shapes):
+   each [model, object, height, how far it's drawn (m; 0: as far as the world draws trees)], and how wide (a rock's post) */
+const GT_TV0=7,GT_TSH=[['F01','tree_young',3,0],['F01','tree_mature',6.3,0],['F01','tree_old',9.9,0],['F04','bush_dense',2.1,260],['F04','bush_half_dead',1.8,260],['F04','bush_clump',1.3,260],
+  ['F07','dome_mound',1.1,320],['F07','spired_mound',1.8,0],['F07','cathedral_mound',3.2,0],['F06','boulder_xs',.86,180],['F06','boulder_s',1.25,180],['F06','boulder_m',1.67,320],
+  ['F06','boulder_l',1.95,0],['F06','boulder_split',3.15,0],['F06','boulder_balanced',4.27,0],['F06','boulder_long_large',4.23,0],
+  /* the Delta's big mossy trees and its reeds; the Canyons' sandstone; the Black Range's lava rocks */
+  ['F10','large_tree',9.2,0],['F10','small_tree',5.2,0],['F12','dense_stand',2.9,220],['F12','wind_bent',2.3,220],['F12','edge_clump',2.6,220],
+  ['F09','sandstone_block',2,0],['F09','leaning_slab',1.7,0],['F09','stepped_ledge',2,0],['F09','boulder_large',1.2,320],['F09','boulder_small',.7,180],
+  ['F14','boulder_large',2.3,0],['F14','boulder_faceted',1.5,320],['F14','rock_pillar',1.5,320],['F14','rock_spiky',1.9,0],['F14','spiky_bomb',.7,180],
+  ['F14','lava_slab',.3,180],['F14','rock_small_a',.6,140],['F14','rock_small_c',.7,140],['F14','rock_small_e',.8,140]];
+const GT_TSB=GT_TSH.map(t=>{const b=GT_PROPBOX[t[0]+'/'+t[1]];return b?Math.min(b[3]-b[0],b[5]-b[2]):1;});
 /* ---------- a chunk's own things: Last Road's surface, the paved runway, the savanna's trees ---------- */
 function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
   const RD=GT_ROAD,c=CL[3],ST=4,lift=.035,D=[-c.draw,0,c.draw];
@@ -253,20 +270,45 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
   for(const p of GT_PROPS){if(!p.solid||p.x<x0-30||p.x>x1+30||p.z<z0-30||p.z>z1+30)continue;const B=GT_PROPBOX[p.id+'/'+p.obj];if(!B)continue;
     const c=Math.cos(p.yaw),sn=Math.sin(p.yaw),pts=[[B[0],B[2]],[B[3],B[2]],[B[3],B[5]],[B[0],B[5]]].map(([a,b])=>[p.x+a*c+b*sn,p.z-a*sn+b*c]);
     const y=gtCore(p.x,p.z,{}).h+(p.dy||0);cols.push({x0:Math.min(...pts.map(q=>q[0])),z0:Math.min(...pts.map(q=>q[1])),x1:Math.max(...pts.map(q=>q[0])),z1:Math.max(...pts.map(q=>q[1])),top:y+B[4]});}
-  /* the trees: the savanna's flat-topped trees, scattered, thicker along the creeks; none on the road or a strip */
-  const G=9,n=Math.floor(CH/G),o={};
-  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const r1=R(),r2=R(),r3=R(),r4=R(),r5=R();
+  /* his plants and rocks (GT_TSH: the game draws them as it draws trees, instanced, near and far), in 9 m cells:
+     the flat-topped trees scattered over the savanna, thicker in clumps and along the creeks; bushes three times as
+     many, smaller; termite mounds here and there; boulders on and round the kopjes. None on the road, a strip, the
+     Causeway or a pad; the trees, mounds and boulders stop you (a post at the trunk, the mound, the rock) */
+  const G=9,n=Math.floor(CH/G),o={},K={};
+  const clear=(x,z,m)=>{gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<12+m)return false;const Q=gtStripQ(x,z);if(Q&&Q.e<18+m)return false;
+    {const C=GT_CAUSE,ux=x-C.ax,uz=z-C.az,t=(ux*C.dx+uz*C.dz)/C.len;if(t>-.01&&t<1.01&&Math.abs(ux*C.dz-uz*C.dx)<8+m)return false;}
+    for(const P of GT_PADS){const F=P.F,u=(x-F.x)*F.dx+(z-F.z)*F.dz,v=-(x-F.x)*F.dz+(z-F.z)*F.dx;if(Math.max(P.u0-u,u-P.u1,P.v0-v,v-P.v1)<20+m)return false;}return true;};
+  const gtTint=(a,b,c)=>[.9+(a-.5)*.14,1+(b-.5)*.12,.8+(c-.5)*.1];
+  const put=(x,z,y,v,sc,yaw,tint,colR,colH)=>{trees.push(x,y,z,yaw,sc,sc,sc,GT_TV0+v,tint[0],tint[1],tint[2],0);if(colR)cols.push({t:'c',x,z,r:colR*sc,top:y+colH*sc});};
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++){const r1=R(),r2=R(),r3=R(),r4=R(),r5=R(),r6=R(),r7=R();
     const x=Math.min(x1-.9,Math.max(x0+.9,x0+(i+.15+r1*.7)*G)),z=Math.min(z1-.9,Math.max(z0+.9,z0+(j+.15+r2*.7)*G));
-    if(r3>.08)continue;const Rg=gtRegions(x,z,GR),sav=Rg.sav+Rg.delta*.6+(1-sst(.2,.6,Math.max(0,Rg.d_high)))*0;if(sav<.2)continue;
+    if(r3>.32)continue;const Rg=gtRegions(x,z,GR),sav=Rg.sav;
+    if(sav<.2){
+      /* the other lands' own: in the Delta its big mossy trees and, at the water's edge and in the shallows, reeds; in
+         the Canyons sandstone blocks, slabs and ledges; in the Black Range lava rocks, thickest on the flows */
+      const oth=Rg.delta+Rg.cany+Rg.black;if(oth<.4||r3>.2)continue;gtCore(x,z,o);if(o.code===SF.asphalt||!clear(x,z,2))continue;
+      const j2=hs(Math.round(x*7),Math.round(z*7),632),yw=j2*6.283,tw=[.95+(j2-.5)*.1,.95+(r5-.5)*.1,.95];
+      if(Rg.delta>=Math.max(Rg.cany,Rg.black)){const wet=o.code===SF.water,dp=wet?o.wl-o.h:9,cd=Math.abs(fbm(x/2400+7,z/2400-3,3,721)-.5),near=wet?(dp<.7?1:0):cd<.03?.5:0;
+        if(wet&&dp>=.7)continue;const pr=.02+near*.16,pt=wet?0:.008+(cd<.04?.03:0);
+        if(r3<pr)put(x,z,o.h-.1,18+(r4*3|0),.8+r5*.5,yw,tw,0,0);
+        else if(r3<pr+pt){const v=r4<.45?16:17;put(x,z,o.h-.1,v,.8+r5*.35,yw,gtTint(j2,r5,r6),v===16?.55:.3,v===16?9:5);}}
+      else if(Rg.cany>=Rg.black){if(o.h>2000||r3>.055)continue;const v=r4<.15?23:r4<.3?21:r4<.42?22:r4<.7?24:25,sc=.7+r5*.7;put(x,z,o.h-.15*sc,v,sc,yw,tw,GT_TSB[v]*.42,GT_TSH[v][2]);}
+      else{const p=.045+.08*sst(.5,.9,o.rock);if(r3>p)continue;const v=r4<.1?26:r4<.2?29:r4<.3?27:r4<.38?28:r4<.5?31:r4<.6?30:32+(r6*3|0),sc=.75+r5*.6;
+        put(x,z,o.h-.08*sc,v,sc,yw,tw,v<30?GT_TSB[v]*.42:0,GT_TSH[v][2]);}
+      continue;}
     const c=Math.abs(fbm(x/2400+7,z/2400-3,3,721)-.5),creek=c<.03&&c>.011?.5:0,clump=sst(.55,.75,fbm(x/700+9,z/700-4,2,795));
-    const p=(.012+.12*clump+creek*.6)*sav;if(r3>p)continue;
-    gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<14)continue;const Q=gtStripQ(x,z);if(Q&&Q.e<20)continue;
-    {const C=GT_CAUSE,ux=x-C.ax,uz=z-C.az,t=(ux*C.dx+uz*C.dz)/C.len;if(t>-.01&&t<1.01&&Math.abs(ux*C.dz-uz*C.dx)<10)continue;}
-    let onPad=false;for(const P of GT_PADS){const F=P.F,u=(x-F.x)*F.dx+(z-F.z)*F.dz,v=-(x-F.x)*F.dz+(z-F.z)*F.dx;if(Math.max(P.u0-u,u-P.u1,P.v0-v,v-P.v1)<25){onPad=true;break;}}if(onPad)continue;
-    gtCore(x,z,o);if(o.code===SF.water||o.code===SF.asphalt||o.rock>.5||o.h>300)continue;
-    const sc=.8+r4*.9,v=r5*3|0,j1=hs(Math.round(x*7),Math.round(z*7),631),t=[74+(j1-.5)*16,84+(r5-.5)*14,40];
-    trees.push(x,o.h,z,j1*6.283,sc*1.5,sc*.62,sc*1.5,v,s2l(t[0]),s2l(t[1]),s2l(t[2]),0);
-    cols.push({t:'c',x,z,r:.35*sc+.15,top:o.h+3.2*sc});}
+    gtKopje(x,z,K);const kop=K.kh>.5?sst(0,.5,K.kr)+.25:0,j1=hs(Math.round(x*7),Math.round(z*7),631),yaw=j1*6.283;
+    const pt=(.012+.12*clump+creek*.6)*sav*(1-Math.min(kop,1)*.7),pb=pt*3+.01*sav,pm=.004*sav*(1-clump),pr=kop*.2;
+    /* which, by the cell's roll: a tree, else a bush, else a mound, else a rock */
+    const ta=Math.min(pt,.08),tb=ta+Math.min(pb,.1),tm=tb+pm,tr=tm+Math.min(pr,.12),k=r3<ta?0:r3<tb?1:r3<tm?2:r3<tr?3:-1;
+    if(k<0||!clear(x,z,k===1?0:2))continue;
+    gtCore(x,z,o);if(o.code===SF.water||o.code===SF.asphalt||o.h>300)continue;if(k<3&&o.rock>.55)continue;
+    const tn=gtTint(j1,r5,r6);
+    if(k===0){const v=r4<.38?0:r4<.88?1:2;put(x,z,o.h-.05,v,.85+r5*.35,yaw,tn,[.16,.3,.5][v],[3,6.3,9.9][v]);}
+    else if(k===1){put(x,z,o.h-.08,3+(r4*3|0),.75+r5*.6,yaw,tn,0,0);}
+    else if(k===2){const v=r4<.45?6:r4<.85?7:8;put(x,z,o.h-.06,v,.8+r5*.4,yaw,[.95+(r6-.5)*.1,.95,.95],[.7,.75,.75][v-6],[1.1,1.8,3.1][v-6]);}
+    else{const big=kop*r7,v=big>.75?12+(r4*4|0):big>.35?10+(r4*2|0):9+(r4*3|0),wR=GT_TSB[v],sc=(.8+r5*.45)*(v>=12?1+big*1.4:1);
+      put(x,z,o.h-.12*sc,v,sc,yaw,[.95+(r6-.5)*.12,.95,.95],wR*.42,GT_TSH[v][2]);}}
 }
 /* what the place is called (the HUD) */
 function gtPlace(x,z){

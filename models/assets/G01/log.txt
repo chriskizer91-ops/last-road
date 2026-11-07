@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 637 s 3704 in 64303 out end_turn
+built {'cattle_cream': {'tris': 1836, 'size': [0.84, 1.792, 2.679], 'min': [-0.42, 0, -1.31]}, 'cattle_red': {'tris': 1836, 'size': [0.84, 1.792, 2.679], 'min': [-0.42, 0, -1.31]}, 'cattle_grey': {'tris': 1836, 'size': [0.84, 1.792, 2.679], 'min': [-0.42, 0, -1.31]}}
+painted {'cattle_cream': {'front, standing (top left)': 0.77, 'side, standing, large (top centre)': 0.712}, 'cattle_grey': {'side, grey colourway (right, middle)': 0.687}, 'cattle_red': {'side, red colourway (top right)': 0.7}} 75s
+helper: done claude-opus-5-5 xhigh 327 s 11044 in 33546 out end_turn
+built {'cattle_cream': {'tris': 1888, 'size': [0.808, 1.792, 2.689], 'min': [-0.404, 0, -1.32]}, 'cattle_red': {'tris': 1888, 'size': [0.808, 1.792, 2.689], 'min': [-0.404, 0, -1.32]}, 'cattle_grey': {'tris': 1888, 'size': [0.808, 1.792, 2.689], 'min': [-0.404, 0, -1.32]}}
+painted {'cattle_cream': {'front, standing (top left)': 0.788, 'side, standing, large (top centre)': 0.723}, 'cattle_grey': {'side, grey colourway (right, middle)': 0.701}, 'cattle_red': {'side, red colourway (top right)': 0.713}} 232s
+done

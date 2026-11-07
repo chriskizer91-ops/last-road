@@ -1,0 +1,13 @@
+{"objects": [
+  {"name": "large_tree", "size_m": [7.8, 9.15, 9.8],
+   "views": [
+     {"label": "large – side", "box": [530, 22, 1140, 590], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "large – top", "box": [192, 632, 640, 982], "cam": [0, 1, 0], "up": [1, 0, 0]}
+   ]},
+  {"name": "small_tree", "size_m": [4.6, 5.22, 7.5],
+   "views": [
+     {"label": "small – side", "box": [1058, 265, 1520, 590], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "small – top", "box": [818, 728, 1140, 930], "cam": [0, 1, 0], "up": [1, 0, 0]}
+   ]}
+ ],
+ "notes": "Gnarled, moss- and lichen-draped cloud-forest tree in two forms. The large tree is about 9.2 m tall with a crown about 9.8 m across; the small, wind-sheared tree is about 5.2 m tall and 7.5 m long. Sizes come from the 1 m bar (about 62 px). The 'side' views are taken as seen from -x, so the trunk lean and the crown run toward +z. The top views seem drawn at about 0.72x the side-view scale, so their depth (x) comes from the top-view aspect. The three-quarter view is left out."}

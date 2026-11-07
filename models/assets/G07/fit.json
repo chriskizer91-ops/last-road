@@ -1,0 +1,30 @@
+{
+ "camel_adult": {
+  "side, standing (top left, head to the left)": {
+   "iou": 0.564,
+   "turn_deg": 4.07
+  },
+  "front, standing (top right, larger animal)": {
+   "iou": 0.77,
+   "turn_deg": 1.09
+  },
+  "texels": {
+   "covered": 526167,
+   "seen": 276221
+  }
+ },
+ "camel_calf": {
+  "side, standing (top left, small animal under the adult's neck)": {
+   "iou": 0.588,
+   "turn_deg": 4.1
+  },
+  "front, standing (top right, smaller animal)": {
+   "iou": 0.734,
+   "turn_deg": 0.53
+  },
+  "texels": {
+   "covered": 507241,
+   "seen": 268638
+  }
+ }
+}

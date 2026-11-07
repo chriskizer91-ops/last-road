@@ -1,0 +1,7 @@
+{"objects": [{"name": "vulture", "size_m": [2.4, 0.63, 0.55],
+  "views": [
+    {"label": "underside (top row)", "box": [108, 8, 1426, 300], "cam": [0, -1, 0], "up": [0, 0, 1]},
+    {"label": "top (middle row)", "box": [105, 322, 1426, 630], "cam": [0, 1, 0], "up": [0, 0, 1]},
+    {"label": "front, head-on (bottom centre)", "box": [320, 608, 1218, 842], "cam": [0, 0, 1], "up": [0, 1, 0]}
+  ]}],
+ "notes": "Griffon-type vulture in a soaring pose: wings in a shallow V (about 22 degrees) with spread primary 'fingers'. The 2.4 m scale bar is taken as the tip-to-tip span; the head-on view is drawn at a smaller scale than the top and underside views. The two perched birds (bottom left and right) show a different, wings-folded pose, so they are left out. The top and underside drawings disagree a little on head and tail length, so the model splits the difference."}

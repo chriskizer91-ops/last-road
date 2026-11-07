@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 541 s 3697 in 57871 out end_turn
+built {'dense_stand': {'tris': 1440, 'size': [2.51, 2.896, 2.588], 'min': [-1.265, -0.033, -1.331]}, 'wind_bent': {'tris': 1461, 'size': [2.885, 2.331, 1.763], 'min': [-1.453, -0.001, -0.893]}, 'edge_clump': {'tris': 350, 'size': [1.195, 2.558, 1.013], 'min': [-0.537, -0.003, -0.578]}}
+painted {'dense_stand': {'Dense stand – side': 0.859, 'Dense stand – top': 0.845}, 'edge_clump': {'Edge clump – side': 0.333, 'Edge clump – top': 0.549}, 'wind_bent': {'Wind-bent – side': 0.835, 'Wind-bent – top': 0.8}} 63s
+helper: done claude-opus-5-5 xhigh 394 s 12899 in 41663 out end_turn
+built {'dense_stand': {'tris': 1440, 'size': [2.385, 2.924, 2.412], 'min': [-1.18, -0.002, -1.23]}, 'wind_bent': {'tris': 1616, 'size': [2.886, 2.33, 1.314], 'min': [-1.476, -0.001, -0.672]}, 'edge_clump': {'tris': 605, 'size': [1.216, 2.582, 1.096], 'min': [-0.625, -0.001, -0.523]}}
+painted {'dense_stand': {'Dense stand – side': 0.859, 'Dense stand – top': 0.852}, 'edge_clump': {'Edge clump – side': 0.461, 'Edge clump – top': 0.502}, 'wind_bent': {'Wind-bent – side': 0.834, 'Wind-bent – top': 0.797}} 241s
+done

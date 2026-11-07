@@ -1,0 +1,7 @@
+{"objects": [{"name": "oryx", "size_m": [0.44, 1.70, 1.87],
+  "views": [
+    {"label": "side view (standing, facing left)", "box": [77, 7, 654, 532], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "front view", "box": [711, 7, 840, 532], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "back view", "box": [980, 7, 1129, 532], "cam": [0, 0, -1], "up": [0, 1, 0]}
+  ]}],
+ "notes": "Gemsbok-type oryx standing square. The scale bar gives about 306.5 px per metre: shoulder 1.2 m, horn tips 1.70 m, nose to tail-tip 1.87 m, horns about 0.85 m. Only the +x flank is drawn, so -x is mirrored. The running poses and the head/flank close-ups are left out. The horn spread is slightly asymmetric in the front and back views and is modelled symmetric."}

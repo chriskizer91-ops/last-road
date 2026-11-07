@@ -34,8 +34,13 @@ def cutout(im):
     bg = np.median(edge, 0); dd = np.sqrt(((a - bg) ** 2).sum(2)); sat = a.max(2) - a.min(2)
     m = (dd > 24) | ((dd > 13) & (sat > 20)); m = ndimage.binary_opening(m, iterations=1); lab, nl = ndimage.label(m)
     if nl > 1: sz = ndimage.sum(m, lab, range(1, nl + 1)); m = np.isin(lab, 1 + np.nonzero(sz > sz.max() * .03)[0])
-    return ndimage.binary_fill_holes(ndimage.binary_closing(m, iterations=2))
+    full = ndimage.binary_fill_holes(ndimage.binary_closing(m, iterations=2))
+    # (with HOLES, the pixels that are the thing itself: not the backdrop, nor the greys at the gaps' edges)
+    return (full, m & ~((sat < 22) & (a.mean(2) > 110))) if HOLES else full
 fits = {}; ID = os.path.basename(os.path.normpath(D))
+# HOLES=1 (for things with gaps in them: a tree's crown, a bush): a texel that lands on the backdrop showing through a
+# gap inside the outline takes nothing from that view (it's painted from the views that see it, or from its neighbours)
+HOLES = os.environ.get('HOLES') == '1'
 def sample(G, pts, nrms):
     """the colour each point takes from one fitted view, and how much (facing it squarely, in sight, inside the cut-out)"""
     x, y, z, a0, b0, K = G['x'], G['y'], G['z'], G['a0'], G['b0'], G['K']; m, me, Z = G['m'], G['me'], G['Z']
@@ -46,6 +51,7 @@ def sample(G, pts, nrms):
     inside = (u >= 0) & (u < m.shape[1] - 1) & (v >= 0) & (v < m.shape[0] - 1)
     ui, vi = u.clip(0, m.shape[1] - 1).round().astype(int), v.clip(0, m.shape[0] - 1).round().astype(int)
     w = face * vis * (inside & me[vi, ui]) * (G['iou'] ** 2)
+    if HOLES: w = w * G['fg'][vi, ui]
     col = np.stack([ndimage.map_coordinates(G['A'][..., ch], [v, u], order=1, mode='nearest') for ch in range(3)], 1)
     return col, w
 for name, faces in objs.items():
@@ -87,7 +93,8 @@ for name, faces in objs.items():
             if mm.any(): zz = w0 * za[0] + w1 * za[1] + w2 * za[2]; Z[YY[mm], XX[mm]] = np.maximum(Z[YY[mm], XX[mm]], zz[mm])
         bx = vw['box']; mx, my = int((bx[2] - bx[0]) * .06) + 6, int((bx[3] - bx[1]) * .06) + 6
         X0, Y0, X1, Y1 = max(int(bx[0]) - mx, 0), max(int(bx[1]) - my, 0), min(int(bx[2]) + mx, sheet.width), min(int(bx[3]) + my, sheet.height)
-        crop = sheet.crop((X0, Y0, X1, Y1)); m = cutout(crop)
+        crop = sheet.crop((X0, Y0, X1, Y1)); m = cutout(crop); fg = None
+        if HOLES: m, fg = m
         if m.sum() < 50: fits[name][vw['label']] = {'iou': 0}; continue
         ds = max(1, int(round(m.shape[1] / 480))); ms = m[::ds, ::ds].astype(float); hs, ws = ms.shape; mmk = Z > -1e8
         ys, xs = np.nonzero(ms > .5); yz, xz = np.nonzero(mmk)
@@ -105,7 +112,7 @@ for name, faces in objs.items():
         fits[name][vw['label']] = {'iou': round(iou, 3), 'turn_deg': round(float(np.degrees(th)), 2)}; print(ID, name, vw['label'], fits[name][vw['label']], flush=True)
         if iou < .55: continue
         G = dict(x=x, y=y, z=z, a0=a0, b0=b0, K=K, sx=sx, sy=sy, th=th, tx=tx, ty=ty, ds=ds, m=m, Z=Z, Wd=Wd, Hd=Hd, iou=iou,
-                 me=ndimage.binary_erosion(m, iterations=2), A=lin(np.asarray(crop, np.float64) / 255)); GOOD.append(G)
+                 me=ndimage.binary_erosion(m, iterations=2), fg=fg, A=lin(np.asarray(crop, np.float64) / 255)); GOOD.append(G)
         col, w = sample(G, pp, pn); acc_c += col * w[:, None]; acc_w += w
     # (faces no view sees, the far side of a thing drawn from one side only: from the view of the near side, as if
     #  the thing were the same both sides (the point and its facing mirrored through the middle along that view's

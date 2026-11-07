@@ -1,0 +1,6 @@
+helper: done claude-opus-5-5 xhigh 612 s 3707 in 61569 out end_turn
+built {'antelope_male': {'tris': 2364, 'size': [0.39, 1.226, 1.036], 'min': [-0.195, -0.006, -0.518]}, 'antelope_female': {'tris': 2172, 'size': [0.346, 1.06, 0.983], 'min': [-0.173, -0.007, -0.492]}}
+painted {'antelope_female': {'female, standing side (facing right)': 0.598, 'female, front': 0.698}, 'antelope_male': {'male, standing side (facing right)': 0.608, 'male, front': 0.682}} 188s
+helper: done claude-opus-5-5 xhigh 379 s 10890 in 34919 out end_turn
+review: no changes
+done

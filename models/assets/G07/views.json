@@ -1,0 +1,21 @@
+{
+  "objects": [
+    {
+      "name": "camel_adult",
+      "size_m": [0.88, 2.25, 3.42],
+      "views": [
+        {"label": "side, standing (top left, head to the left)", "box": [157, 14, 908, 508], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "front, standing (top right, larger animal)", "box": [1126, 14, 1318, 508], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "camel_calf",
+      "size_m": [0.35, 1.15, 1.17],
+      "views": [
+        {"label": "side, standing (top left, small animal under the adult's neck)", "box": [178, 257, 434, 508], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "front, standing (top right, smaller animal)", "box": [1340, 236, 1423, 508], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "A one-humped (dromedary-type) camel with its calf, both standing. The bottom-row walking drawings show a different pose, so they are left out. The scale bars disagree with each other (the vertical bar is non-linear, and the 178 px/m horizontal bar would make the camel 4.2 m long), so I used about 219 px/m, matching the bar's 2.2 m mark at the hump top: adult about 2.25 m tall and 3.4 m long, calf about 1.15 m tall. The calf's front drawing is about 8% taller than its side drawing."
+}

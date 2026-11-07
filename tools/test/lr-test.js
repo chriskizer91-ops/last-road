@@ -31,6 +31,18 @@ window.LRT_T = (() => {
       if (t.w && t.w.fill) t.w.fill(0); t.air = true; t.airT = 1; return { p: Array.from(t.p).map(v => Math.round(v)), place: D.GAME.place }; },
     distFill() { const t = car(); L.lrDistUpdate ? L.lrDistUpdate(t.p, true) : 0; return { tiles: L.LRD.tiles.size }; },
     dist() { const R = L.LRD; return { tiles: R.tiles.size, made: R.made, msEach: R.made ? +(R.ms / R.made).toFixed(1) : 0, drawnTris: R.tris, dbg: R.dbg }; },
+    flora(r) { const t = car(); return { made: L.LRF.made, shapes: __dyb.TREES ? __dyb.TREES.shapes.length : null, near: L.lrFloraNear(t.p[0], t.p[2], r || 300) }; },
+    findRock(x, z, R) { let best = null; const o = {}; for (let a = -R; a <= R; a += 60) for (let b = -R; b <= R; b += 60) { L.WG.sample(x + a, z + b, o); const r = L.WG.gtRegions(x + a, z + b, {}); if (r.sav < .5) continue; if (!best || o.rock > best.rock) best = { x: x + a, z: z + b, rock: +o.rock.toFixed(2), h: +o.h.toFixed(1) }; } return best; },
+    goRock(R, d) { const t = car(), b = this.findRock(t.p[0], t.p[2], R); if (!b) return null; d = d || 110; const a = Math.atan2(b.z - t.p[2], b.x - t.p[0]);
+      const x = b.x - Math.cos(a) * d, z = b.z - Math.sin(a) * d; this.park(x, z, Math.atan2(-(b.z - z), b.x - x)); return { rock: b, car: [Math.round(x), Math.round(z)] }; },
+    goProp(id, obj, d, side) { const p = L.WG.GTP.find(q => q.id === id && q.obj === obj); if (!p) return null; d = d || 30; const a = p.yaw + (side || 0);
+      const x = p.x + Math.cos(a) * d, z = p.z - Math.sin(a) * d; this.park(x, z, Math.atan2(-(p.z - z), p.x - x)); return { at: [Math.round(p.x), Math.round(p.z)], car: [Math.round(x), Math.round(z)] }; },
+    regions() { const t = car(), R = L.WG.gtRegions(t.p[0], t.p[2], {}), o = {}; L.WG.sample(t.p[0], t.p[2], o); const r = {}; for (const k of ['sav', 'pans', 'dune', 'high', 'cany', 'delta', 'black']) r[k] = +(+R[k] || 0).toFixed(2); r.code = o.code; r.h = +o.h.toFixed(1); r.wl = o.wl > -1e8 ? +o.wl.toFixed(1) : null; return r; },
+    seek(kind, d, R) { const t = car(), C = 2500, ca = Math.floor(t.p[0] / C), cb = Math.floor(t.p[2] / C); R = R || 14; let best = null, bd = 1e12;
+      for (let a = ca - R; a <= ca + R; a++) for (let b = cb - R; b <= cb + R; b++) { const H = L.lraHerdFor(a, b); if (!H || H.kind !== kind) continue; const dd = Math.hypot(H.x - t.p[0], H.z - t.p[2]); if (dd < bd) { bd = dd; best = H; } }
+      if (!best) return null; this.park(best.x + (d || 300), best.z, Math.PI); return { at: [Math.round(best.x), Math.round(best.z)], n: best.mem.length }; },
+    calm(on) { L.LRA.calm = !!on; return { calm: L.LRA.calm }; },
+    animals() { const A = L.LRA, P = L.LRP, out = {}; for (const [k, m] of P.mesh) if (/^G0/.test(k)) out[k] = m ? (P.tex.get(k) ? 'ready' : 'no picture') : 'failed'; return { drawn: A.drawn, tris: A.tris, meshes: out, busy: [...P.busy].filter(k => /^G0/.test(k) && !P.mesh.has(k)) }; },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();

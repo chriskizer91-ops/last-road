@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 792 s 3710 in 81020 out end_turn
+built {'flamingo_standing': {'tris': 1904, 'size': [0.29, 1.395, 1.086], 'min': [-0.145, -0.006, -0.567]}, 'flamingo_flying': {'tris': 1476, 'size': [1.65, 0.801, 1.612], 'min': [-0.825, 0, -0.801]}}
+painted {'flamingo_flying': {'bird in flight, side (facing right, wings raised)': 0.736, 'bird in flight, top (head up the page, wings spread)': 0.772}, 'flamingo_standing': {'standing bird, side (facing right)': 0.566}} 48s
+helper: done claude-opus-5-5 xhigh 356 s 10699 in 34510 out end_turn
+built {'flamingo_standing': {'tris': 1904, 'size': [0.29, 1.396, 1.086], 'min': [-0.145, -0.006, -0.567]}, 'flamingo_flying': {'tris': 1476, 'size': [1.65, 0.801, 1.612], 'min': [-0.825, 0, -0.801]}}
+painted {'flamingo_flying': {'bird in flight, side (facing right, wings raised)': 0.736, 'bird in flight, top (head up the page, wings spread)': 0.772}, 'flamingo_standing': {'standing bird, side (facing right)': 0.588}} 54s
+done

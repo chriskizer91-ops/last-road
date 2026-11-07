@@ -10,7 +10,7 @@
   },
   "texels": {
    "covered": 299796,
-   "seen": 83475
+   "seen": 71511
   }
  },
  "tree_old": {
@@ -24,7 +24,7 @@
   },
   "texels": {
    "covered": 199878,
-   "seen": 47521
+   "seen": 40407
   }
  },
  "tree_young": {
@@ -38,7 +38,7 @@
   },
   "texels": {
    "covered": 500347,
-   "seen": 173882
+   "seen": 151810
   }
  }
 }

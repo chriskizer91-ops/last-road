@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 393 s 3705 in 39835 out end_turn
+built {'camel_adult': {'tris': 3904, 'size': [0.909, 2.234, 3.45], 'min': [-0.455, 0, -1.718]}, 'camel_calf': {'tris': 1650, 'size': [0.347, 1.155, 1.177], 'min': [-0.173, 0, -0.585]}}
+painted {'camel_adult': {'side, standing (top left, head to the left)': 0.603, 'front, standing (top right, larger animal)': 0.751}, 'camel_calf': {"side, standing (top left, small animal under the adult's neck)": 0.644, 'front, standing (top right, smaller animal)': 0.77}} 63s
+helper: done claude-opus-5-5 xhigh 276 s 9989 in 26310 out end_turn
+built {'camel_adult': {'tris': 3904, 'size': [0.879, 2.234, 3.45], 'min': [-0.439, 0, -1.718]}, 'camel_calf': {'tris': 1650, 'size': [0.337, 1.155, 1.177], 'min': [-0.169, 0, -0.585]}}
+painted {'camel_adult': {'side, standing (top left, head to the left)': 0.564, 'front, standing (top right, larger animal)': 0.77}, 'camel_calf': {"side, standing (top left, small animal under the adult's neck)": 0.588, 'front, standing (top right, smaller animal)': 0.734}} 55s
+done

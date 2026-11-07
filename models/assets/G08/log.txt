@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 498 s 3715 in 49603 out end_turn
+built {'crane_standing': {'tris': 2572, 'size': [0.37, 1.605, 1.063], 'min': [-0.185, -0.005, -0.528]}, 'crane_flying': {'tris': 1496, 'size': [2.656, 0.598, 1.339], 'min': [-1.328, 0.004, -0.669]}}
+painted {'crane_flying': {'flight side (facing right, wings raised)': 0.745, 'flight top (back, head up)': 0.882, 'flight bottom (belly, head up)': 0.779}, 'crane_standing': {'standing side (facing right)': 0.645, 'standing front': 0.771}} 54s
+helper: done claude-opus-5-5 xhigh 344 s 10964 in 33927 out end_turn
+built {'crane_standing': {'tris': 2796, 'size': [0.37, 1.605, 1.063], 'min': [-0.185, -0.005, -0.528]}, 'crane_flying': {'tris': 1496, 'size': [2.656, 0.598, 1.339], 'min': [-1.328, 0.004, -0.669]}}
+painted {'crane_flying': {'flight side (facing right, wings raised)': 0.745, 'flight top (back, head up)': 0.882, 'flight bottom (belly, head up)': 0.779}, 'crane_standing': {'standing side (facing right)': 0.646, 'standing front': 0.658}} 64s
+done

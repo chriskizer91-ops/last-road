@@ -1,0 +1,29 @@
+{"objects": [
+  {"name": "lava_slab", "size_m": [2.67, 0.30, 1.76],
+   "views": [
+     {"label": "top view", "box": [1014, 26, 1497, 345], "cam": [0, 1, 0], "up": [0, 0, -1]},
+     {"label": "front edge view", "box": [1010, 362, 1500, 416], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "boulder_large", "size_m": [2.67, 2.26, 1.9],
+   "views": [{"label": "front view", "box": [21, 421, 505, 830], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "boulder_faceted", "size_m": [1.51, 1.43, 1.35],
+   "views": [{"label": "front view", "box": [497, 484, 771, 742], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rock_pillar", "size_m": [0.73, 1.46, 0.72],
+   "views": [{"label": "front view", "box": [806, 478, 939, 742], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rock_spiky", "size_m": [1.77, 1.86, 1.8],
+   "views": [{"label": "front view", "box": [966, 455, 1287, 792], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "spiky_bomb", "size_m": [1.1, 0.72, 1.07],
+   "views": [
+     {"label": "top view", "box": [1323, 455, 1517, 647], "cam": [0, 1, 0], "up": [0, 0, -1]},
+     {"label": "front view", "box": [1313, 668, 1515, 798], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rock_small_a", "size_m": [0.73, 0.61, 0.6],
+   "views": [{"label": "front view", "box": [198, 870, 330, 980], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rock_small_b", "size_m": [0.75, 0.64, 0.55],
+   "views": [{"label": "front view", "box": [393, 862, 528, 978], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rock_small_c", "size_m": [0.95, 0.73, 0.8],
+   "views": [{"label": "front view", "box": [586, 846, 758, 978], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rock_small_d", "size_m": [0.74, 0.68, 0.6],
+   "views": [{"label": "front view", "box": [818, 855, 952, 978], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rock_small_e", "size_m": [0.94, 0.76, 0.75],
+   "views": [{"label": "front view", "box": [1010, 840, 1180, 978], "cam": [0, 0, 1], "up": [0, 1, 0]}]}
+ ],
+ "notes": "Set of Black Range lava rocks. It has a ropy pahoehoe slab (about 2.7 x 1.8 x 0.3 m), a 2.7 m boulder, a faceted boulder, a pillar, a spiky scoria rock, a spiky lava bomb and five small rocks (0.7-1 m). Sizes come from the scale bar (1 m is about 181 px). The slab's top-left drawing is a perspective and is left out. The single rock drawings are slightly elevated product shots, treated as front views; their depths are guesses."}

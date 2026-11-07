@@ -1,0 +1,26 @@
+{
+ "flamingo_flying": {
+  "bird in flight, side (facing right, wings raised)": {
+   "iou": 0.736,
+   "turn_deg": -0.22
+  },
+  "bird in flight, top (head up the page, wings spread)": {
+   "iou": 0.772,
+   "turn_deg": -0.04
+  },
+  "texels": {
+   "covered": 452639,
+   "seen": 393486
+  }
+ },
+ "flamingo_standing": {
+  "standing bird, side (facing right)": {
+   "iou": 0.588,
+   "turn_deg": 1.93
+  },
+  "texels": {
+   "covered": 606726,
+   "seen": 279238
+  }
+ }
+}

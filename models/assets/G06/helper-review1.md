@@ -1,0 +1,6 @@
+- **Proportions match the sheet.** Withers are about 1.2 m, horn tips about 1.70 m, and nose to tail-tip about 1.87 m. The back line, belly, rump and throat come straight from the traced side outline. The four hooves land where the sheet has them: front at sheet x ≈ 282/304 px, hind at ≈ 515/592 px.
+- **Front and back views fit well (0.83 and 0.86).** Barrel width, the ears held out sideways and the horn spread all line up. The paint also lands correctly on the face markings, the dark forearms, the flank stripe and the tail. That means the geometry sits where the drawing is.
+- **The side view's lower overlap (0.71) comes mostly from thin parts.** These are the two horns, the white lower legs and the tail tuft, where a few pixels of offset cost a lot. In the sheet's side view the two horns also separate into two lines, while the symmetric model puts them on one line. The white legs and belly sit against a light grey background, and there is a soft ground shadow, so the side outline itself is probably a little noisy. Neither of these is a shape error worth chasing.
+- **Views are right.** The side camera is on +x, so the animal faces left as drawn, and the front and back cameras are correct. There is no other flat view on the sheet. The running poses and close-ups are rightly left out.
+
+NO CHANGES

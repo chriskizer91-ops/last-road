@@ -6,7 +6,7 @@
   },
   "texels": {
    "covered": 437511,
-   "seen": 105209
+   "seen": 105193
   }
  },
  "dome_mound": {
@@ -16,7 +16,7 @@
   },
   "texels": {
    "covered": 543704,
-   "seen": 105076
+   "seen": 104757
   }
  },
  "spired_mound": {
@@ -26,7 +26,7 @@
   },
   "texels": {
    "covered": 602885,
-   "seen": 164973
+   "seen": 164964
   }
  }
 }

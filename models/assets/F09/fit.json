@@ -1,48 +1,48 @@
 {
  "boulder_large": {
   "front": {
-   "iou": 0.925,
-   "turn_deg": -0.1
+   "iou": 0.926,
+   "turn_deg": -0.58
   },
   "right side": {
    "iou": 0.912,
-   "turn_deg": 1.53
+   "turn_deg": 1.9
   },
   "texels": {
-   "covered": 406135,
-   "seen": 33641
+   "covered": 661469,
+   "seen": 335848
   }
  },
  "boulder_small": {
   "front": {
-   "iou": 0.918,
-   "turn_deg": 0.13
+   "iou": 0.928,
+   "turn_deg": -0.11
   },
   "right side": {
-   "iou": 0.904,
-   "turn_deg": -0.52
+   "iou": 0.922,
+   "turn_deg": -0.25
   },
   "texels": {
-   "covered": 476775,
-   "seen": 50715
+   "covered": 697159,
+   "seen": 423909
   }
  },
  "leaning_slab": {
   "front (long side)": {
-   "iou": 0.853,
-   "turn_deg": 0.33
+   "iou": 0.849,
+   "turn_deg": 0.63
   },
   "end (right)": {
-   "iou": 0.874,
-   "turn_deg": -1.78
+   "iou": 0.856,
+   "turn_deg": -3.87
   },
   "top": {
-   "iou": 0.914,
-   "turn_deg": 2.19
+   "iou": 0.878,
+   "turn_deg": 3.51
   },
   "texels": {
-   "covered": 430379,
-   "seen": 385294
+   "covered": 420397,
+   "seen": 373419
   }
  },
  "sandstone_block": {

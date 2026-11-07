@@ -1,0 +1,16 @@
+{
+ "model": {
+  "standing side view on the rock (top left, facing left)": {
+   "iou": 0.705,
+   "turn_deg": 3.92
+  },
+  "front view on the rock (top right)": {
+   "iou": 0.852,
+   "turn_deg": 1.18
+  },
+  "texels": {
+   "covered": 439321,
+   "seen": 170345
+  }
+ }
+}

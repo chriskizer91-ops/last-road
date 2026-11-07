@@ -1,0 +1,44 @@
+{
+ "dense_stand": {
+  "Dense stand \u2013 side": {
+   "iou": 0.859,
+   "turn_deg": 0.73
+  },
+  "Dense stand \u2013 top": {
+   "iou": 0.852,
+   "turn_deg": 1.85
+  },
+  "texels": {
+   "covered": 334029,
+   "seen": 148612
+  }
+ },
+ "edge_clump": {
+  "Edge clump \u2013 side": {
+   "iou": 0.461,
+   "turn_deg": 4.98
+  },
+  "Edge clump \u2013 top": {
+   "iou": 0.502,
+   "turn_deg": -2.6
+  },
+  "texels": {
+   "covered": 309448,
+   "seen": 0
+  }
+ },
+ "wind_bent": {
+  "Wind-bent \u2013 side": {
+   "iou": 0.834,
+   "turn_deg": 0.12
+  },
+  "Wind-bent \u2013 top": {
+   "iou": 0.797,
+   "turn_deg": 0.49
+  },
+  "texels": {
+   "covered": 188308,
+   "seen": 51650
+  }
+ }
+}

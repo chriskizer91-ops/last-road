@@ -10,7 +10,7 @@
   },
   "texels": {
    "covered": 221656,
-   "seen": 86770
+   "seen": 80997
   }
  },
  "bush_dense": {
@@ -24,7 +24,7 @@
   },
   "texels": {
    "covered": 327295,
-   "seen": 105450
+   "seen": 100255
   }
  },
  "bush_half_dead": {
@@ -38,7 +38,7 @@
   },
   "texels": {
    "covered": 275645,
-   "seen": 120428
+   "seen": 98894
   }
  }
 }

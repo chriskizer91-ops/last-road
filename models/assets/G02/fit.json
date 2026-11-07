@@ -1,0 +1,30 @@
+{
+ "antelope_female": {
+  "female, standing side (facing right)": {
+   "iou": 0.598,
+   "turn_deg": 2.29
+  },
+  "female, front": {
+   "iou": 0.698,
+   "turn_deg": 1.66
+  },
+  "texels": {
+   "covered": 222425,
+   "seen": 134046
+  }
+ },
+ "antelope_male": {
+  "male, standing side (facing right)": {
+   "iou": 0.608,
+   "turn_deg": 0.4
+  },
+  "male, front": {
+   "iou": 0.682,
+   "turn_deg": 1.19
+  },
+  "texels": {
+   "covered": 202205,
+   "seen": 113370
+  }
+ }
+}

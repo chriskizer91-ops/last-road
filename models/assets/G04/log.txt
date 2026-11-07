@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 424 s 3716 in 43002 out end_turn
+built {'model': {'tris': 4920, 'size': [0.54, 1.534, 2.593], 'min': [-0.27, 0, -1.291]}}
+painted {'model': {'standing side view on the rock (top left, facing left)': 0.726, 'front view on the rock (top right)': 0.851}} 31s
+helper: done claude-opus-5-5 xhigh 359 s 8452 in 35432 out end_turn
+built {'model': {'tris': 5368, 'size': [0.551, 1.534, 2.593], 'min': [-0.275, 0, -1.291]}}
+painted {'model': {'standing side view on the rock (top left, facing left)': 0.705, 'front view on the rock (top right)': 0.852}} 29s
+done

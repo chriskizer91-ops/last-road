@@ -1,0 +1,20 @@
+{
+ "model": {
+  "underside (top row)": {
+   "iou": 0.809,
+   "turn_deg": -0.02
+  },
+  "top (middle row)": {
+   "iou": 0.818,
+   "turn_deg": 0.04
+  },
+  "front, head-on (bottom centre)": {
+   "iou": 0.577,
+   "turn_deg": 0.0
+  },
+  "texels": {
+   "covered": 270831,
+   "seen": 226038
+  }
+ }
+}

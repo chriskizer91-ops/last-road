@@ -64,23 +64,39 @@ function build(THREE) {
     }
     return hi > lo ? [lo, hi] : null;
   }
-  // boulder as stacked octagonal strata: each layer fits the front and side outlines at its height
-  function hullRock(front, side, layers) {
-    const g = new THREE.Group();
+  // boulder as one lofted solid: a closed cylinder whose rings are reshaped into
+  // squarish (superellipse) sections that fit the front and side outlines at each height
+  function loftRock(front, side, radial, rings, power) {
     let hf = 0, hs = 0;
     front.forEach(p => { hf = Math.max(hf, p[1]); });
     side.forEach(p => { hs = Math.max(hs, p[1]); });
     const H = Math.min(hf, hs);
-    const C = Math.cos(Math.PI / 8);
-    for (let i = 0; i < layers; i++) {
-      const y0 = H * i / layers, y1 = H * (i + 1) / layers, ym = (y0 + y1) / 2;
-      const fx = sliceRange(front, ym), sz = sliceRange(side, ym);
-      if (!fx || !sz) continue;
-      const m = mesh(new THREE.CylinderGeometry(1, 1, y1 - y0, 8, 1, false, Math.PI / 8), 'sandstone');
-      m.scale.set((fx[1] - fx[0]) / 2 / C, 1, (sz[1] - sz[0]) / 2 / C);
-      m.position.set((fx[0] + fx[1]) / 2, ym, (sz[0] + sz[1]) / 2);
-      g.add(m);
+    const yTop = H * 0.95;   // last ring; the top cap domes up to H
+    const eps = H * 0.01;
+    function sample(y) {
+      const yy = Math.min(Math.max(y, eps), yTop);
+      const fx = sliceRange(front, yy) || [-0.05, 0.05];
+      const sz = sliceRange(side, yy) || [-0.05, 0.05];
+      return { cx: (fx[0] + fx[1]) / 2, hx: (fx[1] - fx[0]) / 2, cz: (sz[0] + sz[1]) / 2, hz: (sz[1] - sz[0]) / 2 };
     }
+    const sp = v => Math.sign(v) * Math.pow(Math.abs(v), power);
+    const geo = new THREE.CylinderGeometry(1, 1, 1, radial, rings, false);
+    const pos = geo.attributes.position;
+    for (let i = 0; i < pos.count; i++) {
+      const x = pos.getX(i), y = pos.getY(i), z = pos.getZ(i);
+      const t = y + 0.5;
+      const yy = t * yTop;
+      const s = sample(yy);
+      if (Math.hypot(x, z) < 1e-6) {
+        pos.setXYZ(i, s.cx, t > 0.5 ? H : 0, s.cz);
+      } else {
+        pos.setXYZ(i, s.cx + s.hx * sp(x), yy, s.cz + s.hz * sp(z));
+      }
+    }
+    pos.needsUpdate = true;
+    geo.computeVertexNormals();
+    const g = new THREE.Group();
+    g.add(mesh(geo, 'sandstone'));
     return g;
   }
   function tuft(x, z, h, n, phase) {
@@ -120,7 +136,7 @@ function build(THREE) {
   const slab = new THREE.Group();
   slab.name = 'leaning_slab';
   {
-    const LEAN = 15 * Math.PI / 180, T = 0.62;
+    const LEAN = 19 * Math.PI / 180, T = 0.5;
     const cs = Math.cos(LEAN), sn = Math.sin(LEAN), rise = T * sn;
     // [px, py, isUpperEdge]
     const raw = [[46, 424, 0], [58, 402, 1], [150, 375, 1], [300, 342, 1], [450, 308, 1], [600, 277, 1], [690, 256, 1],
@@ -173,20 +189,20 @@ function build(THREE) {
   }
 
   // ---------------- boulders ----------------
-  const bigRock = hullRock(
+  const bigRock = loftRock(
     px([[1078, 835], [1078, 790], [1086, 758], [1100, 733], [1140, 718], [1185, 708], [1232, 711], [1256, 724],
       [1266, 750], [1271, 800], [1269, 835]], 1173.5, 835),
     pxSide([[1300, 835], [1302, 770], [1312, 740], [1330, 720], [1352, 709], [1372, 711], [1393, 732], [1410, 762],
       [1420, 800], [1421, 835]], 1359.5, 835),
-    14);
+    12, 14, 0.65);
   bigRock.name = 'boulder_large';
 
-  const smallRock = hullRock(
+  const smallRock = loftRock(
     px([[1082, 946], [1081, 905], [1090, 887], [1110, 876], [1150, 871], [1195, 868], [1218, 876], [1228, 895],
       [1233, 925], [1231, 946]], 1155.5, 946),
     pxSide([[1287, 946], [1293, 928], [1315, 905], [1345, 882], [1370, 866], [1390, 870], [1400, 890], [1405, 925],
       [1404, 946]], 1344.5, 946),
-    10);
+    12, 12, 0.65);
   smallRock.name = 'boulder_small';
 
   return {

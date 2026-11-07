@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 497 s 3704 in 53504 out end_turn
+built {'large_tree': {'tris': 8434, 'size': [7.479, 9.242, 9.661], 'min': [-3.815, -0.158, -4.858]}, 'small_tree': {'tris': 5378, 'size': [4.046, 5.243, 7.441], 'min': [-1.739, -0.06, -3.703]}}
+painted {'large_tree': {'large – side': 0.739, 'large – top': 0.842}, 'small_tree': {'small – side': 0.603, 'small – top': 0.761}} 45s
+helper: done claude-opus-5-5 xhigh 285 s 12507 in 30743 out end_turn
+built {'large_tree': {'tris': 8434, 'size': [7.479, 9.242, 9.661], 'min': [-3.815, -0.158, -4.858]}, 'small_tree': {'tris': 5378, 'size': [3.998, 5.222, 7.454], 'min': [-1.8, -0.06, -3.703]}}
+painted {'large_tree': {'large – side': 0.746, 'large – top': 0.844}, 'small_tree': {'small – side': 0.627, 'small – top': 0.779}} 58s
+done

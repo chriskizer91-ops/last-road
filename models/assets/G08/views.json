@@ -1,0 +1,14 @@
+{"objects": [
+  {"name": "crane_standing", "size_m": [0.41, 1.60, 1.06],
+   "views": [
+     {"label": "standing side (facing right)", "box": [55, 138, 547, 882], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "standing front", "box": [540, 140, 730, 882], "cam": [0, 0, 1], "up": [0, 1, 0]}
+   ]},
+  {"name": "crane_flying", "size_m": [2.65, 0.60, 1.34],
+   "views": [
+     {"label": "flight side (facing right, wings raised)", "box": [847, 8, 1467, 282], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "flight top (back, head up)", "box": [817, 279, 1467, 607], "cam": [0, 1, 0], "up": [0, 0, 1]},
+     {"label": "flight bottom (belly, head up)", "box": [812, 620, 1470, 942], "cam": [0, -1, 0], "up": [0, 0, 1]}
+   ]}
+ ],
+ "notes": "Common crane: grey body, black and white head and neck, red crown, drooping tertial plumes. By the scale bar the standing bird is 1.6 m tall (big for a real crane) and the flying side view is 1.34 m beak to toes. The top and bottom flight views are drawn at about half that scale, so the wingspan (2.65 m) is taken from their proportions. The raised wings in the side flight view are modelled as a ~19° upward tilt (dihedral), which fits the side, top and bottom outlines together."}

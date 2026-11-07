@@ -1,0 +1,29 @@
+{
+  "objects": [
+    {
+      "name": "dense_stand",
+      "size_m": [2.3, 2.87, 2.04],
+      "views": [
+        {"label": "Dense stand – side", "box": [14, 26, 396, 502], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Dense stand – top", "box": [22, 567, 362, 906], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "wind_bent",
+      "size_m": [2.9, 2.46, 1.39],
+      "views": [
+        {"label": "Wind-bent – side", "box": [377, 94, 858, 502], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Wind-bent – top", "box": [403, 611, 826, 842], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "edge_clump",
+      "size_m": [1.28, 2.58, 1.16],
+      "views": [
+        {"label": "Edge clump – side", "box": [845, 74, 1058, 502], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Edge clump – top", "box": [850, 645, 1043, 838], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Three late-season reed clump variants: a dense stand (~2.3 m wide, 2.87 m tall), a wind-bent clump leaning to +x (~2.9 m long, 2.46 m tall) and a sparse edge clump (~1.28 m wide, 2.58 m tall). Scale bar: 1 m = 166 px. The 'side' views are used as front views (+z). The wind-bent top view is shorter (2.55 m) than its side view (2.9 m), which is a sheet inconsistency. The three-quarter view is left out."
+}

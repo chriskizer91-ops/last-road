@@ -1,0 +1,8 @@
+- **Sizes match the scale bar.** The shoulder is about 0.75 m, nose to tail about 1.03 m, the ram's horn tips reach 1.22 m, and the ewe is slightly smaller. The reported x widths (0.39 and 0.35 m) and the ewe's 1.06 m height are slightly too big. They come from the axis-aligned boxes of the tilted ears and horn segments. The geometry itself is about 0.34 m wide at the ear tips, which matches the front-view boxes, and the ewe's ear tip sits at 1.03 m, which matches her side box.
+- **Views are set up correctly.** All four boxes enclose their figures. The side camera at −x puts +z (the head) on the right, as drawn, and the front camera at +z sees the face. The two running figures are a different pose, so leaving them out is correct. The sheet has no rear view and no second side view, so nothing usable is missing.
+- **The overlap of about 0.6 in the side views is not a wrong box or camera.** It comes from two things:
+  - Thin parts (cannon bones about 10 px wide, horns, tail tuft) lose half their area if they are off by a few pixels.
+  - The side drawings are slightly in perspective. Both horns, and the far ear, are drawn well apart. A mirror-symmetric model has to put each pair in one place, and the model already places the horns midway.
+- **Remaining small inaccuracies.** Part of the grey on the lower legs in the painted renders may come from leg positions being a few pixels off; part comes from faces no view shows being painted by a guess. The front views draw the ears a little lower and more spread than the side views do. Neither is a structural error worth moving landmarks for without better evidence.
+
+NO CHANGES

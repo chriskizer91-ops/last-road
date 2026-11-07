@@ -56,7 +56,7 @@ swap("function core(x,z,ctx,o){\n  if(DUNES)return duneCore(x,z,o);", open(sys.p
 swap("function baseAt(x,z){\n  if(DUNES)return rimAt(x,z);", "function baseAt(x,z){\n  if(GT)return gtBase(x,z);if(DUNES)return rimAt(x,z);")
 swap("if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];", "if(GT)gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R);if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];")
 swap("props:null,trees:new Float32Array(0),cols", "props:null,trees:new Float32Array(trees),cols")
-swap("return {L,HALF,CH,FT,ROAD_END,", "return {gtPlace,GTS:GT_STRIPS,GTR:GT_ROAD,GTP:GT_PROPS,GTB:GT_PROPBOX,GX,GZ,gtRegions,L,HALF,CH,FT,ROAD_END,")
+swap("return {L,HALF,CH,FT,ROAD_END,", "return {gtPlace,GTT:GT_TSH,GTV0:GT_TV0,GTS:GT_STRIPS,GTR:GT_ROAD,GTP:GT_PROPS,GTB:GT_PROPBOX,GX,GZ,gtRegions,L,HALF,CH,FT,ROAD_END,")
 swap("if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';", "if(WG.gtPlace)return WG.gtPlace(x,z);if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';")
 swap("const HOME=[0,1.9,0];", "const HOME=(()=>{const R=WG.GTR,s=R.len-2300;let i=0;while(i<R.S.length-2&&R.S[i+1]<s)i++;const a=R.P[i],b=R.P[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]),dx=(b[0]-a[0])/l,dz=(b[1]-a[1])/l;\n  return [a[0]-dz*1.9,a[1]+dx*1.9,Math.atan2(-dz,dx)];})();")
 # THE DISTANT LAND (src/lr-game.js lrDist*): drawn after the far tiles; the camera sees as far as it reaches (its far
@@ -101,6 +101,11 @@ swap("else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt
 swap("function sasNear(){\n  if(APP.orbit)return .3;", "function sasNear(){\n  if(LRW.on)return .1;if(APP.orbit)return .3;")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
+# his plants and rocks (lr-game.js: LRF): each drawn in its own picture, each kind only out to its own reach; the
+# plane's material (120) also as 121, its picture tinted by the instance's colour
+swap("const m=TREES.shapes[v][far?1:l];instBind(", "const m=TREES.shapes[v][far?1:l];if(m.tx)lrTreeTex(m.tx);instBind(")
+swap("const v=T[o+7]|0,l=nearOnly||d2<nn?0:1,cn=L.cnt[v];", "const v=T[o+7]|0;if(d2>LRF.D2[v]*(GFX.level==='mobile'?.45:1))continue;const l=nearOnly||d2<nn?0:1,cn=L.cnt[v];")
+swap("  else if(m==120){\n    alb=pow(texture(uRTa,vUV).rgb,vec3(2.2));", "  else if(m==120||m==121){\n    alb=pow(texture(uRTa,vUV).rgb,vec3(2.2));if(m==121)alb*=vC.rgb;")
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'

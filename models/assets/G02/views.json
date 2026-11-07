@@ -1,0 +1,21 @@
+{
+  "objects": [
+    {
+      "name": "antelope_male",
+      "size_m": [0.34, 1.22, 1.03],
+      "views": [
+        {"label": "male, standing side (facing right)", "box": [97, 20, 543, 545], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "male, front", "box": [1092, 18, 1240, 547], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "antelope_female",
+      "size_m": [0.30, 1.03, 0.98],
+      "views": [
+        {"label": "female, standing side (facing right)", "box": [574, 100, 997, 546], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "female, front", "box": [1320, 117, 1455, 546], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "Impala-type antelope: a horned ram and a hornless ewe. The scale bar gives 431 px per metre, so each is about 0.75 m at the shoulder and 1.0 m from nose to tail; the ram's horns reach 1.22 m. The two running poses on the bottom row are a different pose, not flat views of this standing model, so they are left out. The front views foreshorten the face and spread the ears wider and lower than the side views allow, so the ear tips are a compromise between the two. The rear is not drawn: a white rump and a black tail tuft are guessed."
+}

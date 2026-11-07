@@ -3,15 +3,17 @@ game as shape plus picture, into src/lr-props.js (window.LR_PROPS): per object o
 points (16-bit, across its box), facings (8-bit), picture coordinates (16-bit, v turned for WebGL) and triangles, its
 box, and its colour picture with the crease shade in
 (<object>_albedo_ao.webp): 1024 for a building, 512 for something under 3 m (phones halve them when they load).
+A model with a far shape (model_far.obj, from tools/models/lod.py) also gets <object>~far: the thinned shape, wearing
+the near one's picture (texOf), for what the game draws many of far off (trees, bushes, rocks).
 usage: python3 tools/props_pack.py B02 B06 ...  (from last-road's top)"""
 import sys, os, io, json, base64, gzip
 import numpy as np
 from PIL import Image
 b64 = lambda a: base64.b64encode(np.ascontiguousarray(a).tobytes()).decode()
 out = {}
-for ID in sys.argv[1:]:
-    D = f'models/assets/{ID}/'; vs, vts, vns = [], [], []; objs = {}; cur = None
-    for line in open(D + 'model_uv.obj'):
+def read(path):
+    vs, vts, vns = [], [], []; objs = {}; cur = None
+    for line in open(path):
         t = line.split()
         if not t: continue
         if t[0] == 'v': vs.append([float(x) for x in t[1:4]])
@@ -21,31 +23,36 @@ for ID in sys.argv[1:]:
         elif t[0] == 'f':
             if cur is None: cur = 'model'; objs.setdefault(cur, [])
             objs[cur].append([tuple(int(q) if q else 0 for q in (p.split('/') + ['', ''])[:3]) for p in t[1:]])
-    vs, vts, vns = np.array(vs), np.array(vts) if vts else np.zeros((1, 2)), np.array(vns) if vns else np.array([[0, 1, 0.]])
-    ent = {}
-    for name, faces in objs.items():
-        key = {}; P, UV, N, I = [], [], [], []
-        for f in faces:
-            ids = []
-            for c in f:
-                if c not in key: key[c] = len(P); P.append(vs[c[0] - 1]); UV.append(vts[c[1] - 1] if c[1] else [0, 0]); N.append(vns[c[2] - 1] if c[2] else [0, 1, 0])
-                ids.append(key[c])
-            for k in range(1, len(ids) - 1): I += [ids[0], ids[k], ids[k + 1]]
-        P = np.array(P, np.float32); UV = np.array(UV, np.float32); UV[:, 1] = 1 - UV[:, 1]; N = np.array(N, np.float32)
-        I = np.array(I, np.uint32 if len(P) > 65535 else np.uint16)
-        size = (P.max(0) - P.min(0)).tolist()
-        tex = Image.open(D + f'{name}_albedo_ao.webp').convert('RGB'); px = 1024 if max(size) >= 3 else 512
-        if tex.width > px: tex = tex.resize((px, px), Image.LANCZOS)
-        b = io.BytesIO(); tex.save(b, 'WEBP', quality=int(os.environ.get('PROPQ', 72)), method=6)
-        lo, hi = P.min(0), P.max(0); q = np.round((P - lo) / np.maximum(hi - lo, 1e-6) * 65535).astype(np.uint16)
-        nq = np.round(np.clip(N / np.maximum(np.linalg.norm(N, axis=1, keepdims=True), 1e-9), -1, 1) * 127).astype(np.int8); nq = np.concatenate([nq, np.zeros((len(nq), 1), np.int8)], 1)
-        uq = np.round(np.clip(UV, 0, 1) * 65535).astype(np.uint16)
-        blob = gzip.compress(q.tobytes() + nq.tobytes() + uq.tobytes() + I.tobytes(), 9)
-        ent[name] = {'z': base64.b64encode(blob).decode(), 'nv': int(len(P)), 'i32': I.dtype == np.uint32, 'n': int(len(I)),
-                     'min': [round(float(v), 3) for v in P.min(0)], 'max': [round(float(v), 3) for v in P.max(0)], 'tex': 'data:image/webp;base64,' + base64.b64encode(b.getvalue()).decode()}
-        print(ID, name, len(I) // 3, 'triangles', px, 'px', len(b.getvalue()) // 1024, 'KB picture', flush=True)
+    return np.array(vs), np.array(vts) if vts else np.zeros((1, 2)), np.array(vns) if vns else np.array([[0, 1, 0.]]), objs
+for ID in sys.argv[1:]:
+    D = f'models/assets/{ID}/'; ent = {}; parts = [('', read(D + 'model_uv.obj'))]
+    if os.path.exists(D + 'model_far.obj'): parts.append(('~far', read(D + 'model_far.obj')))
+    for tag, (vs, vts, vns, objs) in parts:
+     for name, faces in objs.items():
+         key = {}; P, UV, N, I = [], [], [], []
+         for f in faces:
+             ids = []
+             for c in f:
+                 if c not in key: key[c] = len(P); P.append(vs[c[0] - 1]); UV.append(vts[c[1] - 1] if c[1] else [0, 0]); N.append(vns[c[2] - 1] if c[2] else [0, 1, 0])
+                 ids.append(key[c])
+             for k in range(1, len(ids) - 1): I += [ids[0], ids[k], ids[k + 1]]
+         P = np.array(P, np.float32); UV = np.array(UV, np.float32); UV[:, 1] = 1 - UV[:, 1]; N = np.array(N, np.float32)
+         I = np.array(I, np.uint32 if len(P) > 65535 else np.uint16)
+         size = (P.max(0) - P.min(0)).tolist()
+         b = io.BytesIO(); px = 1024 if max(size) >= 3 else 512
+         if not tag:
+             tex = Image.open(D + f'{name}_albedo_ao.webp').convert('RGB')
+             if tex.width > px: tex = tex.resize((px, px), Image.LANCZOS)
+             tex.save(b, 'WEBP', quality=int(os.environ.get('PROPQ', 72)), method=6)
+         lo, hi = P.min(0), P.max(0); q = np.round((P - lo) / np.maximum(hi - lo, 1e-6) * 65535).astype(np.uint16)
+         nq = np.round(np.clip(N / np.maximum(np.linalg.norm(N, axis=1, keepdims=True), 1e-9), -1, 1) * 127).astype(np.int8); nq = np.concatenate([nq, np.zeros((len(nq), 1), np.int8)], 1)
+         uq = np.round(np.clip(UV, 0, 1) * 65535).astype(np.uint16)
+         blob = gzip.compress(q.tobytes() + nq.tobytes() + uq.tobytes() + I.tobytes(), 9)
+         ent[name + tag] = {'z': base64.b64encode(blob).decode(), 'nv': int(len(P)), 'i32': I.dtype == np.uint32, 'n': int(len(I)),
+                      'min': [round(float(v), 3) for v in P.min(0)], 'max': [round(float(v), 3) for v in P.max(0)], **({'texOf': name} if tag else {'tex': 'data:image/webp;base64,' + base64.b64encode(b.getvalue()).decode()})}
+         print(ID, name + tag, len(I) // 3, 'triangles', px, 'px', len(b.getvalue()) // 1024, 'KB picture', flush=True)
     out[ID] = ent
 open('src/lr-props.js', 'w').write('/* GENERATED by tools/props_pack.py from his models (models/assets/): shape and picture for each, for the world */\nwindow.LR_PROPS=' + json.dumps(out, separators=(',', ':')) + ';\n')
-box = {f'{i}/{o}': [round(v, 2) for v in e['min'] + e['max']] for i, ob in out.items() for o, e in ob.items()}
+box = {f'{i}/{o}': [round(v, 2) for v in e['min'] + e['max']] for i, ob in out.items() for o, e in ob.items() if '~' not in o}
 open('src/gt-propbox.js', 'w').write("/* GENERATED by tools/props_pack.py: each placed model's box (min x, y, z, max x, y, z; metres) */\nconst GT_PROPBOX=" + json.dumps(box, separators=(',', ':')) + ';\n')
 print('src/lr-props.js', os.path.getsize('src/lr-props.js') // 1024, 'KB')

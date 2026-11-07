@@ -1,0 +1,34 @@
+{
+ "crane_flying": {
+  "flight side (facing right, wings raised)": {
+   "iou": 0.745,
+   "turn_deg": 1.14
+  },
+  "flight top (back, head up)": {
+   "iou": 0.882,
+   "turn_deg": 0.0
+  },
+  "flight bottom (belly, head up)": {
+   "iou": 0.779,
+   "turn_deg": 0.05
+  },
+  "texels": {
+   "covered": 363813,
+   "seen": 311025
+  }
+ },
+ "crane_standing": {
+  "standing side (facing right)": {
+   "iou": 0.646,
+   "turn_deg": 1.05
+  },
+  "standing front": {
+   "iou": 0.658,
+   "turn_deg": 0.87
+  },
+  "texels": {
+   "covered": 313716,
+   "seen": 150004
+  }
+ }
+}

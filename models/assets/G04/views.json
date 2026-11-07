@@ -1,0 +1,6 @@
+{"objects": [{"name": "big_cat", "size_m": [0.54, 1.52, 2.6],
+  "views": [
+    {"label": "standing side view on the rock (top left, facing left)", "box": [94, 10, 904, 484], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "front view on the rock (top right)", "box": [1121, 21, 1291, 494], "cam": [0, 0, 1], "up": [0, 1, 0]}
+  ]}],
+ "notes": "An adult lioness (no mane) standing alert, about 2.6 m from nose to tail tip, taken from the 2.6 m end of the scale bar. That makes her about 1.25 m at the shoulder and 1.5 m to the ear tips. The bar's own ticks are uneven, and read literally they would make her about 3.7 m long, so I used the 2.6 m label as her length. The rock is not modelled. The bottom-left walking drawing is a different pose and the bottom-right is a scene shot, so neither is listed as a view."}

@@ -1,0 +1,12 @@
+{"objects": [
+  {"name": "flamingo_standing", "size_m": [0.29, 1.39, 1.04],
+   "views": [
+     {"label": "standing bird, side (facing right)", "box": [28, 16, 401, 519], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+   ]},
+  {"name": "flamingo_flying", "size_m": [1.65, 0.80, 1.60],
+   "views": [
+     {"label": "bird in flight, side (facing right, wings raised)", "box": [378, 45, 1038, 378], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "bird in flight, top (head up the page, wings spread)", "box": [1021, 16, 1525, 506], "cam": [0, 1, 0], "up": [0, 0, 1]}
+   ]}
+ ],
+ "notes": "Greater flamingo drawn in two poses, so two models: standing (side view only) and flying with neck out and legs trailing (side and top views). The two flight views show different moments of the wingbeat. The wings are set in a ~40° V so they fill both outlines, with the wing-tip fore/aft position split between the two views, and they sit in left_wing/right_wing groups that pivot at the shoulder so they can be flapped. Scale: the sheet's views are not drawn at one scale. Read against the scale bar (212 px/m), the standing bird is 2.37 m tall, the flying bird is 3.1 m long in the side view but 2.3 m long in the top view, and the span is 2.37 m. All of these are about 1.4-1.9x a real flamingo. Both models are built at real size instead: standing 1.39 m tall, flying 1.6 m bill-to-toe with a 1.65 m span. That is about 1/1.7 of the bar for the standing bird and 1/1.4-1/1.9 for the flying one. Scale them up if the bar was meant."}

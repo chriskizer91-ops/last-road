@@ -1,0 +1,16 @@
+{"objects": [
+  {"name": "cattle_cream", "size_m": [0.73, 1.78, 2.63],
+   "views": [
+     {"label": "front, standing (top left)", "box": [64, 16, 270, 502], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side, standing, large (top centre)", "box": [304, 16, 1034, 512], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+   ]},
+  {"name": "cattle_red", "size_m": [0.73, 1.78, 2.63],
+   "views": [
+     {"label": "side, red colourway (top right)", "box": [1097, 14, 1491, 272], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+   ]},
+  {"name": "cattle_grey", "size_m": [0.73, 1.78, 2.63],
+   "views": [
+     {"label": "side, grey colourway (right, middle)", "box": [1096, 283, 1491, 536], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+   ]}
+ ],
+ "notes": "Brahman-type zebu station bull with a hump, dewlap and long drooping ears. The scale bar is about 277 px/m, giving roughly 2.63 m from nose to tail switch and 1.78 m to the horn tips (hump about 1.74 m). The red and grey drawings are colourways of the same animal, so they use the same shape as separate objects. The running poses (bottom row) are left out. The front view spreads the ears wider and higher than the side view shows them, so their angle is a compromise between the two, and the hump probably peeks slightly above the poll in the front view."}

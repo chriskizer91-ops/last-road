@@ -1,0 +1,30 @@
+{
+ "large_tree": {
+  "large \u2013 side": {
+   "iou": 0.746,
+   "turn_deg": 2.5
+  },
+  "large \u2013 top": {
+   "iou": 0.844,
+   "turn_deg": -0.8
+  },
+  "texels": {
+   "covered": 88150,
+   "seen": 13282
+  }
+ },
+ "small_tree": {
+  "small \u2013 side": {
+   "iou": 0.627,
+   "turn_deg": -1.21
+  },
+  "small \u2013 top": {
+   "iou": 0.779,
+   "turn_deg": 1.65
+  },
+  "texels": {
+   "covered": 172157,
+   "seen": 32265
+  }
+ }
+}

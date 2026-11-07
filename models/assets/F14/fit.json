@@ -1,0 +1,120 @@
+{
+ "boulder_faceted": {
+  "front view": {
+   "iou": 0.923,
+   "turn_deg": 0.65
+  },
+  "texels": {
+   "covered": 524702,
+   "seen": 244167
+  }
+ },
+ "boulder_large": {
+  "front view": {
+   "iou": 0.892,
+   "turn_deg": -4.76
+  },
+  "texels": {
+   "covered": 408150,
+   "seen": 132514
+  }
+ },
+ "lava_slab": {
+  "top view": {
+   "iou": 0.942,
+   "turn_deg": -0.78
+  },
+  "front edge view": {
+   "iou": 0.955,
+   "turn_deg": -0.04
+  },
+  "texels": {
+   "covered": 453552,
+   "seen": 367028
+  }
+ },
+ "rock_pillar": {
+  "front view": {
+   "iou": 0.924,
+   "turn_deg": 0.24
+  },
+  "texels": {
+   "covered": 533541,
+   "seen": 246714
+  }
+ },
+ "rock_small_a": {
+  "front view": {
+   "iou": 0.876,
+   "turn_deg": 3.28
+  },
+  "texels": {
+   "covered": 509162,
+   "seen": 238819
+  }
+ },
+ "rock_small_b": {
+  "front view": {
+   "iou": 0.883,
+   "turn_deg": 3.32
+  },
+  "texels": {
+   "covered": 652049,
+   "seen": 359119
+  }
+ },
+ "rock_small_c": {
+  "front view": {
+   "iou": 0.858,
+   "turn_deg": -2.14
+  },
+  "texels": {
+   "covered": 537109,
+   "seen": 227876
+  }
+ },
+ "rock_small_d": {
+  "front view": {
+   "iou": 0.911,
+   "turn_deg": 2.93
+  },
+  "texels": {
+   "covered": 610779,
+   "seen": 344275
+  }
+ },
+ "rock_small_e": {
+  "front view": {
+   "iou": 0.829,
+   "turn_deg": -2.07
+  },
+  "texels": {
+   "covered": 545383,
+   "seen": 212057
+  }
+ },
+ "rock_spiky": {
+  "front view": {
+   "iou": 0.865,
+   "turn_deg": -0.39
+  },
+  "texels": {
+   "covered": 264048,
+   "seen": 79035
+  }
+ },
+ "spiky_bomb": {
+  "top view": {
+   "iou": 0.897,
+   "turn_deg": 2.32
+  },
+  "front view": {
+   "iou": 0.897,
+   "turn_deg": -0.31
+  },
+  "texels": {
+   "covered": 741183,
+   "seen": 616200
+  }
+ }
+}
