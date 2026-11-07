@@ -77,41 +77,45 @@ function build(THREE) {
   }
   // base plate
   add(pump, new THREE.BoxGeometry(0.56, 0.025, 0.40), 'rusty_iron', 0, 0.0725, 0);
-  // engine crankcase
-  add(pump, new THREE.BoxGeometry(0.30, 0.22, 0.28), 'cast_aluminium', -0.07, 0.195, -0.02);
-  // recoil starter cowl facing front, with hub
-  const cowl = add(pump, new THREE.CylinderGeometry(0.135, 0.135, 0.07, 24), 'paint_red', -0.075, 0.205, 0.155);
-  cowl.rotation.x = Math.PI / 2;
-  const hub = add(pump, new THREE.CylinderGeometry(0.035, 0.035, 0.03, 12), 'rusty_iron', -0.075, 0.205, 0.20);
+  // engine crankcase (stops short of the rear, as drawn in the side view)
+  add(pump, new THREE.BoxGeometry(0.30, 0.24, 0.24), 'cast_aluminium', -0.07, 0.205, 0.01);
+  // lower-left engine block under the air cleaner
+  add(pump, new THREE.BoxGeometry(0.10, 0.175, 0.18), 'cast_aluminium', -0.265, 0.1725, 0.03);
+  // recoil starter: rounded-square shroud facing front, round grille, hub, grip
+  add(pump, new THREE.ExtrudeGeometry(roundRectShape(0.29, 0.235, 0.045),
+    { depth: 0.04, bevelEnabled: false, curveSegments: 4 }), 'paint_red', -0.07, 0.207, 0.13);
+  const grille = add(pump, new THREE.CylinderGeometry(0.10, 0.10, 0.03, 24), 'paint_red', -0.085, 0.205, 0.18);
+  grille.rotation.x = Math.PI / 2;
+  const hub = add(pump, new THREE.CylinderGeometry(0.03, 0.03, 0.02, 12), 'rusty_iron', -0.085, 0.205, 0.20);
   hub.rotation.x = Math.PI / 2;
-  // starter grip
-  const grip = add(pump, new THREE.BoxGeometry(0.07, 0.024, 0.03), 'black_plastic', -0.225, 0.262, 0.20);
+  const grip = add(pump, new THREE.BoxGeometry(0.07, 0.024, 0.03), 'black_plastic', -0.19, 0.25, 0.185);
   grip.rotation.z = 0.6;
-  // air cleaner (front left) and muffler guard (rear)
-  add(pump, new THREE.BoxGeometry(0.14, 0.22, 0.22), 'paint_black', -0.255, 0.35, 0.05);
-  add(pump, new THREE.BoxGeometry(0.36, 0.17, 0.15), 'paint_black', -0.12, 0.385, -0.155);
+  // air cleaner (front left, tall) and muffler guard (rear)
+  add(pump, new THREE.BoxGeometry(0.145, 0.18, 0.20), 'paint_black', -0.2525, 0.40, 0.07);
+  add(pump, new THREE.BoxGeometry(0.36, 0.17, 0.16), 'paint_black', -0.12, 0.385, -0.14);
   // fuel tank (rounded front profile) and cap
-  const tank = add(pump, new THREE.ExtrudeGeometry(roundRectShape(0.27, 0.15, 0.03),
-    { depth: 0.24, bevelEnabled: false, curveSegments: 4 }), 'paint_cream', -0.05, 0.425, -0.07);
-  tank.rotation.set(0, 0, 0);
-  add(pump, new THREE.CylinderGeometry(0.032, 0.035, 0.03, 12), 'black_plastic', -0.06, 0.515, 0.05);
-  // pump: bell housing, volute, foot
-  const bell = add(pump, new THREE.CylinderGeometry(0.08, 0.08, 0.04, 16), 'rusty_red_iron', 0.10, 0.205, 0.06);
+  add(pump, new THREE.ExtrudeGeometry(roundRectShape(0.26, 0.14, 0.03),
+    { depth: 0.24, bevelEnabled: false, curveSegments: 4 }), 'paint_cream', -0.05, 0.395, -0.07);
+  add(pump, new THREE.CylinderGeometry(0.032, 0.035, 0.025, 12), 'black_plastic', -0.05, 0.4775, 0.05);
+  // pump: bell housing, volute (forward, near the cage front), foot, tall neck
+  const bell = add(pump, new THREE.CylinderGeometry(0.08, 0.08, 0.045, 16), 'rusty_red_iron', 0.0925, 0.22, 0.12);
   bell.rotation.z = Math.PI / 2;
-  const vol = add(pump, new THREE.CylinderGeometry(0.13, 0.13, 0.19, 24), 'rusty_red_iron', 0.215, 0.215, 0.10);
+  const vol = add(pump, new THREE.CylinderGeometry(0.12, 0.12, 0.21, 24), 'rusty_red_iron', 0.21, 0.235, 0.175);
   vol.rotation.z = Math.PI / 2;
-  add(pump, new THREE.BoxGeometry(0.16, 0.05, 0.16), 'rusty_red_iron', 0.215, 0.105, 0.08);
-  // suction coupling + hollow threaded nipple pointing front
-  const fl = add(pump, new THREE.CylinderGeometry(0.066, 0.066, 0.045, 16), 'rusty_red_iron', 0.215, 0.215, 0.2425);
+  add(pump, new THREE.BoxGeometry(0.18, 0.05, 0.15), 'rusty_red_iron', 0.21, 0.11, 0.175);
+  add(pump, new THREE.BoxGeometry(0.14, 0.105, 0.13), 'rusty_red_iron', 0.21, 0.3525, 0.175);
+  // discharge pipe and cap on top, priming plug on the +x side of the neck
+  add(pump, new THREE.CylinderGeometry(0.04, 0.04, 0.06, 12), 'rusty_red_iron', 0.19, 0.42, 0.19);
+  add(pump, new THREE.CylinderGeometry(0.05, 0.05, 0.025, 12), 'rusty_iron', 0.19, 0.4575, 0.19);
+  const plug = add(pump, new THREE.CylinderGeometry(0.02, 0.02, 0.035, 8), 'rusty_iron', 0.2975, 0.375, 0.175);
+  plug.rotation.z = Math.PI / 2;
+  // suction flange + hollow threaded nipple pointing front, past the cage
+  const fl = add(pump, new THREE.CylinderGeometry(0.066, 0.066, 0.03, 16), 'rusty_red_iron', 0.235, 0.235, 0.285);
   fl.rotation.x = Math.PI / 2;
-  const nipProf = [[0.040, 0], [0.052, 0], [0.052, 0.06], [0.040, 0.06], [0.040, 0]]
+  const nipProf = [[0.042, 0], [0.054, 0], [0.054, 0.06], [0.042, 0.06], [0.042, 0]]
     .map(p => new THREE.Vector2(p[0], p[1]));
-  const nip = add(pump, new THREE.LatheGeometry(nipProf, 14), 'rusty_iron', 0.215, 0.215, 0.262);
+  const nip = add(pump, new THREE.LatheGeometry(nipProf, 14), 'rusty_iron', 0.235, 0.235, 0.295);
   nip.rotation.x = Math.PI / 2;
-  // discharge pipe and cap on top, priming plug
-  add(pump, new THREE.CylinderGeometry(0.042, 0.042, 0.13, 12), 'rusty_red_iron', 0.215, 0.39, 0.16);
-  add(pump, new THREE.CylinderGeometry(0.052, 0.052, 0.03, 12), 'rusty_iron', 0.215, 0.47, 0.16);
-  add(pump, new THREE.CylinderGeometry(0.02, 0.02, 0.04, 8), 'rusty_iron', 0.27, 0.355, 0.08);
 
   // ---------------- PARTS CRATE ----------------
   const crate = new THREE.Group();

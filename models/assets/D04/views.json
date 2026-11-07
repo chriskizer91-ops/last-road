@@ -1,0 +1,8 @@
+{"objects": [{"name": "bore_windmill", "size_m": [7.5, 8.5, 4.5],
+  "views": [
+    {"label": "Front", "box": [57, 12, 471, 479], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [611, 14, 869, 479], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [1085, 12, 1500, 479], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [54, 617, 530, 870], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "The scale bar is about 55 px per metre. The sheet shows an old galvanised lattice bore windmill: an 18-blade rotor about 3.4 m across, its hub about 6.8 m up, and a pump rod down the tower to the bore. A pipe runs from the pump to a 2.5 m corrugated tank on a timber stand, and on to a 2.8 m concrete trough. The views disagree about the tail vane: Back and Top draw it pointing sideways (+x), flat to the rotor. I modelled it the way Front and Side show it, at right angles to the rotor and pointing +z, with the rotor behind the tower at -z. Side is taken as the -x side (tower in front of the tank, trough toward the front). The tank's front-back position is a compromise between the Top and Side views."}

@@ -1,0 +1,24 @@
+{
+ "model": {
+  "Front": {
+   "iou": 0.943,
+   "turn_deg": -0.3
+  },
+  "Side": {
+   "iou": 0.9,
+   "turn_deg": -0.46
+  },
+  "Back": {
+   "iou": 0.945,
+   "turn_deg": 0.4
+  },
+  "Top": {
+   "iou": 0.94,
+   "turn_deg": -0.33
+  },
+  "texels": {
+   "covered": 268349,
+   "seen": 95765
+  }
+ }
+}

@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "pan_wreck",
+      "size_m": [2.36, 1.95, 7.36],
+      "views": [
+        {"label": "Front View", "box": [1092, 20, 1478, 352], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Side View", "box": [60, 435, 976, 678], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back View", "box": [1111, 444, 1459, 693], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Top View", "box": [216, 760, 956, 974], "cam": [0, 1, 0], "up": [-1, 0, 0]}
+      ]
+    }
+  ],
+  "notes": "A 1950s-style bonneted 6x4 flatbed truck rusting on the salt pan. It has a glassless cab with the driver door hanging open on +x, tandem dual rear axles, and a stake bed with broken rails and loose planks. The scale bar (100 px/m) fits the top view, giving about 7.4 m long. The side, front and back views are drawn at larger scales that don't agree with each other (the back view reads wider), so I used a width of about 2.35 m and took the 1.95 m height from the side-view proportions. The top view may be mirrored, since a door-like part sticks out on its top (-x) edge."
+}

@@ -1,0 +1,23 @@
+{"objects": [
+  {"name": "jerry_can", "size_m": [0.37, 0.45, 0.164],
+   "views": [
+     {"label": "front", "box": [90, 54, 400, 434], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side", "box": [190, 457, 292, 728], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [94, 788, 372, 924], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "water_can", "size_m": [0.384, 0.46, 0.215],
+   "views": [
+     {"label": "front", "box": [491, 55, 792, 415], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side", "box": [558, 461, 685, 729], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [494, 778, 770, 937], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "drum_200l", "size_m": [0.6, 0.825, 0.6],
+   "views": [
+     {"label": "front", "box": [881, 10, 1194, 442], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side", "box": [904, 464, 1139, 721], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [896, 731, 1142, 951], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "oil_can", "size_m": [0.164, 0.311, 0.11],
+   "views": [
+     {"label": "front", "box": [1287, 104, 1457, 428], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side", "box": [1303, 487, 1390, 721], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [1277, 803, 1466, 919], "cam": [0, 1, 0], "up": [0, 0, -1]}]}
+ ],
+ "notes": "Set of four containers: an olive steel 20 L jerry can with a cam-lever spout and a triple handle frame, a blue plastic water can with a moulded handle, a red 200 L steel drum with two rolling hoops and two bungs, and a grey rectangular oil tin. The 1 m bar (about 615 px) does not hold across objects: it would make all four roughly the same height, with the drum only 0.5 m wide, so I used real-world sizes and kept each object's proportions from its own views. The drum's side view is drawn squatter than its front view, and the side views are assumed to look from the spout or cap side (-x)."}

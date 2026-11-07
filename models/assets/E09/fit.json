@@ -1,0 +1,72 @@
+{
+ "parts_crate": {
+  "front": {
+   "iou": 0.965,
+   "turn_deg": 0.0
+  },
+  "side": {
+   "iou": 0.982,
+   "turn_deg": -0.05
+  },
+  "top": {
+   "iou": 0.956,
+   "turn_deg": -0.11
+  },
+  "back": {
+   "iou": 0.965,
+   "turn_deg": 0.0
+  },
+  "left": {
+   "iou": 0.982,
+   "turn_deg": -0.05
+  },
+  "texels": {
+   "covered": 877487,
+   "seen": 589449
+  }
+ },
+ "water_pump": {
+  "front": {
+   "iou": 0.867,
+   "turn_deg": -0.0
+  },
+  "side": {
+   "iou": 0.872,
+   "turn_deg": 0.59
+  },
+  "top": {
+   "iou": 0.928,
+   "turn_deg": -0.59
+  },
+  "texels": {
+   "covered": 373268,
+   "seen": 194993
+  }
+ },
+ "wire_coil": {
+  "front": {
+   "iou": 0.95,
+   "turn_deg": -0.0
+  },
+  "side": {
+   "iou": 0.95,
+   "turn_deg": -0.0
+  },
+  "back": {
+   "iou": 0.95,
+   "turn_deg": -0.0
+  },
+  "left": {
+   "iou": 0.95,
+   "turn_deg": -0.0
+  },
+  "top": {
+   "iou": 0.75,
+   "turn_deg": -0.09
+  },
+  "texels": {
+   "covered": 640387,
+   "seen": 491414
+  }
+ }
+}

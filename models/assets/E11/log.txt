@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 310 s 3713 in 31582 out end_turn
+built {'sand_ladder': {'tris': 1440, 'size': [1.06, 0.046, 0.314], 'min': [-0.53, 0, -0.157]}, 'shovel': {'tris': 644, 'size': [0.224, 1.008, 0.052], 'min': [-0.112, 0, -0.026]}, 'farm_jack': {'tris': 392, 'size': [0.318, 1.047, 0.09], 'min': [-0.161, 0, -0.045]}}
+painted {'farm_jack': {'front (high-lift jack, holed bar face)': 0.539}, 'sand_ladder': {'top (single ladder, lower left)': 0.955}, 'shovel': {'front (D-handle round-point shovel)': 0.832}} 238s
+helper: done claude-opus-5-5 xhigh 221 s 10918 in 22648 out end_turn
+built {'sand_ladder': {'tris': 1440, 'size': [1.06, 0.046, 0.314], 'min': [-0.53, 0, -0.157]}, 'shovel': {'tris': 644, 'size': [0.224, 1.008, 0.052], 'min': [-0.112, 0, -0.026]}, 'farm_jack': {'tris': 1580, 'size': [0.318, 1.047, 0.09], 'min': [-0.161, 0, -0.045]}}
+painted {'farm_jack': {'front (high-lift jack, holed bar face)': 0.582}, 'sand_ladder': {'top (single ladder, lower left)': 0.955}, 'shovel': {'front (D-handle round-point shovel)': 0.832}} 224s
+done

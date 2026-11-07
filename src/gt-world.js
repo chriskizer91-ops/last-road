@@ -49,6 +49,32 @@ function gtRoadQ(x,z,o){o.d=1e9;const R=GT_ROAD,L=R.G.get(R.key(Math.floor(x/R.C
     const px=a[0]+ex*t,pz=a[1]+ez*t,d=Math.hypot(x-px,z-pz);if(d<Math.abs(o.d)){const l=Math.sqrt(l2);o.d=((x-a[0])*ez-(z-a[1])*ex)/l>0?d:-d;o.s=R.S[i]+t*l;o.dx=ex/l;o.dz=ez/l;o.i=i;o.t=t;}}
   return o;}
 
+/* ---------- what's placed in the world: his models (tools/props_pack.py, drawn by src/lr-game.js), and the ground
+   levelled under them. Each: model, object in it, world x, z, the way its front faces (yaw: its +z turned to
+   (sin yaw, cos yaw)), whether it stops you (a box round it), and how far off it's still drawn ---------- */
+const GT_PADS=[],GT_PROPS=[];
+{const put=(id,obj,x,z,yaw,solid,far)=>GT_PROPS.push({id,obj,x,z,yaw,solid:solid!==false,far:far||1500});
+  /* (a frame: u along a strip or the road, v across it, to the right) */
+  const frame=(x,z,dx,dz)=>({at:(u,v)=>[x+dx*u-dz*v,z+dz*u+dx*v],face:(fu,fv)=>Math.atan2(dx*fu-dz*fv,dz*fu+dx*fv),x,z,dx,dz});
+  const pad=(F,u0,u1,v0,v1,surf,h)=>GT_PADS.push({F,u0,u1,v0,v1,surf,h});
+  /* Roadhead: the runway, and south of it the apron, the hangar and Outfitter, the fuel, the tower and the mast */
+  {const S=GT_STRIPS[0],F=frame(S.x,S.z,S.dx,S.dz);pad(F,-450,-50,20,150,'gravel',()=>gtStripH(S));
+    const N=F.face(0,-1);put('B02','model',...F.at(-235,64),N,false);put('B06','model',...F.at(-178,42),N);put('B10','model',...F.at(-318,112),N);
+    put('B11','model',...F.at(-392,74),N);put('B07','windsock',...F.at(-90,26),F.face(1,0),true,900);
+    for(let u=-500;u<=500;u+=100)for(const v of [-17,17])put('B07',(u/100+(v>0?1:0))%2?'drum_orange':'drum_white',...F.at(u,v),F.face(0,1),true,700);
+    for(const u of [-506,506])for(const v of [-9,9])put('B07','tire',...F.at(u,v),F.face(1,0),false,600);}
+  /* beside Last Road at Roadhead: the roadhouse, two houses (on the north side, facing the road) */
+  {const R=GT_ROAD,o={};const on=s=>{let i=0;while(i<R.S.length-2&&R.S[i+1]<s)i++;const a=R.P[i],b=R.P[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]);return frame(a[0],a[1],(b[0]-a[0])/l,(b[1]-a[1])/l);};
+    for(const [id,s,v] of [['B08',R.len-2050,-30],['B12',R.len-2210,-32],['B14',R.len-1890,-30]]){const F=on(s),q=F.at(0,v);put(id,'model',q[0],q[1],F.face(0,1));
+      pad(frame(q[0],q[1],F.dx,F.dz),-18,18,-16,22,'dirt',null);}}
+  /* Kettle Creek Station, beside its strip: the homestead, the windmill and tank, the workshop, the yards */
+  {const S=GT_STRIPS[1],F=frame(S.x,S.z,S.dx,S.dz);pad(F,-470,-60,30,300,'dirt',()=>gtStripH(S));
+    put('B16','model',...F.at(-300,150),F.face(0,-1));put('B17','model',...F.at(-170,250),F.face(0,-1));put('B18','model',...F.at(-410,70),F.face(0,-1));
+    put('B19','model',...F.at(-140,140),F.face(1,0));put('B07','windsock',...F.at(0,28),F.face(1,0),true,900);}
+}
+/* a pad's level: its own (the strip's), else the land's at its middle (made once) */
+function gtPadH(P){if(P.hv===undefined){if(P.h)P.hv=P.h();else{const o={};P.hv=gtLand(P.F.x,P.F.z,o).h;gtRoadQ(P.F.x,P.F.z,GRQ);if(Math.abs(GRQ.d)<60)P.hv=gtRoadH(GRQ.s);}}return P.hv;}
+
 /* ---------- the regions: how much of each is here (their edges warped by slow noise) ---------- */
 const GR={};
 function gtRegions(x,z,o){
@@ -152,6 +178,9 @@ function gtCore(x,z,o){
     if(Q.e<0){const in2=Math.abs(Q.ac)<S.hw;
       if(S.surf==='paved'&&in2)code=SF.concrete;else if(S.surf==='salt')code=SF.strip;else if(S.surf==='sand')code=SF.sand;else if(S.surf==='gravel'||S.surf==='cinder')code=SF.gravel;else if(S.surf==='grass')code=SF.grass;else code=SF.dirt;
       if(in2&&S.surf!=='grass'&&S.surf!=='salt'&&S.surf!=='sand'){grass*=.15;rock=0;}if(S.surf==='grass'&&in2)grass=Math.max(grass,.8);}}
+  /* the pads under the buildings: level, bare */
+  for(const P of GT_PADS){const F=P.F,u=(x-F.x)*F.dx+(z-F.z)*F.dz,v=-(x-F.x)*F.dz+(z-F.z)*F.dx,e=Math.max(P.u0-u,u-P.u1,P.v0-v,v-P.v1);if(e>45)continue;
+    const f=1-sst(0,40,e);h=h+(gtPadH(P)-h)*f;if(f>.3){wet=0;mud=0;}if(e<0){code=P.surf==='gravel'?SF.gravel:SF.dirt;grass*=.25;rock=0;sand*=.3;}}
   h+=rimAt(x,z);
   if(wet&&h<wl){code=SF.water;}else wet=0;
   o.h=h;o.code=code;o.grass=grass;o.rock=rock;o.mud=Math.max(mud,wet?.8:0);o.salt=salt;o.sand=sand;o.ramp=0;o.wet=wet;o.wl=wet?wl:h;o.B=h;o.rk=rock;o.k=0;o.tm=0;o.tin=0;
@@ -179,6 +208,10 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
     const y=gtStripH(S)+rimAt(S.x,S.z)+.04;
     for(let a=-hl;a<hl;a+=4)for(let b=-hw;b<hw;b+=4){const mx=S.x+S.dx*(a+2)-S.dz*(b+2),mz=S.z+S.dz*(a+2)+S.dx*(b+2);if(!inC(mx,mz))continue;
       const P=(u,v)=>RB.v(S.x+S.dx*u-S.dz*v,y,S.z+S.dz*u+S.dx*v,0,1,0,.4,.4,1,0,MAT.CONCRETE);const p0=P(a,b),p1=P(a+4,b),p2=P(a+4,b+4),p3=P(a,b+4);RB.I.push(p0,p3,p2,p0,p2,p1);}}
+  /* the placed models that stop you: a box round each (its footprint turned to its yaw), up to its top */
+  for(const p of GT_PROPS){if(!p.solid||p.x<x0-30||p.x>x1+30||p.z<z0-30||p.z>z1+30)continue;const B=GT_PROPBOX[p.id+'/'+p.obj];if(!B)continue;
+    const c=Math.cos(p.yaw),sn=Math.sin(p.yaw),pts=[[B[0],B[2]],[B[3],B[2]],[B[3],B[5]],[B[0],B[5]]].map(([a,b])=>[p.x+a*c+b*sn,p.z-a*sn+b*c]);
+    const y=gtCore(p.x,p.z,{}).h;cols.push({x0:Math.min(...pts.map(q=>q[0])),z0:Math.min(...pts.map(q=>q[1])),x1:Math.max(...pts.map(q=>q[0])),z1:Math.max(...pts.map(q=>q[1])),top:y+B[4]});}
   /* the trees: the savanna's flat-topped trees, scattered, thicker along the creeks; none on the road or a strip */
   const G=9,n=Math.floor(CH/G),o={};
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const r1=R(),r2=R(),r3=R(),r4=R(),r5=R();
@@ -187,6 +220,7 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
     const c=Math.abs(fbm(x/2400+7,z/2400-3,3,721)-.5),creek=c<.03&&c>.011?.5:0,clump=sst(.55,.75,fbm(x/700+9,z/700-4,2,795));
     const p=(.012+.12*clump+creek*.6)*sav;if(r3>p)continue;
     gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<14)continue;const Q=gtStripQ(x,z);if(Q&&Q.e<20)continue;
+    let onPad=false;for(const P of GT_PADS){const F=P.F,u=(x-F.x)*F.dx+(z-F.z)*F.dz,v=-(x-F.x)*F.dz+(z-F.z)*F.dx;if(Math.max(P.u0-u,u-P.u1,P.v0-v,v-P.v1)<25){onPad=true;break;}}if(onPad)continue;
     gtCore(x,z,o);if(o.code===SF.water||o.code===SF.asphalt||o.rock>.5||o.h>300)continue;
     const sc=.8+r4*.9,v=r5*3|0,j1=hs(Math.round(x*7),Math.round(z*7),631),t=[74+(j1-.5)*16,84+(r5-.5)*14,40];
     trees.push(x,o.h,z,j1*6.283,sc*1.5,sc*.62,sc*1.5,v,s2l(t[0]),s2l(t[1]),s2l(t[2]),0);

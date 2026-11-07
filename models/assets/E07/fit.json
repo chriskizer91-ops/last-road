@@ -1,0 +1,96 @@
+{
+ "ground_anchor_1": {
+  "front (left screw anchor)": {
+   "iou": 0.641,
+   "turn_deg": -0.8
+  },
+  "texels": {
+   "covered": 311025,
+   "seen": 207555
+  }
+ },
+ "ground_anchor_2": {
+  "front (middle screw anchor)": {
+   "iou": 0.616,
+   "turn_deg": -0.4
+  },
+  "texels": {
+   "covered": 415603,
+   "seen": 226154
+  }
+ },
+ "ground_anchor_3": {
+  "front (right screw anchor)": {
+   "iou": 0.625,
+   "turn_deg": -1.49
+  },
+  "texels": {
+   "covered": 477741,
+   "seen": 265103
+  }
+ },
+ "pitot_cover": {
+  "top (red sleeve and streamer lying flat)": {
+   "iou": 0.69,
+   "turn_deg": 3.83
+  },
+  "texels": {
+   "covered": 654492,
+   "seen": 436060
+  }
+ },
+ "rope_coil_1": {
+  "top (left coil)": {
+   "iou": 0.768,
+   "turn_deg": 0.01
+  },
+  "texels": {
+   "covered": 555112,
+   "seen": 450840
+  }
+ },
+ "rope_coil_2": {
+  "top (middle coil)": {
+   "iou": 0.795,
+   "turn_deg": -0.06
+  },
+  "texels": {
+   "covered": 437658,
+   "seen": 370759
+  }
+ },
+ "rope_coil_3": {
+  "top (right coil)": {
+   "iou": 0.774,
+   "turn_deg": 1.24
+  },
+  "texels": {
+   "covered": 384619,
+   "seen": 323625
+  }
+ },
+ "stake_bag": {
+  "front (drawstring bag)": {
+   "iou": 0.9,
+   "turn_deg": 0.23
+  },
+  "texels": {
+   "covered": 514811,
+   "seen": 335206
+  }
+ },
+ "wheel_chocks": {
+  "top (middle row, rope loop toward viewer)": {
+   "iou": 0.905,
+   "turn_deg": -0.05
+  },
+  "back (bottom row, wedges with holes, no rope)": {
+   "iou": 0.874,
+   "turn_deg": -0.31
+  },
+  "texels": {
+   "covered": 545011,
+   "seen": 343299
+  }
+ }
+}

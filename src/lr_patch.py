@@ -52,11 +52,11 @@ swap("tex:1,texcol:.5,", "tex:1,texcol:.85,")
 # runway, trees), the place names, and the start (on Last Road at Roadhead, heading east). No Highway 40.
 swap("const DUNES=true;", "const DUNES=true,GT=true;")
 swap("if(DUNES)return j===0&&Math.abs(x)<HALF-800?3:0;", "if(GT)return 0;if(DUNES)return j===0&&Math.abs(x)<HALF-800?3:0;")
-swap("function core(x,z,ctx,o){\n  if(DUNES)return duneCore(x,z,o);", open(sys.path[0] + '/gt-world.js', encoding='utf-8').read() + "\nfunction core(x,z,ctx,o){\n  if(GT)return gtCore(x,z,o);if(DUNES)return duneCore(x,z,o);")
+swap("function core(x,z,ctx,o){\n  if(DUNES)return duneCore(x,z,o);", open(sys.path[0] + '/gt-propbox.js', encoding='utf-8').read() + open(sys.path[0] + '/gt-world.js', encoding='utf-8').read() + "\nfunction core(x,z,ctx,o){\n  if(GT)return gtCore(x,z,o);if(DUNES)return duneCore(x,z,o);")
 swap("function baseAt(x,z){\n  if(DUNES)return rimAt(x,z);", "function baseAt(x,z){\n  if(GT)return gtBase(x,z);if(DUNES)return rimAt(x,z);")
 swap("if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];", "if(GT)gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R);if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];")
 swap("props:null,trees:new Float32Array(0),cols", "props:null,trees:new Float32Array(trees),cols")
-swap("return {L,HALF,CH,FT,ROAD_END,", "return {gtPlace,GTS:GT_STRIPS,GTR:GT_ROAD,GX,GZ,gtRegions,L,HALF,CH,FT,ROAD_END,")
+swap("return {L,HALF,CH,FT,ROAD_END,", "return {gtPlace,GTS:GT_STRIPS,GTR:GT_ROAD,GTP:GT_PROPS,GX,GZ,gtRegions,L,HALF,CH,FT,ROAD_END,")
 swap("if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';", "if(WG.gtPlace)return WG.gtPlace(x,z);if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';")
 swap("const HOME=[0,1.9,0];", "const HOME=(()=>{const R=WG.GTR,s=R.len-2300;let i=0;while(i<R.S.length-2&&R.S[i+1]<s)i++;const a=R.P[i],b=R.P[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]),dx=(b[0]-a[0])/l,dz=(b[1]-a[1])/l;\n  return [a[0]-dz*1.9,a[1]+dx*1.9,Math.atan2(-dz,dx)];})();")
 # THE DISTANT LAND (src/lr-game.js lrDist*): drawn after the far tiles; the camera sees as far as it reaches (its far
@@ -67,6 +67,9 @@ swap("const worldFar=()=>SKY.night&&SKY.draw?Math.min(SKY.draw,Math.max(WORLD.ne
 swap("fogCol:[.6,.7,.88],fogDen:.0011,fogFall:.02,", "fogCol:[.6,.7,.88],fogDen:.00016,fogFall:.004,")
 swap("fogCol:[.46,.39,.34],fogDen:.0008,fogFall:.025,", "fogCol:[.46,.39,.34],fogDen:.00013,fogFall:.004,")
 swap("fogCol:[.03,.04,.07],fogDen:.0017,fogFall:.03,", "fogCol:[.03,.04,.07],fogDen:.0005,fogFall:.006,")
+# HIS MODELS IN THE WORLD (src/lr-game.js lrProps*): drawn after the chunks' own buildings, and into the sun's shadow
+swap("let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}", "let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}\n  tp+=lrPropsDraw(u,e,F,probe);")
+swap("gl.uniformMatrix4fv(u.uM,false,W_ID);\n  return tris+(DEVW.off.trees?0:drawTreeList(", "tris+=lrPropsShadow(u,F,e,maxD);\n  gl.uniformMatrix4fv(u.uM,false,W_ID);\n  return tris+(DEVW.off.trees?0:drawTreeList(")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
@@ -74,7 +77,7 @@ i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else No
 assert i is not None, 'the plane data script'
 import base64, os
 HERON = os.path.join(sys.path[0], '..', 'models/heron/paint/redtail-2-heron.webp')
-heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n'
+heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read()
 s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '\n' + heron + '</script>\n' + s[i:]
 open(dst, 'w', encoding='utf-8').write(s)
 print('written', dst, len(s))

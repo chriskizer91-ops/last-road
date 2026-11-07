@@ -1,0 +1,52 @@
+{
+ "compressor_case": {
+  "front, seen from about 65 degrees above (open case, lid standing up behind)": {
+   "iou": 0.912,
+   "turn_deg": 1.54
+  },
+  "texels": {
+   "covered": 593119,
+   "seen": 237077
+  }
+ },
+ "shackle_left": {
+  "top (bow shackle lying flat, bow up, pin eye right)": {
+   "iou": 0.674,
+   "turn_deg": -2.44
+  },
+  "texels": {
+   "covered": 610078,
+   "seen": 387076
+  }
+ },
+ "shackle_right": {
+  "top (bow shackle lying flat, bow up, pin eye right)": {
+   "iou": 0.673,
+   "turn_deg": -2.93
+  },
+  "texels": {
+   "covered": 590171,
+   "seen": 369565
+  }
+ },
+ "tow_strap": {
+  "top (strap lying coiled, sewn eyes to the right)": {
+   "iou": 0.814,
+   "turn_deg": -1.35
+  },
+  "texels": {
+   "covered": 556340,
+   "seen": 460714
+  }
+ },
+ "tyre_repair_kit": {
+  "top (open zip pouch, T-tools and plug strips)": {
+   "iou": 0.945,
+   "turn_deg": -1.82
+  },
+  "texels": {
+   "covered": 459558,
+   "seen": 359273
+  }
+ }
+}

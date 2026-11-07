@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "cairn",
+      "size_m": [2.56, 2.24, 2.4],
+      "views": [
+        {"label": "Front", "box": [28, 14, 508, 433], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [546, 17, 996, 433], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [1040, 14, 1513, 433], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Top", "box": [148, 506, 573, 919], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Dry-stone cairn of stacked flat slabs on a low sand apron. The scale bar is 1 m ≈ 187 px. The apron is about 2.5 m across, the stack is about 1.5 m high, and a standing stone about 0.8 m tall on top brings the total to about 2.24 m. 'Side' is assumed to be the +x side; in it the standing stone leans back (toward -z) about 9°, which matches the top view. The top view is drawn slightly smaller than the elevations."
+}

@@ -1,5 +1,5 @@
 {"objects": [
-  {"name": "water_pump", "size_m": [0.72, 0.565, 0.585],
+  {"name": "water_pump", "size_m": [0.72, 0.565, 0.615],
    "views": [
      {"label": "front", "box": [37, 24, 428, 333], "cam": [0, 0, 1], "up": [0, 1, 0]},
      {"label": "side", "box": [492, 29, 831, 333], "cam": [1, 0, 0], "up": [0, 1, 0]},
@@ -9,13 +9,17 @@
    "views": [
      {"label": "front", "box": [24, 381, 536, 616], "cam": [0, 0, 1], "up": [0, 1, 0]},
      {"label": "side", "box": [599, 382, 859, 616], "cam": [1, 0, 0], "up": [0, 1, 0]},
-     {"label": "top", "box": [946, 374, 1386, 622], "cam": [0, 1, 0], "up": [0, 0, -1]}
+     {"label": "top", "box": [946, 374, 1386, 622], "cam": [0, 1, 0], "up": [0, 0, -1]},
+     {"label": "back", "box": [24, 381, 536, 616], "cam": [0, 0, -1], "up": [0, 1, 0]},
+     {"label": "left", "box": [599, 382, 859, 616], "cam": [-1, 0, 0], "up": [0, 1, 0]}
    ]},
   {"name": "wire_coil", "size_m": [0.664, 0.47, 0.664],
    "views": [
      {"label": "front", "box": [88, 684, 456, 946], "cam": [0, 0, 1], "up": [0, 1, 0]},
-     {"label": "side", "box": [596, 664, 786, 946], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "side", "box": [88, 684, 456, 946], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "back", "box": [88, 684, 456, 946], "cam": [0, 0, -1], "up": [0, 1, 0]},
+     {"label": "left", "box": [88, 684, 456, 946], "cam": [-1, 0, 0], "up": [0, 1, 0]},
      {"label": "top", "box": [914, 653, 1202, 937], "cam": [0, 1, 0], "up": [0, 0, -1]}
    ]}
  ],
- "notes": "Scale bar is 1 m ≈ 545 px. The set is a petrol water pump in a red tube cage (0.72 × 0.57 × 0.52 m, plus a suction nipple facing front on the +x pump side), a rope-handled wooden parts crate (0.80 × 0.43 × 0.47 m), and a flat-lying fence-wire coil (0.66 m across × 0.47 m tall). Unclear points: the top views are drawn about 15% smaller than the front views. The coil's side view draws it standing on edge, so it is listed but won't fit the outline well. The rolled fire hose is only a three-quarter drawing, so it isn't modelled."}
+ "notes": "Scale bar is 1 m ≈ 545 px. The set is:\n- a petrol water pump in a red tube cage, 0.72 × 0.565 m with a 0.52 m deep cage; the suction nipple on the +x pump faces front and reaches 0.615 m overall\n- a rope-handled wooden parts crate, 0.80 × 0.43 × 0.47 m\n- a flat-lying fence-wire coil, 0.66 m across × 0.47 m tall\n\nThe top views are drawn about 14% smaller than the front views.\n\nThe coil's own side drawing shows it standing on edge, which contradicts its front and top views. The coil is round, so its front drawing is reused for the side, back and left. The crate is symmetric, so its front and side drawings are reused for its back and left. The pump's back and left aren't drawn.\n\nThe coil's top-view overlap is limited by the through-hole being counted on only one outline; the hole size matches the drawing.\n\nThe rolled fire hose is only a three-quarter drawing, so it isn't modelled."}

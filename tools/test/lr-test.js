@@ -7,6 +7,8 @@ window.LRT_T = (() => {
     frameTris() { try { return { tris: D.APP.tris }; } catch (e) { return { err: String(e) }; } },
     saves() { const k = []; for (let i = 0; i < localStorage.length; i++) k.push(localStorage.key(i)); return { lr: k.filter(x => x.startsWith('lr:')).length, sas: k.filter(x => x.startsWith('sas:')).length, keys: k.slice(0, 12) }; },
     paint() { return { paint: __rt2.RT.paint, texP: !!__rt2.RT.texP, btn: getComputedStyle(document.getElementById('rtPaintB') || document.body).display }; },
+    park(x, z, yaw) { D.placeCar(x, z, yaw); D.setTestInput({ steer: 0, thr: 0, brk: 1, hb: 1, nos: false }); const t = car(); t.v[0] = t.v[1] = t.v[2] = 0; return { p: Array.from(t.p).map(v => Math.round(v)), place: D.GAME.place }; },
+    props() { const P = L.LRP; return { made: P.mesh.size, tex: P.tex.size, drawn: P.drawn, tris: P.tris }; },
     air(x, z, alt, yaw, mph) { const t0 = car(); D.placeCar(x, z, yaw); const t = car(); t.p[1] += alt; const V = mph / 2.23694; t.v[0] = Math.cos(yaw) * V; t.v[2] = -Math.sin(yaw) * V; t.v[1] = 0;
       if (t.w && t.w.fill) t.w.fill(0); t.air = true; t.airT = 1; return { p: Array.from(t.p).map(v => Math.round(v)), place: D.GAME.place }; },
     distFill() { const t = car(); L.lrDistUpdate ? L.lrDistUpdate(t.p, true) : 0; return { tiles: L.LRD.tiles.size }; },

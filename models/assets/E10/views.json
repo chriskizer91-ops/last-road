@@ -1,0 +1,40 @@
+{
+  "objects": [
+    {
+      "name": "tow_strap",
+      "size_m": [0.542, 0.015, 0.219],
+      "views": [
+        {"label": "top (strap lying coiled, sewn eyes to the right)", "box": [18, 28, 912, 388], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "shackle_left",
+      "size_m": [0.157, 0.038, 0.181],
+      "views": [
+        {"label": "top (bow shackle lying flat, bow up, pin eye right)", "box": [955, 85, 1216, 388], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "shackle_right",
+      "size_m": [0.166, 0.038, 0.181],
+      "views": [
+        {"label": "top (bow shackle lying flat, bow up, pin eye right)", "box": [1227, 85, 1500, 388], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "compressor_case",
+      "size_m": [0.433, 0.349, 0.25],
+      "views": [
+        {"label": "front, seen from about 65 degrees above (open case, lid standing up behind)", "box": [62, 395, 776, 992], "cam": [0, 0.906, 0.423], "up": [0, 0.423, -0.906]}
+      ]
+    },
+    {
+      "name": "tyre_repair_kit",
+      "size_m": [0.364, 0.034, 0.291],
+      "views": [
+        {"label": "top (open zip pouch, T-tools and plug strips)", "box": [855, 465, 1456, 945], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "E10 field recovery set: a yellow recovery strap with two sewn eyes, two bow shackles, a 12 V compressor in an open plastic case (gauge, finned pump head, coiled yellow hose, red and black clamp leads), and a tyre-plug kit in a zip pouch. Scale bar is 165 px = 10 cm, giving a coil about 54 cm, a case about 43 x 14 x 20 cm, a pouch about 36 x 29 cm and shackles about 16 x 18 cm. That scale makes the shackles and plug strips look oversized. The flat items are flat-lays seen straight from above. The case has no straight view: it is drawn from roughly 65 degrees above its front, so it is listed with that tilted camera and modelled with the lid standing open."
+}

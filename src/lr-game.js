@@ -134,3 +134,43 @@ function lrDistDraw(u,e,F){
     atM(u,t.x0,0,t.z0);drawMesh(t.m);tris+=t.m.tris;}
   LRD.tris=tris;return tris;}
 window.__lr=Object.assign(window.__lr||{},{LRD,lrDistUpdate});
+
+/* ---------- HIS MODELS IN THE WORLD (src/lr-props.js; where each stands is the world's: WG.GTP). Each is made the
+   first time you come within its distance (its block unzipped, its picture loaded: half size on a phone), drawn in
+   the plane's material (its colour picture, a flat normal, rough and not metal), and into the sun's shadow ---------- */
+const LRP={mesh:new Map(),tex:new Map(),busy:new Set(),one:null,M:new Float32Array(16),drawn:0,tris:0};
+function lrPropTex1(){if(LRP.one)return;const mk=(r,g,b)=>{const t=gl.createTexture();gl.activeTexture(gl.TEXTURE15);gl.bindTexture(gl.TEXTURE_2D,t);
+    gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,1,1,0,gl.RGBA,gl.UNSIGNED_BYTE,new Uint8Array([r,g,b,255]));gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.NEAREST);gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MAG_FILTER,gl.NEAREST);return t;};
+  LRP.one={n:mk(128,128,255),o:mk(255,218,0)};gl.activeTexture(gl.TEXTURE0);}
+async function lrPropMake(key){
+  const [id,obj]=key.split('/'),E=window.LR_PROPS&&LR_PROPS[id]&&LR_PROPS[id][obj];if(!E){LRP.mesh.set(key,null);return;}
+  try{const bin=Uint8Array.from(atob(E.z),c=>c.charCodeAt(0));
+    const buf=new Uint8Array(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());
+    const nv=E.nv,q=new Uint16Array(buf.buffer,0,nv*3),nq=new Int8Array(buf.buffer,nv*6,nv*4),uq=new Uint16Array(buf.buffer,nv*10,nv*2),ib=buf.slice(nv*14).buffer;
+    const pos=new Float32Array(nv*3),nrm=new Float32Array(nv*3),uv=new Float32Array(nv*2),col=new Float32Array(nv*4).fill(1),mat=new Float32Array(nv).fill(120);
+    for(let k=0;k<nv;k++){for(let c=0;c<3;c++){pos[k*3+c]=E.min[c]+q[k*3+c]/65535*(E.max[c]-E.min[c]);nrm[k*3+c]=nq[k*4+c]/127;}uv[k*2]=uq[k*2]/65535;uv[k*2+1]=uq[k*2+1]/65535;col[k*4+3]=0;}
+    const idx=E.i32?new Uint32Array(ib):new Uint16Array(ib),m=makeMesh({pos,nrm,col,mat,idx,uv});m.tris=E.n/3;LRP.mesh.set(key,m);
+    lrTexFrom(E.tex.replace(/^data:image\/webp;base64,/,''),tx=>LRP.tex.set(key,tx));}
+  catch(e){console.warn('model '+key+': '+(e&&e.message||e));LRP.mesh.set(key,null);}}
+/* a placed model's matrix: turned by its yaw, stood on the ground where it is (the world's own height there) */
+function lrPropM(p){if(p.y===undefined){const o={};p.y=WG.sample(p.x,p.z,o).h;}const c=Math.cos(p.yaw),s=Math.sin(p.yaw),M=LRP.M;
+  M[0]=c;M[1]=0;M[2]=-s;M[3]=0;M[4]=0;M[5]=1;M[6]=0;M[7]=0;M[8]=s;M[9]=0;M[10]=c;M[11]=0;M[12]=p.x-RO[0];M[13]=p.y-RO[1];M[14]=p.z-RO[2];M[15]=1;return M;}
+function lrPropBox(p){if(!p.mn){const E=LR_PROPS[p.id]&&LR_PROPS[p.id][p.obj];if(!E)return null;const r=Math.hypot(Math.max(-E.min[0],E.max[0]),Math.max(-E.min[2],E.max[2]));if(p.y===undefined)lrPropM(p);
+    p.mn=[p.x-r,p.y+E.min[1]-1,p.z-r];p.mx=[p.x+r,p.y+E.max[1]+1,p.z+r];}return p.mn;}
+function lrPropsDraw(u,e,F,probe){
+  if(probe||!window.LR_PROPS||typeof WG==='undefined'||!WG.GTP)return 0;lrPropTex1();let tris=0,n=0;
+  if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
+  for(const p of WG.GTP){const d=Math.hypot(p.x-e[0],p.z-e[2]);if(d>p.far)continue;const key=p.id+'/'+p.obj;
+    if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}continue;}
+    const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)continue;if(!lrPropBox(p)||!boxVisible(F,p.mn,p.mx))continue;
+    gl.uniformMatrix4fv(u.uM,false,lrPropM(p));
+    const U=[[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]];
+    for(const [loc,t,unit] of U){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);
+    drawMesh(m);tris+=m.tris;n++;}
+  LRP.drawn=n;LRP.tris=tris;return tris;}
+function lrPropsShadow(u,F,e,maxD){
+  if(!window.LR_PROPS||typeof WG==='undefined'||!WG.GTP)return 0;let tris=0;
+  for(const p of WG.GTP){if(Math.hypot(p.x-e[0],p.z-e[2])>Math.min(maxD+60,p.far))continue;const m=LRP.mesh.get(p.id+'/'+p.obj);if(!m||!lrPropBox(p)||!boxVisible(F,p.mn,p.mx))continue;
+    gl.uniformMatrix4fv(u.uM,false,lrPropM(p));drawMesh(m);tris+=m.tris;}
+  return tris;}
+window.__lr=Object.assign(window.__lr||{},{LRP});

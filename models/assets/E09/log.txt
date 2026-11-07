@@ -1,2 +1,7 @@
 helper: done claude-opus-5-5 xhigh 546 s 3707 in 55023 out end_turn
 built {'water_pump': {'tris': 1924, 'size': [0.72, 0.565, 0.582], 'min': [-0.36, 0, -0.26]}, 'parts_crate': {'tris': 888, 'size': [0.944, 0.43, 0.48], 'min': [-0.472, 0, -0.24]}, 'wire_coil': {'tris': 1024, 'size': [0.664, 0.47, 0.664], 'min': [-0.332, 0, -0.332]}}
+painted {'parts_crate': {'front': 0.965, 'side': 0.982, 'top': 0.956}, 'water_pump': {'front': 0.829, 'side': 0.87, 'top': 0.95}, 'wire_coil': {'front': 0.95, 'side': 0.876, 'top': 0.75}} 309s
+helper: done claude-opus-5-5 xhigh 485 s 11551 in 49489 out end_turn
+built {'water_pump': {'tris': 2024, 'size': [0.72, 0.565, 0.615], 'min': [-0.36, 0, -0.26]}, 'parts_crate': {'tris': 888, 'size': [0.944, 0.43, 0.48], 'min': [-0.472, 0, -0.24]}, 'wire_coil': {'tris': 1024, 'size': [0.664, 0.47, 0.664], 'min': [-0.332, 0, -0.332]}}
+painted {'parts_crate': {'front': 0.965, 'side': 0.982, 'top': 0.956, 'back': 0.965, 'left': 0.982}, 'water_pump': {'front': 0.867, 'side': 0.872, 'top': 0.928}, 'wire_coil': {'front': 0.95, 'side': 0.95, 'back': 0.95, 'left': 0.95, 'top': 0.75}} 296s
+done

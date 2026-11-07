@@ -1,0 +1,74 @@
+{
+ "drum_200l": {
+  "front": {
+   "iou": 0.97,
+   "turn_deg": 0.0
+  },
+  "side": {
+   "iou": 0.979,
+   "turn_deg": -0.05
+  },
+  "top": {
+   "iou": 0.944,
+   "turn_deg": -2.59
+  },
+  "texels": {
+   "covered": 387219,
+   "seen": 354739
+  }
+ },
+ "jerry_can": {
+  "front": {
+   "iou": 0.933,
+   "turn_deg": -0.0
+  },
+  "side": {
+   "iou": 0.949,
+   "turn_deg": 0.38
+  },
+  "top": {
+   "iou": 0.952,
+   "turn_deg": -0.58
+  },
+  "texels": {
+   "covered": 622173,
+   "seen": 358965
+  }
+ },
+ "oil_can": {
+  "front": {
+   "iou": 0.969,
+   "turn_deg": 0.8
+  },
+  "side": {
+   "iou": 0.91,
+   "turn_deg": 0.84
+  },
+  "top": {
+   "iou": 0.978,
+   "turn_deg": 1.06
+  },
+  "texels": {
+   "covered": 531400,
+   "seen": 419337
+  }
+ },
+ "water_can": {
+  "front": {
+   "iou": 0.94,
+   "turn_deg": 0.79
+  },
+  "side": {
+   "iou": 0.939,
+   "turn_deg": 0.71
+  },
+  "top": {
+   "iou": 0.943,
+   "turn_deg": -0.44
+  },
+  "texels": {
+   "covered": 329835,
+   "seen": 283708
+  }
+ }
+}

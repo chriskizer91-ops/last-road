@@ -1,0 +1,21 @@
+{
+ "webbing": "#a98a34",
+ "worn_steel": "#8b857a",
+ "rusty_steel": "#76604c",
+ "black_plastic": "#4f4b43",
+ "black_metal": "#302e2a",
+ "bare_aluminium": "#8c8474",
+ "chrome": "#a29e96",
+ "glass": "#d8d2c4",
+ "brass": "#9e7c40",
+ "black_rubber": "#2c2a27",
+ "red_rubber": "#8e2c24",
+ "copper": "#a6663e",
+ "yellow_rubber": "#c8a02c",
+ "canvas": "#6e604a",
+ "steel": "#8f8d89",
+ "elastic_webbing": "#4a3e30",
+ "clear_plastic": "#bcb4a6",
+ "brown_rubber": "#6c3b23",
+ "bronze": "#6d5b3f"
+}

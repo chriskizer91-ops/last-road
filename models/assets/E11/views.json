@@ -1,0 +1,15 @@
+{"objects": [
+  {"name": "sand_ladder", "size_m": [1.06, 0.046, 0.314],
+   "views": [
+     {"label": "top (single ladder, lower left)", "box": [22, 577, 945, 851], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "shovel", "size_m": [0.224, 1.01, 0.055],
+   "views": [
+     {"label": "front (D-handle round-point shovel)", "box": [988, 50, 1184, 934], "cam": [0, 0, 1], "up": [0, 1, 0]}
+   ]},
+  {"name": "farm_jack", "size_m": [0.32, 1.047, 0.09],
+   "views": [
+     {"label": "front (high-lift jack, holed bar face)", "box": [1236, 22, 1516, 934], "cam": [0, 0, 1], "up": [0, 1, 0]}
+   ]}
+],
+ "notes": "Truck recovery set. It has a pair of orange plastic sand ladders (about 1.06 x 0.31 m), a D-handle round-point shovel (about 1.0 m) and a red high-lift farm jack (about 1.05 m). Scale bar is about 870 px = 1 m. Only one ladder is modelled; place two stacked for the pair. The stacked pair at top left is a perspective drawing and is not listed. The ladder's slot spacing on the sheet is slightly lopsided and is followed as drawn. Shovel and jack have only a front view, so their backs and depth are guessed."}
