@@ -462,3 +462,34 @@ function lraDraw(u,e,F,probe){
       one('G03/'+V[0],x,g+150+50*lraHash(a,k,25),z,-an,0);}}
   LRA.drawn=n;LRA.tris=tris;return tris;}
 window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
+
+/* ---------- GROUND TRUTH'S FRONT DOOR. The page starts on its own title over the bay: START drives out at Roadhead
+   on Last Road; OUTFITTER is the bay (the Rock & Mud, and the Heron by its button). Salt & Sand's garage of other
+   cars, its races, challenges, career and traffic stay out of this game's menus. The build's name in the corner, so
+   you can tell which one you opened. On the phone's driving screen, no N2O, O/D OFF, REAR or HORN buttons ---------- */
+const LR_BUILD='last-road-18';
+function lrTitle(){
+  const st=document.createElement('style');st.textContent=`
+#tNos,#tOD,#tRear,#touch [data-k=horn],#shBack,#mTabs [data-t=chals],#mTabs [data-t=races],#mTabs [data-t=garage],#mTabs [data-t=cool],
+#menu section:has(#mCars),#menu section:has(#mModes),#menu section:has(#mPresets),#menu section:has(#mTraffic),#menu section:has(#mSim){display:none!important}
+#lrTitle{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;color:#f4ead8;font-family:Georgia,'Times New Roman',serif;
+  background:linear-gradient(180deg,rgba(18,22,30,.25),rgba(18,14,10,.15) 55%,rgba(14,10,8,.82)),var(--lrh) center 62%/auto 46% repeat-x,linear-gradient(180deg,#9fb3c4,#e3c79c 70%,#b98a5a)}
+#lrTitle .lrT{text-align:center;padding:16px 24px;max-width:680px}
+#lrTitle small{letter-spacing:.32em;text-transform:uppercase;font-size:13px;opacity:.85;font-family:system-ui,sans-serif}
+#lrTitle h1{font-size:min(9vw,15vh,92px);white-space:nowrap;font-weight:400;font-style:italic;margin:4px 0 2px;text-shadow:0 2px 18px rgba(0,0,0,.45)}
+#lrTitle p{font-size:clamp(14px,2.2vw,18px);margin:0 0 22px;opacity:.92;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+#lrTitle button{font:600 18px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;border:0;border-radius:999px;cursor:pointer;margin:6px}
+#lrGo{background:#e2b85c;color:#1d160c;padding:16px 54px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#lrOut{background:rgba(20,16,12,.55);color:#f4ead8;padding:12px 26px;font-size:14px!important;border:1px solid rgba(244,234,216,.35)!important}
+#lrTitle i{position:absolute;right:12px;bottom:8px;font:12px system-ui,sans-serif;opacity:.6}`;
+  document.head.appendChild(st);
+  const h=document.querySelector('#menu .mhead h1');if(h)h.innerHTML='Ground Truth <small class="tagw">'+LR_BUILD+'</small>';
+  document.title='Ground Truth';
+  const d=document.createElement('div');d.id='lrTitle';
+  d.innerHTML='<div class="lrT"><small>A survey of the interior</small><h1>Ground Truth</h1><p>Roadhead, at the end of Last Road. The truck is fuelled; the Heron waits on the apron.</p>'+
+    '<button id="lrGo" type="button">Start</button><br><button id="lrOut" type="button">Outfitter</button></div><i>'+LR_BUILD+'</i>';
+  if(window.LR_HORZ)d.style.setProperty('--lrh','url(data:image/webp;base64,'+LR_HORZ+')');
+  document.body.appendChild(d);
+  d.querySelector('#lrGo').addEventListener('click',()=>{d.remove();const b=$('sasDrive');if(b)b.click();});
+  d.querySelector('#lrOut').addEventListener('click',()=>d.remove());}
+window.__lr=Object.assign(window.__lr||{},{lrTitle,LR_BUILD});

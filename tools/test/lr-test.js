@@ -44,6 +44,8 @@ window.LRT_T = (() => {
     calm(on) { L.LRA.calm = !!on; return { calm: L.LRA.calm }; },
     animals() { const A = L.LRA, P = L.LRP, out = {}; for (const [k, m] of P.mesh) if (/^G0/.test(k)) out[k] = m ? (P.tex.get(k) ? 'ready' : 'no picture') : 'failed'; return { drawn: A.drawn, tris: A.tris, meshes: out, busy: [...P.busy].filter(k => /^G0/.test(k) && !P.mesh.has(k)) }; },
     stat() { return L.lrStat(); },
+    hit(id) { const e = document.getElementById(id); if (!e) return null; const r = e.getBoundingClientRect(), t = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { box: [r.left, r.top, r.width, r.height].map(Math.round), top: t ? t.tagName + '#' + t.id + '.' + t.className : null, z: t ? getComputedStyle(t).zIndex : null }; },
+    tap(id) { const e = document.getElementById(id); if (!e) return null; e.click(); return { tapped: id, st: D.GAME.state }; },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();
