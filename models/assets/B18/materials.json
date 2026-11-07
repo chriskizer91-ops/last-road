@@ -1,0 +1,20 @@
+{
+ "corrugated_iron": "#8b6a57",
+ "rusty_iron": "#7b4a33",
+ "concrete": "#6b5a4b",
+ "door_steel": "#7a6658",
+ "steel_grey": "#5d6266",
+ "light_fitting": "#cfcdc2",
+ "timber": "#7d5e42",
+ "paint_green": "#6e7652",
+ "rusty_tin": "#8a603f",
+ "glass_brown": "#7b5b3b",
+ "paint_red": "#9b4634",
+ "rusty_steel": "#82604e",
+ "rubber_black": "#2b2826",
+ "paint_blue": "#3e5a80",
+ "paint_grey": "#6a6c68",
+ "rubber_yellow": "#c9a234",
+ "rusty_pipe": "#8f4f30",
+ "wire_mesh": "#8c8d8a"
+}

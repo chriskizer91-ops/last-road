@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 615 s 3705 in 63037 out end_turn
+built {'field_book': {'tris': 248, 'size': [0.14, 0.02, 0.206], 'min': [-0.07, 0, -0.103]}, 'field_book_open': {'tris': 172, 'size': [0.281, 0.01, 0.198], 'min': [-0.14, 0, -0.099]}, 'camera': {'tris': 1156, 'size': [0.189, 0.099, 0.072], 'min': [-0.094, 0, -0.036]}, 'rubbing_kit': {'tris': 1388, 'size': [0.594, 0.059, 0.183], 'min': [-0.296, 0, -0.091]}}
+painted {'camera': {'front': 0.837, 'top': 0.888, 'side (+x, lens at left)': 0.86}, 'field_book': {'top (closed cover, pencil in loop)': 0.968}, 'field_book_open': {'top (open spread, hand sketch)': 0.983}, 'rubbing_kit': {'top (tool roll laid open)': 0.908}} 270s
+helper: done claude-opus-5-5 xhigh 291 s 13246 in 28879 out end_turn
+built {'field_book': {'tris': 248, 'size': [0.14, 0.02, 0.206], 'min': [-0.07, 0, -0.103]}, 'field_book_open': {'tris': 172, 'size': [0.281, 0.01, 0.198], 'min': [-0.14, 0, -0.099]}, 'camera': {'tris': 1156, 'size': [0.189, 0.099, 0.072], 'min': [-0.094, 0, -0.036]}, 'rubbing_kit': {'tris': 1388, 'size': [0.596, 0.059, 0.183], 'min': [-0.296, 0, -0.091]}}
+painted {'camera': {'front': 0.837, 'top': 0.888, 'side (+x, lens at left)': 0.846}, 'field_book': {'top (closed cover, pencil in loop)': 0.968}, 'field_book_open': {'top (open spread, hand sketch)': 0.983}, 'rubbing_kit': {'top (tool roll laid open)': 0.911}} 262s
+done

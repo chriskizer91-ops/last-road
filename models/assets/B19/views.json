@@ -1,0 +1,16 @@
+{
+  "objects": [
+    {
+      "name": "stock_yards",
+      "size_m": [14.1, 2.05, 12.18],
+      "views": [
+        {"label": "Top", "box": [24, 11, 699, 592], "cam": [0, 1, 0], "up": [0, 0, -1]},
+        {"label": "Front", "box": [18, 637, 771, 756], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Back", "box": [27, 831, 773, 946], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [840, 637, 1511, 756], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Side", "box": [845, 831, 1479, 946], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "Station cattle yards. A red-dirt yard about 13.6 x 10 m, fenced with timber posts and 5 pipe rails (about 1.33 m high), with three pens. It also has a round yard (about 4.9 m across), a curved race into a steel crush, and a timber loading ramp with a 2.05 m head frame that runs out the front-right (+x, +z). Scale bar is about 55 px/m on the elevations; the top view is drawn at about 0.87 of that. The back view puts the ramp about 1 m further toward -x than the top and front views; I followed top and front. The top view draws the ramp wide and skewed; I modelled it as a straight 1 m ramp on a dirt apron that fills the drawn footprint."
+}

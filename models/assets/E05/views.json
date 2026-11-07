@@ -1,0 +1,35 @@
+{
+  "objects": [
+    {
+      "name": "field_book",
+      "size_m": [0.140, 0.020, 0.206],
+      "views": [
+        {"label": "top (closed cover, pencil in loop)", "box": [30, 47, 345, 505], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "field_book_open",
+      "size_m": [0.281, 0.010, 0.198],
+      "views": [
+        {"label": "top (open spread, hand sketch)", "box": [367, 52, 999, 497], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "camera",
+      "size_m": [0.189, 0.099, 0.072],
+      "views": [
+        {"label": "front", "box": [1060, 28, 1486, 251], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "top", "box": [1020, 372, 1345, 502], "cam": [0, 1, 0], "up": [0, 0, -1]},
+        {"label": "side (+x, lens at left)", "box": [1378, 325, 1500, 493], "cam": [1, 0, 0], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "rubbing_kit",
+      "size_m": [0.595, 0.059, 0.184],
+      "views": [
+        {"label": "top (tool roll laid open)", "box": [147, 555, 1487, 970], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Field-finding set, using the scale bar (10 cm = 225 px). Cloth-bound field book about 13 x 20 cm, shown closed with a pencil and also open, so it is modelled twice. Compact camera about 17 x 10 x 7 cm. Canvas tool roll about 47 x 18 cm (60 cm with its wrist loop) holding a brush, three rubbing-wax blocks, masking tape and a paper roll. The book thickness and the item heights in the roll are guesses, since no side views show them. The camera strap appears only in the front view, hanging below the body. The top and side views show no strap, so I left the strap off and kept only the lugs and split rings. The front box covers the body plus the rings."
+}

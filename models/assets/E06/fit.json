@@ -1,0 +1,44 @@
+{
+ "machete": {
+  "row 4: machete flat side (front, spine up)": {
+   "iou": 0.784,
+   "turn_deg": -0.4
+  },
+  "row 5: machete edge-on from the spine (top)": {
+   "iou": 0.0,
+   "turn_deg": 0.66
+  },
+  "row 6: machete edge-on from the cutting edge (bottom)": {
+   "iou": 0.0,
+   "turn_deg": 0.66
+  },
+  "texels": {
+   "covered": 476744,
+   "seen": 376741
+  }
+ },
+ "point_bar": {
+  "row 3: straight hex bar with striking head and point, side (front)": {
+   "iou": 0.748,
+   "turn_deg": 0.1
+  },
+  "texels": {
+   "covered": 132742,
+   "seen": 76581
+  }
+ },
+ "wrecking_bar": {
+  "row 1: gooseneck bar, side (front)": {
+   "iou": 0.649,
+   "turn_deg": 0.41
+  },
+  "row 2: same bar from above (claw fork, chisel flare)": {
+   "iou": 0.799,
+   "turn_deg": 0.0
+  },
+  "texels": {
+   "covered": 152666,
+   "seen": 108606
+  }
+ }
+}

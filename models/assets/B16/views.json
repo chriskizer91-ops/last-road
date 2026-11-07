@@ -1,0 +1,9 @@
+{"objects": [{"name": "station_homestead", "size_m": [19.3, 7.2, 17.2],
+  "views": [
+    {"label": "Front", "box": [55, 12, 768, 282], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Right", "box": [876, 12, 1490, 282], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [51, 318, 767, 585], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Left", "box": [871, 318, 1470, 584], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Top", "box": [100, 640, 585, 991], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Station homestead: rendered core under a rusty corrugated hip roof with two chimneys, bullnose verandah all round on timber posts, fly-screened bays, deck on a batten skirt, front steps, two galvanised tanks at the back corners. Sized from doors/windows (~37.5 px/m in the elevations). Roof 18.8 x 15.3 m, main eave 13.7 x 10.6 m, ridge 4.8 m long at 6.67 m, chimney tops 7.2 m. The back and side elevations agree the tanks straddle the back verandah corners (centre ~(+-8.6, -7.4)); the top view alone puts them beside the house, so I followed the elevations and notched the deck corners round the tanks. Side elevations show the core reaching ~z=+-5.1, so the core is 13.2 x 10 m. Steps kept though the side views omit them (top and three-quarter show them)."}

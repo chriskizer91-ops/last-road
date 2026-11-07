@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "map_stone",
+      "size_m": [3.46, 1.34, 1.68],
+      "views": [
+        {"label": "Top", "box": [31, 18, 894, 602], "cam": [0, 1, 0], "up": [0, 0, -1]},
+        {"label": "Front", "box": [18, 695, 597, 917], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [630, 695, 907, 917], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [944, 702, 1508, 917], "cam": [0, 0, -1], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "A thick carved relief slab (about 3.46 x 1.68 m, 0.4 m thick) on a two-tier masonry plinth with a projecting band. Its top is carved with a hand rising from a pool, a stream down stepped terraces, a waterfall, channels to three house squares, a sunken pond and a cluster of small city blocks. The scale bar is 167 px = 1 m, which puts the slab top at about 1.27 m. The top view is drawn at a different aspect (1.48) from the elevations (2.06), so I took the depth from the side elevation. I assumed the side view shows the -x end, because the hand bump appears at its left."
+}

@@ -1,0 +1,50 @@
+{
+ "camera": {
+  "front": {
+   "iou": 0.837,
+   "turn_deg": -2.94
+  },
+  "top": {
+   "iou": 0.888,
+   "turn_deg": 1.14
+  },
+  "side (+x, lens at left)": {
+   "iou": 0.846,
+   "turn_deg": 2.93
+  },
+  "texels": {
+   "covered": 559982,
+   "seen": 445436
+  }
+ },
+ "field_book": {
+  "top (closed cover, pencil in loop)": {
+   "iou": 0.968,
+   "turn_deg": -0.87
+  },
+  "texels": {
+   "covered": 893644,
+   "seen": 765854
+  }
+ },
+ "field_book_open": {
+  "top (open spread, hand sketch)": {
+   "iou": 0.983,
+   "turn_deg": -0.36
+  },
+  "texels": {
+   "covered": 643275,
+   "seen": 617117
+  }
+ },
+ "rubbing_kit": {
+  "top (tool roll laid open)": {
+   "iou": 0.911,
+   "turn_deg": 0.03
+  },
+  "texels": {
+   "covered": 686865,
+   "seen": 561077
+  }
+ }
+}

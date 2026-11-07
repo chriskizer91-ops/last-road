@@ -1,0 +1,6 @@
+helper: done claude-opus-5-5 xhigh 526 s 3705 in 51315 out end_turn
+built {'wrecking_bar': {'tris': 448, 'size': [0.959, 0.133, 0.056], 'min': [-0.48, 0, -0.028]}, 'point_bar': {'tris': 120, 'size': [0.96, 0.031, 0.036], 'min': [-0.48, 0, -0.018]}, 'machete': {'tris': 776, 'size': [0.903, 0.14, 0.03], 'min': [-0.452, 0, -0.015]}}
+painted {'machete': {'row 4: machete flat side (front, spine up)': 0.784, 'row 5: machete edge-on from the spine (top)': 0.0, 'row 6: machete edge-on from the cutting edge (bottom)': 0.0}, 'point_bar': {'row 3: straight hex bar with striking head and point, side (front)': 0.748}, 'wrecking_bar': {'row 1: gooseneck bar, side (front)': 0.649, 'row 2: same bar from above (claw fork, chisel flare)': 0.799}} 154s
+helper: done claude-opus-5-5 xhigh 248 s 10811 in 22641 out end_turn
+review: no changes
+done

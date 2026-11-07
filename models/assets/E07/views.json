@@ -1,0 +1,23 @@
+{"objects": [
+  {"name": "wheel_chocks", "size_m": [0.492, 0.10, 0.141],
+   "views": [
+     {"label": "top (middle row, rope loop toward viewer)", "box": [45, 310, 707, 502], "cam": [0, 1, 0], "up": [0, 0, -1]},
+     {"label": "back (bottom row, wedges with holes, no rope)", "box": [46, 502, 709, 642], "cam": [0, 0, -1], "up": [0, 1, 0]}]},
+  {"name": "ground_anchor_1", "size_m": [0.047, 0.44, 0.039],
+   "views": [{"label": "front (left screw anchor)", "box": [750, 55, 812, 640], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "ground_anchor_2", "size_m": [0.047, 0.44, 0.039],
+   "views": [{"label": "front (middle screw anchor)", "box": [882, 55, 946, 640], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "ground_anchor_3", "size_m": [0.047, 0.44, 0.039],
+   "views": [{"label": "front (right screw anchor)", "box": [1012, 55, 1074, 640], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "rope_coil_1", "size_m": [0.214, 0.027, 0.191],
+   "views": [{"label": "top (left coil)", "box": [35, 694, 320, 948], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "rope_coil_2", "size_m": [0.206, 0.027, 0.19],
+   "views": [{"label": "top (middle coil)", "box": [338, 692, 612, 946], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "rope_coil_3", "size_m": [0.213, 0.027, 0.19],
+   "views": [{"label": "top (right coil)", "box": [624, 692, 908, 946], "cam": [0, 1, 0], "up": [0, 0, -1]}]},
+  {"name": "stake_bag", "size_m": [0.293, 0.438, 0.084],
+   "views": [{"label": "front (drawstring bag)", "box": [1128, 62, 1518, 646], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "pitot_cover", "size_m": [0.225, 0.047, 0.168],
+   "views": [{"label": "top (red sleeve and streamer lying flat)", "box": [943, 700, 1242, 924], "cam": [0, 1, 0], "up": [0, 0, -1]}]}
+ ],
+ "notes": "Tie-down kit: a rope-linked pair of wooden wheel chocks (each ~19.6x10x9.6 cm, 10 cm apart, tall ends facing in), three ~44 cm screw-in ground anchors (eye ring ~4.7 cm, auger flight from ~27 cm down to the tip, mud-caked lower flights), three coils of orange tie-down rope (~21 cm across), an olive canvas stake bag (~25x44 cm), and a red pitot cover with streamer. The scale bar is 10 cm = ~133 px. The top chock row is a three-quarter view with the rope and is left out. The bottom chock row is read as the back view, since it shows no rope; the right-hand blocks reach x~705 px in both rows."}

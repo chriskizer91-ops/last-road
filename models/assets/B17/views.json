@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "station_windmill_tank",
+      "size_m": [11.8, 9.26, 7.9],
+      "views": [
+        {"label": "Front", "box": [48, 13, 557, 413], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [590, 10, 935, 412], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [1000, 13, 1507, 413], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Top", "box": [64, 547, 687, 893], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Scale bar is about 43 px/m. The model is a steel lattice windmill: 18-blade wheel 3.2 m across, hub at 7.65 m, tower base 2.6 m, wheel facing +z, tail vane to -z. It stands at -x beside a 5.1 m x 1.6 m corrugated tank on a 0.45 m earth pad. In front (+x,+z) is a 6.55 m galvanised trough on 3 concrete blocks, running from -1.1 to +5.45 m from the tank centre as Front and Back show. A mud patch ends at x = 6.15 m. Pipes run from the pump to the tank lid and from the tank to the trough end. The sheet is inconsistent in places. The Top view draws the tail pointing -x, which contradicts the Side view; I modelled it to -z and left that tail out of the Top box. The Top view also shifts the trough and mud about 2 m further +x; I followed Front and Back. The trough z is a compromise between Top (3.0 m) and Side (4.2 m). The Side box is cropped at the trough block to leave out a thin ground strip that the Top view doesn't support."
+}

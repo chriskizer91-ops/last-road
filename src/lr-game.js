@@ -79,6 +79,58 @@ function lrPlaneChase(t,dt){
   return {eye:LRC.e.slice(),fwd:norm2(sub2(LRC.l,LRC.e)),up:[0,1,0],fov:1.0};}
 const LR_CA=camAuto;
 camAuto=function(t,dt){
+  /* (a fixed view for the tools, as the game's own camera has) */
+  if(CAM.over){const o=CAM.over;LRC.on=false;return {eye:o.eye.slice(),fwd:norm2(sub2(o.at,o.eye)),up:[0,1,0],fov:o.fov||1};}
   if(t&&t.rt&&CAMS[APP.cam]==='Chase'&&GAME.state==='drive'&&!APP.orbit&&!CAM.rear&&!JUMP.on){const r=LR_CA(t,dt);if(r)return r;return lrPlaneChase(t,dt);}
   LRC.on=false;return LR_CA(t,dt);};
 window.__lr={LRT,LR_PLAY,lrBuild,LRC};
+
+/* ---------- THE DISTANT LAND (Ground Truth's world is 40 miles across: the escarpment, the big dunes, the cones and
+   the mesas have to be seen from far off). Past the engine's far tiles (2 km round you), a ring of 4 km tiles, a
+   point every 256 m, out to 26 km: the same land (the world's own sample), the same ground material, made here a
+   tile a frame (about 2 ms each) and kept until you've gone well past. Sunk 60 m where the nearer tiles are, so
+   they always show over it. The fog thinned to match (each time of day's own fog, about a seventh as thick), so
+   you can see that far ---------- */
+const LRD={tiles:new Map(),FT:4096,st:256,R:26000,R0:26000,on:true,made:0,ms:0,tris:0};
+/* (how far: 26 km on the ground, further the higher you are, up to the whole map: 55 km from 2,500 m) */
+function LRD_FAR(){return LRD.on&&typeof WG!=="undefined"&&WG.gtPlace?LRD.R:0;}
+function lrDistReach(e){LRD.R=Math.min(70000,LRD.R0+12*Math.max(0,e[1]-50));}
+function lrDistMake(tx,tz){
+  const t0=performance.now(),st=LRD.st,FT=LRD.FT,n=FT/st+1,nb=n+2,x0=tx*FT,z0=tz*FT,o={},Hh=new Float64Array(nb*nb),Wt=new Float32Array(n*n*4);
+  for(let j=0;j<nb;j++)for(let i=0;i<nb;i++){const x=x0+(i-1)*st,z=z0+(j-1)*st;WG.sample(x,z,o);Hh[j*nb+i]=o.code===WG.SF.water?Math.min(o.h,o.wl):o.h;
+    if(i>0&&j>0&&i<=n&&j<=n){const k=(j-1)*n+i-1;Wt[k*4]=o.sand>.02?-o.sand:o.grass;Wt[k*4+1]=o.rock;Wt[k*4+2]=o.salt>.02?-o.salt:o.mud*.5;Wt[k*4+3]=o.code===WG.SF.water?.6:1;}}
+  const nv=n*n+4*n*2,P=new Float32Array(nv*3),N=new Float32Array(nv*3),C=new Float32Array(nv*4),M=new Float32Array(nv).fill(40),I=[];let v=0,ymin=1e9,ymax=-1e9;
+  const put=(i,j,dy)=>{const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],l=Math.hypot(hx,2*st,hz);
+    P[v*3]=i*st;P[v*3+1]=Hh[b]-dy;P[v*3+2]=j*st;N[v*3]=hx/l;N[v*3+1]=2*st/l;N[v*3+2]=hz/l;C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];
+    if(!dy){ymin=Math.min(ymin,Hh[b]);ymax=Math.max(ymax,Hh[b]);}return v++;};
+  for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);
+  for(let j=0;j<n-1;j++)for(let i=0;i<n-1;i++){const p=j*n+i,q=p+1,r=p+n,s=r+1;I.push(p,s,q,p,r,s);}
+  const edge=(list,flip)=>{for(let e=0;e<list.length-1;e++){const [ia,ja]=list[e],[ib,jb]=list[e+1],a=ja*n+ia,b=jb*n+ib,c=put(ia,ja,40),d=put(ib,jb,40);if(flip)I.push(a,c,b,b,c,d);else I.push(a,b,c,b,d,c);}};
+  const top=[],bot=[],lef=[],rig=[];for(let a=0;a<n;a++){top.push([a,0]);bot.push([a,n-1]);lef.push([0,a]);rig.push([n-1,a]);}
+  edge(top,false);edge(bot,true);edge(lef,true);edge(rig,false);
+  const m=makeMesh({pos:P.subarray(0,v*3),nrm:N.subarray(0,v*3),col:C.subarray(0,v*4),mat:M.subarray(0,v),idx:new Uint16Array(I),tris:I.length/3});m.tris=I.length/3;
+  LRD.made++;LRD.ms+=performance.now()-t0;
+  return {tx,tz,x0,z0,m,mn:[x0,ymin-70,z0],mx:[x0+FT,ymax+5,z0+FT]};
+}
+/* each frame: the tiles in reach that are missing (nearest first, one made), those far out of reach let go */
+/* (as many a frame as fit in a few milliseconds: 6 ms, or 16 while the ring is still mostly missing; all at once for the tests) */
+function lrDistUpdate(e,all){
+  if(!LRD_FAR())return;const FT=LRD.FT,R=LRD.R,cx=Math.floor(e[0]/FT),cz=Math.floor(e[2]/FT),k=Math.ceil(R/FT)+1,want=[];
+  for(let a=cx-k;a<=cx+k;a++)for(let b=cz-k;b<=cz+k;b++){const key=a+','+b;if(LRD.tiles.has(key))continue;
+    const dx=Math.max(a*FT-e[0],0,e[0]-(a+1)*FT),dz=Math.max(b*FT-e[2],0,e[2]-(b+1)*FT),d=Math.hypot(dx,dz);if(d>R)continue;
+    if(Math.abs((a+.5)*FT)>WG.HALF+FT||Math.abs((b+.5)*FT)>WG.HALF+FT)continue;want.push([d,a,b,key]);}
+  want.sort((p,q)=>p[0]-q[0]);const t0=performance.now(),budget=all?1e9:LRD.tiles.size<40?16:6;
+  for(const w of want){LRD.tiles.set(w[3],lrDistMake(w[1],w[2]));if(performance.now()-t0>budget)break;}
+  for(const [key,t] of LRD.tiles){const dx=Math.max(t.x0-e[0],0,e[0]-t.x0-FT),dz=Math.max(t.z0-e[2],0,e[2]-t.z0-FT);if(Math.hypot(dx,dz)>R+2*FT){freeMesh(t.m);LRD.tiles.delete(key);}}
+}
+/* drawn after the far tiles (drawWorld), sunk where they are */
+function lrDistDraw(u,e,F){
+  if(!LRD_FAR())return 0;lrDistReach(e);lrDistUpdate(e);const W=WORLD;let tris=0;
+  if(u.uFarDrop)gl.uniform4f(u.uFarDrop,1,W.farR-350,W.farR+250,60);
+  const D=LRD.dbg={n:0,far:0,vis:0,near:0,drawn:0,e:[Math.round(e[0]),Math.round(e[1]),Math.round(e[2])]};
+  for(const t of LRD.tiles.values()){D.n++;const d=boxDist(e,t.mn,t.mx);if(d>LRD.R){D.far++;continue;}if(!boxVisible(F,t.mn,t.mx)){D.vis++;continue;}
+    /* (wholly inside the far tiles' ring: hidden under them anyway) */
+    const far=Math.hypot(Math.max(Math.abs(t.x0-e[0]),Math.abs(t.x0+LRD.FT-e[0])),Math.max(Math.abs(t.z0-e[2]),Math.abs(t.z0+LRD.FT-e[2])));if(far<W.farR-400){D.near++;continue;}D.drawn++;
+    atM(u,t.x0,0,t.z0);drawMesh(t.m);tris+=t.m.tris;}
+  LRD.tris=tris;return tris;}
+window.__lr=Object.assign(window.__lr||{},{LRD,lrDistUpdate});

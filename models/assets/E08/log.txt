@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 348 s 3710 in 36675 out end_turn
+built {'mail_bag': {'tris': 2024, 'size': [0.314, 0.674, 0.251], 'min': [-0.157, 0, -0.126]}, 'first_aid_kit': {'tris': 556, 'size': [0.672, 0.579, 0.334], 'min': [-0.336, 0, -0.166]}, 'cold_box': {'tris': 1040, 'size': [0.825, 0.625, 0.541], 'min': [-0.412, 0, -0.269]}}
+painted {'cold_box': {'front (top row, right)': 0.976, 'side, +x (middle row, right)': 0.953, 'top (bottom row, right)': 0.969}, 'first_aid_kit': {'front (top row, middle)': 0.943, 'side, +x (middle row, middle)': 0.938, 'top (bottom row, middle)': 0.956}, 'mail_bag': {'front (top row, left)': 0.946, 'side, +x (middle row, left)': 0.879, 'top (bottom row, left)': 0.931}} 270s
+helper: done claude-opus-5-5 xhigh 234 s 11486 in 23643 out end_turn
+built {'mail_bag': {'tris': 2024, 'size': [0.314, 0.674, 0.27], 'min': [-0.157, 0, -0.135]}, 'first_aid_kit': {'tris': 556, 'size': [0.672, 0.579, 0.334], 'min': [-0.336, 0, -0.166]}, 'cold_box': {'tris': 1040, 'size': [0.825, 0.625, 0.541], 'min': [-0.412, 0, -0.269]}}
+painted {'cold_box': {'front (top row, right)': 0.976, 'side, +x (middle row, right)': 0.953, 'top (bottom row, right)': 0.969}, 'first_aid_kit': {'front (top row, middle)': 0.943, 'side, +x (middle row, middle)': 0.938, 'top (bottom row, middle)': 0.956}, 'mail_bag': {'front (top row, left)': 0.946, 'side, +x (middle row, left)': 0.879, 'top (bottom row, left)': 0.939}} 238s
+done

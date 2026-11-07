@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "causeway",
+      "size_m": [9.0, 1.5, 10.0],
+      "views": [
+        {"label": "Front", "box": [77, 82, 585, 198], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Side", "box": [621, 81, 1509, 198], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [67, 398, 579, 521], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Top", "box": [628, 306, 1509, 615], "cam": [0, 1, 0], "up": [-1, 0, 0]}
+      ]
+    }
+  ],
+  "notes": "A 10 m section of a stepped, dry-laid stone causeway: 9.0 m wide at the base, 6.0 m across the top and 1.5 m high (sheet dimensions and scale bar). The front view is the cross-section to sweep, with length along z. The ends also step in about 0.5 m. There is a drain mouth on the +x side of the front face, a slumped collapse on the +x flank toward the back, and two scupper gaps in the -x kerb. The sheet's top view is squashed across its width (not to scale), so the front view's dimensions take precedence."
+}

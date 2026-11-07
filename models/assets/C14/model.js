@@ -38,56 +38,49 @@ function build(THREE) {
     return add(geo, name, 0, 0, z0);
   }
 
-  // ---------------- WINGS (causeway embankment walls with culverts) ----------------
+  // ---------------- WINGS (slim causeway embankment with one culvert each) ----------------
   const HW = 2.45;   // wing body top (road surface)
   const HC = 2.6;    // coping top
-  const wingHalves = [
-    { c0: 4.2, c1: 6.64, h: 1.66, z0: 0, z1: 2.2 },     // front half (front-view culverts)
-    { c0: 4.05, c1: 6.55, h: 2.1, z0: -2.2, z1: 0 }     // back half (back-view culverts, taller)
-  ];
+  const WZ0 = -1.9, WZ1 = 1.45;          // back / front faces of the wings (local)
+  const C0 = 4.2, C1 = 6.62, CH = 1.66;  // culvert span and height
   for (const s of [-1, 1]) {
-    for (const w of wingHalves) {
-      const pts = [
-        [3.0, 0], [w.c0, 0], [w.c0, w.h], [w.c1, w.h], [w.c1, 0],
-        [11.05, 0], [10.5, HW], [3.0, HW]
-      ].map(p => [p[0] * s, p[1]]);
-      extrude('stone', pts, w.z0, w.z1);
-    }
+    const pts = [
+      [3.0, 0], [C0, 0], [C0, CH], [C1, CH], [C1, 0],
+      [11.05, 0], [10.5, HW], [3.0, HW]
+    ].map(p => [p[0] * s, p[1]]);
+    extrude('stone', pts, WZ0, WZ1);
     // coping kerbs along front and back edges of the road
-    box('stone', 3.0 * s, 9.7 * s, HW, HC, 1.8, 2.28);
-    box('stone', 3.0 * s, 9.7 * s, HW, HC, -2.28, -1.8);
+    box('stone', 3.0 * s, 9.7 * s, HW, HC, WZ1 - 0.4, WZ1 + 0.08);
+    box('stone', 3.0 * s, 9.7 * s, HW, HC, WZ0 - 0.08, WZ0 + 0.4);
     // wider end cap at the outer end
-    box('stone', 9.7 * s, 10.47 * s, HW, HC, -2.3, 2.3);
-    // abutment pier where the wing meets the tower
-    box('stone', 3.0 * s, 4.0 * s, 0, HC, -2.7, 2.7);
+    box('stone', 9.7 * s, 10.47 * s, HW, HC, WZ0 - 0.1, WZ1 + 0.1);
+    // abutment pier / stepped plinth where the wing meets the tower
+    box('stone', 3.0 * s, 4.1 * s, 0, HW, -3.3, 3.3);
   }
 
   // ---------------- GATEHOUSE TOWER (battered in x) ----------------
   const hb = y => 3.5 - 0.1 * y; // half-width of battered tower at height y
   const YS = 2.13;  // door sill / passage floor
   const YT = 5.4;   // top of tower body (under cornice slab)
-  const lower = (cw, ch) => [
-    [-3.5, 0], [-cw, 0], [-cw, ch], [cw, ch], [cw, 0], [3.5, 0], [hb(YS), YS], [-hb(YS), YS]
-  ];
-  extrude('stone', lower(1.2, 1.2), 0, 3.9);       // front half, low culvert
-  extrude('stone', lower(1.15, 1.95), -4.5, 0);    // back half incl. rear landing apron
-  const upper = dh => [
-    [-hb(YS), YS], [-0.55, YS], [-0.55, dh], [0.55, dh], [0.55, YS], [hb(YS), YS], [hb(YT), YT], [-hb(YT), YT]
-  ];
-  extrude('stone', upper(3.85), 0, 3.9);           // front half with doorway
-  extrude('stone', upper(4.0), -3.9, 0);           // back half with doorway
+  const DH = 3.95;  // door head
+  // lower body with the creek passage (1.6 m) running front to back, incl. rear apron
+  extrude('stone', [
+    [-3.5, 0], [-1.2, 0], [-1.2, 1.6], [1.2, 1.6], [1.2, 0], [3.5, 0], [hb(YS), YS], [-hb(YS), YS]
+  ], -4.5, 3.9);
+  // upper body with the through doorway
+  extrude('stone', [
+    [-hb(YS), YS], [-0.55, YS], [-0.55, DH], [0.55, DH], [0.55, YS], [hb(YS), YS], [hb(YT), YT], [-hb(YT), YT]
+  ], -3.9, 3.9);
 
   // plank floor through the passage
   box('timber', -0.53, 0.53, YS, YS + 0.04, -3.9, 3.9);
 
   // door surrounds (projecting frames)
   for (const side of [1, -1]) {
-    const dh = side > 0 ? 3.85 : 4.0;
-    const lt = side > 0 ? 4.26 : 4.3;
     const za = 3.9 * side, zb = 4.02 * side;
-    box('stone', -1.22, -0.55, YS, dh, za, zb);
-    box('stone', 0.55, 1.22, YS, dh, za, zb);
-    box('stone', -1.22, 1.22, dh, lt, za, zb);
+    box('stone', -1.22, -0.55, YS, DH, za, zb);
+    box('stone', 0.55, 1.22, YS, DH, za, zb);
+    box('stone', -1.22, 1.22, DH, DH + 0.4, za, zb);
   }
 
   // string course around the tower
@@ -121,9 +114,9 @@ function build(THREE) {
   box('stone', -3.25, -2.95, 5.60, 5.70, -3.85, 3.85);
   box('stone', 2.95, 3.25, 5.60, 5.70, -3.85, 3.85);
 
-  // ---------------- FRONT STAIR BLOCK ----------------
+  // ---------------- FRONT STAIR BLOCK (lower culvert mouth) ----------------
   extrude('stone', [
-    [-2.45, 0], [-1.2, 0], [-1.2, 1.2], [1.2, 1.2], [1.2, 0], [2.45, 0], [2.45, 1.6], [-2.45, 1.6]
+    [-2.45, 0], [-1.2, 0], [-1.2, 1.25], [1.2, 1.25], [1.2, 0], [2.45, 0], [2.45, 1.6], [-2.45, 1.6]
   ], 3.9, 5.3);
   const stepFronts = [5.15, 4.88, 4.61, 4.34];
   for (let k = 0; k < 4; k++) {
@@ -134,19 +127,20 @@ function build(THREE) {
     box('stone', 1.45 * s, 2.45 * s, 1.6, 2.22, 3.9, 5.3);
   }
 
-  // ---------------- TREE growing in the left front culvert ----------------
-  add(new THREE.ConeGeometry(0.4, 0.35, 8), 'bark', -5.32, 0.175, 1.55);
-  add(new THREE.CylinderGeometry(0.11, 0.2, 0.95, 8), 'bark', -5.32, 0.475, 1.55);
-  const br1 = add(new THREE.CylinderGeometry(0.05, 0.08, 0.6, 6), 'bark', -5.55, 1.05, 1.55);
+  // ---------------- TREE growing in the left culvert mouth ----------------
+  const TX = -5.35, TZ = 1.0;
+  add(new THREE.ConeGeometry(0.45, 0.4, 8), 'bark', TX, 0.2, TZ);
+  add(new THREE.CylinderGeometry(0.13, 0.24, 1.0, 8), 'bark', TX, 0.5, TZ);
+  const br1 = add(new THREE.CylinderGeometry(0.05, 0.08, 0.6, 6), 'bark', TX - 0.25, 1.08, TZ);
   br1.rotation.z = 0.8;
-  const br2 = add(new THREE.CylinderGeometry(0.05, 0.08, 0.6, 6), 'bark', -5.1, 1.08, 1.6);
+  const br2 = add(new THREE.CylinderGeometry(0.05, 0.08, 0.6, 6), 'bark', TX + 0.25, 1.1, TZ + 0.05);
   br2.rotation.z = -0.75;
   const canopyGeo = new THREE.SphereGeometry(1, 8, 6);
   const canopy = [
-    [-5.95, 1.22, 1.55, 0.55, 0.30, 0.50],
-    [-5.30, 1.33, 1.60, 0.60, 0.30, 0.55],
-    [-4.70, 1.20, 1.55, 0.45, 0.28, 0.45],
-    [-5.40, 1.18, 1.15, 0.50, 0.26, 0.45]
+    [-6.05, 1.32, 1.00, 0.55, 0.28, 0.45],
+    [-5.35, 1.38, 1.05, 0.65, 0.25, 0.50],
+    [-4.70, 1.30, 1.00, 0.45, 0.27, 0.42],
+    [-5.45, 1.25, 0.60, 0.50, 0.25, 0.40]
   ];
   for (const c of canopy) {
     const m = add(canopyGeo, 'foliage', c[0], c[1], c[2]);
@@ -164,15 +158,19 @@ function build(THREE) {
     m.position.y = sy * 0.6;
     m.rotation.y = rnd() * Math.PI;
   }
-  const culverts = [[-6.5, -4.3, 2.0, -2.0], [4.3, 6.5, 2.0, -2.0], [-1.1, 1.1, 5.0, -4.2]];
+  const culverts = [[-6.5, -4.3, WZ1, WZ0], [4.3, 6.5, WZ1, WZ0], [-1.1, 1.1, 5.0, -4.2]];
   for (const [a, b, zf, zb] of culverts) {
     for (let i = 0; i < 4; i++) {
       rock(a + (b - a) * rnd(), zf - 0.6 * rnd(), 0.12 + 0.12 * rnd());
       rock(a + (b - a) * rnd(), zb + 0.6 * rnd(), 0.12 + 0.12 * rnd());
     }
   }
-  const looseRocks = [[-8.6, 2.5], [-3.0, 2.5], [5.2, 2.5], [9.5, 2.45], [-2.0, 5.45], [2.2, 5.45],
-                      [-9.0, -2.5], [-2.9, -2.5], [2.9, -2.5], [8.2, -2.5]];
+  const looseRocks = [
+    [-10.0, WZ1 + 0.05], [-8.6, WZ1 + 0.05], [7.4, WZ1 + 0.05], [9.5, WZ1 + 0.05],
+    [-2.0, 5.45], [2.2, 5.45], [-3.0, 4.05], [3.1, 4.05],
+    [-9.0, WZ0 - 0.05], [-7.4, WZ0 - 0.05], [8.2, WZ0 - 0.05], [9.8, WZ0 - 0.05],
+    [-2.6, -4.6], [2.8, -4.6]
+  ];
   for (const [x, z] of looseRocks) rock(x, z, 0.15 + 0.12 * rnd());
 
   // ---------------- DRY GRASS TUFTS ----------------
@@ -182,11 +180,12 @@ function build(THREE) {
     const m = add(tuftGeo, 'dry_grass', x, 0.21 * s, z);
     m.scale.set(s, s, s);
   }
-  for (const x of [-10.3, -9.3, -8.4, -7.2, -3.6, 3.55, 7.3, 8.6, 9.9]) tuft(x, 2.35);
-  for (const x of [-10.2, -8.0, -7.1, 3.7, 7.2, 9.0, 10.3]) tuft(x, -2.35);
+  for (const x of [-10.3, -9.3, -8.4, -7.2, 7.3, 8.6, 9.9]) tuft(x, WZ1 + 0.1);
+  for (const x of [-10.2, -8.0, -7.1, 7.2, 9.0, 10.3]) tuft(x, WZ0 - 0.1);
+  tuft(-3.7, 4.0); tuft(3.65, 3.95);
   tuft(-2.3, 5.4); tuft(1.7, 5.4);
   tuft(-2.8, -4.6); tuft(2.6, -4.6);
-  tuft(-10.95, 1.2); tuft(10.95, -1.0);
+  tuft(-11.15, 0.3); tuft(11.15, -0.8);
 
   return root;
 }

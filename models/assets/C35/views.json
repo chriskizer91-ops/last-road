@@ -1,0 +1,9 @@
+{"objects": [{"name": "stone_ring", "size_m": [16, 2.95, 16],
+  "views": [
+    {"label": "Front", "box": [18, 612, 792, 758], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [816, 614, 1522, 758], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [18, 821, 792, 961], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [816, 819, 1522, 961], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Top", "box": [952, 36, 1463, 549], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "A ring of lichen-covered standing stones about 2.1 m tall and 13 m across, on a low 16 m earth disc (scale bar 1 m = about 48 px). A tall split 'M' stone about 2.95 m high stands at the back on the sight-line, with a narrow channel running from it to a 1.9 x 2.3 m slab carved with a hand. A fallen slab lies at front-left and the gap in the ring faces the front. The flat views disagree: the top view sets the ring back on the disc, the side views centre it (ring moved 0.3 m forward as a compromise), and the back view leaves out the split stone. One back-left stone is inferred from the three-quarter view."}

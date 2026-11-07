@@ -1,0 +1,8 @@
+{"objects": [{"name": "marbles_kopje", "size_m": [74, 24.4, 54],
+  "views": [
+    {"label": "Front", "box": [22, 14, 848, 279], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [865, 11, 1523, 278], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [13, 324, 849, 584], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [866, 321, 1521, 779], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Granite kopje 'The Marbles': a domed pile of rounded, lichen-streaked boulders under a perched egg-shaped summit boulder (~13 m long), with three fig/acacia trees, dead snags and fallen exfoliation slabs at front-left, on a dry-grass apron. The scale bar (10 m ≈ 106 px) gives about 78 m wide in the elevations but about 62 m in the top view, so the views disagree by roughly 20%. I used a 74 × 54 m footprint and 24.4 m to the top of the summit boulder. 'Side' is the -x side, because the front slabs appear at its right; the top view has the front at the bottom."}

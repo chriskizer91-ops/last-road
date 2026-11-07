@@ -1,0 +1,8 @@
+{"objects": [{"name": "the_weir", "size_m": [38.0, 6.55, 15.0],
+  "views": [
+    {"label": "Front", "box": [8, 40, 1530, 306], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Left", "box": [10, 361, 390, 569], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [418, 365, 1528, 569], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [8, 646, 633, 944], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "The weir is a curved, stepped stone wall about 3.8 m high, with a crest and five steps on the downstream (front, +z) face. In plan it bows toward the front, with a left abutment of boulders. At the +x end is a sluice house about 7.25 x 6.8 x 6.55 m with a corbelled cornice, a door, a carved-hand panel and a low outlet. A sloping stone channel runs from the outlet toward +z. Scale: about 40 px/m on the Front view; the other views are drawn smaller and do not fully agree. The Left view leaves out the outlet channel that the Top view shows (about 9 m long), so I made the channel 8 m as a compromise."}

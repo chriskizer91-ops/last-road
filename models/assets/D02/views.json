@@ -1,0 +1,8 @@
+{"objects": [{"name": "bottle_tree", "size_m": [15.2, 12.3, 14.4],
+  "views": [
+    {"label": "Front", "box": [18, 38, 502, 432], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [537, 33, 1000, 432], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [1033, 38, 1516, 432], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [140, 488, 625, 945], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "A giant baobab (bottle tree): a bell-shaped trunk about 9 m across above buttress roots, a dark hollow at the front base, a leafless crown with green buds and hanging seed pods, on a dirt patch. The 10 m bar measures about 31.9 px/m, giving roughly 15.2 m wide, 12.3 m tall and 14.4 m deep. Assumptions: the single side view is taken as +x, the top view has the front at the bottom, and the three-quarter view is left out."}

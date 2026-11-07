@@ -1,0 +1,8 @@
+{"objects": [{"name": "workshop_shed", "size_m": [17.8, 4.63, 6.75],
+  "views": [
+    {"label": "Front", "box": [38, 28, 1033, 287], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [1086, 27, 1500, 287], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [38, 341, 807, 531], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [928, 345, 1487, 538], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Rusty corrugated-iron mono-pitch workshop shed. Using the scale bar (1 m ≈ 56 px), the main shed is 14.4 m wide and 6 m deep between walls. It is 4.6 m high at the front and 3.1 m at the back. It has two open bays (bench, shelves, welder, gas bottles, drums), a roller-door bay, and a 3.4 m open lean-to on +x holding steel tube and wire rolls. Unclear: the side view has its high edge on the left and leaves out the lean-to, so I treated it as the +x side, which makes the outline match. The side view suggests a depth of about 7.4 m and the top view about 6 m, so I used 6.6 m. The props are drawn slightly oversized against the scale bar."}

@@ -1,0 +1,26 @@
+{
+  "objects": [
+    {
+      "name": "lantern",
+      "size_m": [0.106, 0.218, 0.097],
+      "views": [
+        {"label": "front (dimmer knob facing)", "box": [60, 46, 324, 560], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "side, knob on left (+x side)", "box": [367, 8, 607, 560], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "back", "box": [676, 20, 916, 560], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "side, knob hidden (-x side)", "box": [972, 8, 1202, 560], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top (knob at bottom)", "box": [1228, 168, 1512, 470], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "headlamp",
+      "size_m": [0.117, 0.080, 0.133],
+      "views": [
+        {"label": "front (lens)", "box": [12, 640, 412, 856], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "side, lamp on left (+x side)", "box": [420, 634, 802, 852], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "back (battery box)", "box": [808, 640, 1200, 856], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "top (lamp at bottom)", "box": [1208, 578, 1520, 890], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Set E04: an olive-drab battery camp lantern and a webbing headlamp. The scale bar is about 245 px per 10 cm. The lantern is about 10.6 cm wide at the handle lugs and 22 cm tall to the top of the handle, with a wire cage, a frosted globe and a front dimmer knob. Its bail handle leans about 6 degrees toward the back, as both side views draw it. The headlamp loop is about 11.5 cm wide and the whole headlamp about 13.3 cm front to back. The side view (15 cm) and top view (12 cm) disagree on depth, so the model splits the difference. The headlamp has a front lamp, a rear battery box, an over-the-head strap peaking at about 8 cm, and a slide buckle on the +x side just behind the middle. The headlamp boxes are now generous. The old side box cut off the top of the strap arc, and the old front and back boxes probably cut off the right end of the band. With the band uncropped, and going by the top view, the lamp, strap and battery box are centred on x = 0. The front and back views draw the band high on the lamp and the side view draws it low, which looks like a slightly raised camera. The band is placed at the lamp's mid-height, where it threads through the mount. The lantern top view is slightly tilted and shows the handle folded back; its box leaves out most of that arc."
+}

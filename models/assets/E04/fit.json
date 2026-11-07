@@ -1,0 +1,50 @@
+{
+ "headlamp": {
+  "front (lens)": {
+   "iou": 0.838,
+   "turn_deg": -0.19
+  },
+  "side, lamp on left (+x side)": {
+   "iou": 0.81,
+   "turn_deg": 2.96
+  },
+  "back (battery box)": {
+   "iou": 0.711,
+   "turn_deg": -2.3
+  },
+  "top (lamp at bottom)": {
+   "iou": 0.362,
+   "turn_deg": -0.47
+  },
+  "texels": {
+   "covered": 209993,
+   "seen": 80384
+  }
+ },
+ "lantern": {
+  "front (dimmer knob facing)": {
+   "iou": 0.893,
+   "turn_deg": -1.39
+  },
+  "side, knob on left (+x side)": {
+   "iou": 0.91,
+   "turn_deg": -0.33
+  },
+  "back": {
+   "iou": 0.856,
+   "turn_deg": -1.86
+  },
+  "side, knob hidden (-x side)": {
+   "iou": 0.908,
+   "turn_deg": 0.62
+  },
+  "top (knob at bottom)": {
+   "iou": 0.874,
+   "turn_deg": -1.54
+  },
+  "texels": {
+   "covered": 405857,
+   "seen": 353730
+  }
+ }
+}

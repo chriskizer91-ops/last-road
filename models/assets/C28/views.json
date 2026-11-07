@@ -1,0 +1,8 @@
+{"objects": [{"name": "seated_figure", "size_m": [2.18, 2.68, 1.80],
+  "views": [
+    {"label": "Front", "box": [72, 14, 474, 508], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [582, 14, 912, 508], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [1055, 14, 1452, 508], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [258, 590, 597, 934], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Weathered stone seated robed figure, cross-legged, right hand (-x) open palm-up, left hand (+x) resting on the knee, on a two-tier carved plinth. From the 1 m bar (~184 px) it is about 2.18 m wide, 2.68 m tall and 1.8 m deep. The side view faces right with the open hand nearest the camera, so it is the -x side (the three-quarter view contradicts this). The +x side is not drawn. The top view is drawn nearly square (about 2.2 m deep), so the side-view depth of 1.8 m was used."}

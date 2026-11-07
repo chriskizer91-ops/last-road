@@ -1,0 +1,15 @@
+{
+  "objects": [
+    {
+      "name": "great_hall_tower",
+      "size_m": [21.2, 7.43, 8.8],
+      "views": [
+        {"label": "FRONT", "box": [36, 14, 945, 337], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "SIDE", "box": [1088, 14, 1469, 337], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "BACK", "box": [50, 363, 760, 626], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "TOP", "box": [30, 668, 722, 955], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "A ruined great hall about 20.9 x 7.3 m with battered stone walls 4.3 m high to a corbelled cornice. It has a 7.4 m tower on the back-right corner (+x, -z) and a collapsed front-left corner that opens into a pilastered, beamed chamber with a carved hand on its back wall. The 1 m scale bar is about 43 px on the front view; the back view is drawn smaller. The top-right SIDE shows the tower on its left, which only fits the -x end. The second 'SIDE' (middle right: a long low wall with no tower and a rubble ramp) matches no face of this building, so it is left out and the +x end gets a colour guess only."
+}

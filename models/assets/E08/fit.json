@@ -1,0 +1,56 @@
+{
+ "cold_box": {
+  "front (top row, right)": {
+   "iou": 0.976,
+   "turn_deg": -0.1
+  },
+  "side, +x (middle row, right)": {
+   "iou": 0.953,
+   "turn_deg": 1.5
+  },
+  "top (bottom row, right)": {
+   "iou": 0.969,
+   "turn_deg": -0.42
+  },
+  "texels": {
+   "covered": 309582,
+   "seen": 152920
+  }
+ },
+ "first_aid_kit": {
+  "front (top row, middle)": {
+   "iou": 0.943,
+   "turn_deg": 0.03
+  },
+  "side, +x (middle row, middle)": {
+   "iou": 0.938,
+   "turn_deg": -0.0
+  },
+  "top (bottom row, middle)": {
+   "iou": 0.956,
+   "turn_deg": 0.05
+  },
+  "texels": {
+   "covered": 475199,
+   "seen": 328706
+  }
+ },
+ "mail_bag": {
+  "front (top row, left)": {
+   "iou": 0.946,
+   "turn_deg": 4.26
+  },
+  "side, +x (middle row, left)": {
+   "iou": 0.879,
+   "turn_deg": -1.48
+  },
+  "top (bottom row, left)": {
+   "iou": 0.939,
+   "turn_deg": 2.98
+  },
+  "texels": {
+   "covered": 669683,
+   "seen": 574070
+  }
+ }
+}

@@ -1,0 +1,21 @@
+{"objects": [
+  {"name": "water_pump", "size_m": [0.72, 0.565, 0.585],
+   "views": [
+     {"label": "front", "box": [37, 24, 428, 333], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side", "box": [492, 29, 831, 333], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [893, 38, 1233, 318], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "parts_crate", "size_m": [0.944, 0.43, 0.47],
+   "views": [
+     {"label": "front", "box": [24, 381, 536, 616], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side", "box": [599, 382, 859, 616], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [946, 374, 1386, 622], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "wire_coil", "size_m": [0.664, 0.47, 0.664],
+   "views": [
+     {"label": "front", "box": [88, 684, 456, 946], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "side", "box": [596, 664, 786, 946], "cam": [1, 0, 0], "up": [0, 1, 0]},
+     {"label": "top", "box": [914, 653, 1202, 937], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]}
+ ],
+ "notes": "Scale bar is 1 m ≈ 545 px. The set is a petrol water pump in a red tube cage (0.72 × 0.57 × 0.52 m, plus a suction nipple facing front on the +x pump side), a rope-handled wooden parts crate (0.80 × 0.43 × 0.47 m), and a flat-lying fence-wire coil (0.66 m across × 0.47 m tall). Unclear points: the top views are drawn about 15% smaller than the front views. The coil's side view draws it standing on edge, so it is listed but won't fit the outline well. The rolled fire hose is only a three-quarter drawing, so it isn't modelled."}

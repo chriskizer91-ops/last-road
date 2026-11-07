@@ -29,6 +29,44 @@ swap("{id:'redtail',name:'Redtail',gov:0,", "{id:'redtail',name:'Heron',gov:0,")
 # laptops start on Low (his rule for the laptop, and what he expects from Salt & Sand); a phone still starts on Mobile.
 # A tier picked in the menu still holds for the start it makes, and ?quality= still picks one
 swap("const GFX_START=matchMedia('(pointer: coarse)').matches?'mobile':'high';", "const GFX_START=matchMedia('(pointer: coarse)').matches?'mobile':'low';")
+# THE GROUND IN HIS PICTURES: his textures (tools/texpack.py -> src/lr-texpack.js) in the engine's texture pack, one
+# per ground surface (each line of TEXPACK swapped whole); a new surface, SAND, for the Dune Sea's orange sand (Salt &
+# Sand's white gypsum keeps its shape and ripples, now in his sand's colour and picture); and the pictures' own colour
+# at 85% (the engine's default is half its own ground colours)
+import json as _j, re as _re
+TP = _j.loads(open(sys.path[0] + '/lr-texpack.js', encoding='utf-8').read().split('window.LR_TEXPACK=', 1)[1].rstrip().rstrip(';'))
+lay = lambda L: '{id:"%s",t:"%s",m:[%s],scale:%s,has:true,src:"%s"}' % (L['id'], L['t'], ', '.join('%.4f' % v for v in L['m']), L['scale'], L['src'])
+for t, L in TP.items():
+    if t == 'SAND': continue
+    m = _re.findall(r'\{id:"[a-z_0-9]+",t:"%s",m:\[[^\]]*\],scale:[0-9.]+,has:false,src:""\}' % t, s)
+    assert len(m) == 1, t
+    swap(m[0], lay(L))
+swap('{id:"clay_track",t:"CLAYTRACK",m:[0.5, 0.5, 0.5],scale:3,has:false,src:""}\n]};', '{id:"clay_track",t:"CLAYTRACK",m:[0.5, 0.5, 0.5],scale:3,has:false,src:""},\n' + lay(TP['SAND']) + '\n]};')
+swap("'SALT','BRICK','STUCCO','FORECOURT','PAINT','CLAYTRACK'];", "'SALT','BRICK','STUCCO','FORECOURT','PAINT','CLAYTRACK','SAND'];")
+sm = TP['SAND']['m']
+swap("if(dw>.004){vec3 sd=vec3(.80,.77,.70)*(.9+.12*vn(wp*.012)+.05*vn(wp*.37));", "if(dw>.004){vec3 sd=vec3(%.3f,%.3f,%.3f)*(.9+.12*vn(wp*.012)+.05*vn(wp*.37));" % tuple(sm))
+swap("alb=mix(alb,sd,dw);gw*=1.-dw;rw*=1.-dw;}", "sd=photoG(sd,T_SAND,wp);alb=mix(alb,sd,dw);gw*=1.-dw;rw*=1.-dw;}")
+swap("tex:1,texcol:.5,", "tex:1,texcol:.85,")
+# THE WORLD: Ground Truth's own land (src/gt-world.js) inside the engine's world generator, asked first, as Salt &
+# Sand's dunes were: core (the land at a point), baseAt (under a ribbon), the chunks' own things (Last Road, the
+# runway, trees), the place names, and the start (on Last Road at Roadhead, heading east). No Highway 40.
+swap("const DUNES=true;", "const DUNES=true,GT=true;")
+swap("if(DUNES)return j===0&&Math.abs(x)<HALF-800?3:0;", "if(GT)return 0;if(DUNES)return j===0&&Math.abs(x)<HALF-800?3:0;")
+swap("function core(x,z,ctx,o){\n  if(DUNES)return duneCore(x,z,o);", open(sys.path[0] + '/gt-world.js', encoding='utf-8').read() + "\nfunction core(x,z,ctx,o){\n  if(GT)return gtCore(x,z,o);if(DUNES)return duneCore(x,z,o);")
+swap("function baseAt(x,z){\n  if(DUNES)return rimAt(x,z);", "function baseAt(x,z){\n  if(GT)return gtBase(x,z);if(DUNES)return rimAt(x,z);")
+swap("if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];", "if(GT)gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R);if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];")
+swap("props:null,trees:new Float32Array(0),cols", "props:null,trees:new Float32Array(trees),cols")
+swap("return {L,HALF,CH,FT,ROAD_END,", "return {gtPlace,GTS:GT_STRIPS,GTR:GT_ROAD,GX,GZ,gtRegions,L,HALF,CH,FT,ROAD_END,")
+swap("if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';", "if(WG.gtPlace)return WG.gtPlace(x,z);if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';")
+swap("const HOME=[0,1.9,0];", "const HOME=(()=>{const R=WG.GTR,s=R.len-2300;let i=0;while(i<R.S.length-2&&R.S[i+1]<s)i++;const a=R.P[i],b=R.P[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]),dx=(b[0]-a[0])/l,dz=(b[1]-a[1])/l;\n  return [a[0]-dz*1.9,a[1]+dx*1.9,Math.atan2(-dz,dx)];})();")
+# THE DISTANT LAND (src/lr-game.js lrDist*): drawn after the far tiles; the camera sees as far as it reaches (its far
+# plane, and the land's fade into the fog); the fog of each time of day thinned to about a seventh
+swap("if(t.marks){drawMesh(t.marks);tris+=t.marks.tris;}}\n    if(u.uFarDrop)gl.uniform4f(u.uFarDrop,0,0,0,0);}", "if(t.marks){drawMesh(t.marks);tris+=t.marks.tris;}}\n    tris+=lrDistDraw(u,e,F);\n    if(u.uFarDrop)gl.uniform4f(u.uFarDrop,0,0,0,0);}")
+swap("far=Math.max(1500,WORLD.farR+600),", "far=Math.max(1500,WORLD.farR+600,LRD_FAR()+3000),")
+swap("const worldFar=()=>SKY.night&&SKY.draw?Math.min(SKY.draw,Math.max(WORLD.near,WORLD.farR)):Math.max(WORLD.near,WORLD.farR);", "const worldFar=()=>SKY.night&&SKY.draw?Math.min(SKY.draw,Math.max(WORLD.near,WORLD.farR,LRD_FAR()*.4)):Math.max(WORLD.near,WORLD.farR,LRD_FAR());")
+swap("fogCol:[.6,.7,.88],fogDen:.0011,fogFall:.02,", "fogCol:[.6,.7,.88],fogDen:.00016,fogFall:.004,")
+swap("fogCol:[.46,.39,.34],fogDen:.0008,fogFall:.025,", "fogCol:[.46,.39,.34],fogDen:.00013,fogFall:.004,")
+swap("fogCol:[.03,.04,.07],fogDen:.0017,fogFall:.03,", "fogCol:[.03,.04,.07],fogDen:.0005,fogFall:.006,")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)

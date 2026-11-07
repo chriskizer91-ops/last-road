@@ -1,0 +1,16 @@
+{
+  "objects": [
+    {
+      "name": "terraces_temple",
+      "size_m": [14.5, 6.19, 13.0],
+      "views": [
+        {"label": "Front", "box": [78, 15, 763, 307], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Right", "box": [812, 15, 1422, 307], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back", "box": [118, 350, 712, 589], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Left", "box": [851, 353, 1350, 588], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top", "box": [147, 640, 557, 973], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Ruined stone temple. It has battered (inward-sloping) walls, a frieze of stepped corbels under a heavy cornice, a vented attic block on the roof, and three doorways. The centre doorway is closed by a hand-relief slab and has a small spout; a water runnel runs down the full-width front stairs. The scale bar (about 47 px = 1 m on the front view) gives about 14.5 m wide, 6.2 m tall and 13 m deep including about 2.8 m of stairs. The back, left and top views are drawn at smaller and slightly different scales. The right view draws the stair profile rising higher (about 2.6 m) than the front and left views do (about 1.34 m); the model uses 1.34 m, the door threshold. The attic depth disagrees between views (the sides show 1.6 to 2 m, the top shows about 3.8 m); the model uses 1.9 m."
+}

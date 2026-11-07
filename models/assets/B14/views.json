@@ -1,0 +1,16 @@
+{
+  "objects": [
+    {
+      "name": "iron_house",
+      "size_m": [14.8, 3.2, 7.6],
+      "views": [
+        {"label": "front view", "box": [45, 403, 933, 590], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "right side view", "box": [1031, 389, 1456, 590], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "back view", "box": [55, 641, 913, 838], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "left side view", "box": [996, 643, 1479, 840], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "top view", "box": [454, 881, 1084, 997], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Corrugated-iron skillion-roof house. The enclosed part is about 11.3 x 5.1 m, with a 2.2 m shade-clothed veranda across the front, an open woodshed lean-to on the +x end and a rainwater tank on the -x end. Overall it is about 14.8 x 3.2 x 7.6 m, taken from the 1 m scale bar (about 60 px/m on the front view). The sheet's views disagree with each other. The top view is squashed to about half the depth. The back view draws the eave sloping; I modelled it level, with the skillion falling to the front as the side views and three-quarter view show. The side views leave out the lean-to."
+}

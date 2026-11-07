@@ -51,7 +51,7 @@ async def main():
                     r = await pg.evaluate('async()=>await RTF_T.clip("' + t[5:] + '")'); import base64 as B
                     open(SH + f'{TAG}_clip_{t[5:]}.webm', 'wb').write(B.b64decode(r.pop('b64')))
                 elif t.startswith('F:'): r = await pg.evaluate('()=>RTF_T.' + t[2:].replace('_', ','))
-                elif t.startswith('L:'): r = await pg.evaluate('()=>LRT_T.' + t[2:])
+                elif t.startswith('L:'): r = await pg.evaluate('()=>LRT_T.' + t[2:].replace('_', ','))
                 elif t.startswith('click:#'): await pg.click(t[6:]); await asyncio.sleep(1.5); r = await pg.evaluate('()=>LRT_T.truck()')
                 elif t == 'ready':
                     for i in range(60):

@@ -1,0 +1,18 @@
+{"objects": [
+  {"name": "wrecking_bar", "size_m": [0.959, 0.134, 0.056],
+   "views": [
+     {"label": "row 1: gooseneck bar, side (front)", "box": [36, 41, 1515, 250], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "row 2: same bar from above (claw fork, chisel flare)", "box": [40, 280, 1517, 371], "cam": [0, 1, 0], "up": [0, 0, -1]}
+   ]},
+  {"name": "point_bar", "size_m": [0.959, 0.031, 0.036],
+   "views": [
+     {"label": "row 3: straight hex bar with striking head and point, side (front)", "box": [37, 421, 1517, 471], "cam": [0, 0, 1], "up": [0, 1, 0]}
+   ]},
+  {"name": "machete", "size_m": [0.903, 0.141, 0.030],
+   "views": [
+     {"label": "row 4: machete flat side (front, spine up)", "box": [78, 547, 1477, 770], "cam": [0, 0, 1], "up": [0, 1, 0]},
+     {"label": "row 5: machete edge-on from the spine (top)", "box": [66, 779, 1500, 832], "cam": [0, 1, 0], "up": [0, 0, -1]},
+     {"label": "row 6: machete edge-on from the cutting edge (bottom)", "box": [66, 879, 1500, 934], "cam": [0, -1, 0], "up": [0, 0, 1]}
+   ]}
+ ],
+ "notes": "Scale bar 10 cm = 154 px. The set has a red-painted, rusty hex gooseneck wrecking bar about 0.96 m long, drawn in rows 1–2. Row 3 is a third bar about 0.96 m long, with a hex striking head and a point; it has no claw or chisel, so it is treated as a separate tool. The machete is large, with a blade about 0.64 m long, a wooden handle about 0.22 m long and a cord lanyard. Unclear points: the sheet flares the chisel end in both views, and the edge views exaggerate blade thickness and disagree on the tip. Rows 5 and 6 are assumed to be the spine (top) and edge (bottom) views."}

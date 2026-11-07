@@ -1,0 +1,7 @@
+helper: done claude-opus-5-5 xhigh 468 s 3707 in 47151 out end_turn
+built {'lantern': {'tris': 3096, 'size': [0.106, 0.218, 0.098], 'min': [-0.053, 0, -0.045]}, 'headlamp': {'tris': 860, 'size': [0.115, 0.077, 0.138], 'min': [-0.058, 0, -0.069]}}
+painted {'headlamp': {'front (lens)': 0.82, 'side, lamp on left (+x side)': 0.62, 'back (battery box)': 0.87, 'top (lamp at bottom)': 0.614}, 'lantern': {'front (dimmer knob facing)': 0.891, 'side, knob on left (+x side)': 0.917, 'back': 0.857, 'side, knob hidden (-x side)': 0.897, 'top (knob at bottom)': 0.874}} 122s
+helper: done claude-opus-5-5 xhigh 431 s 11567 in 43757 out end_turn
+built {'lantern': {'tris': 3096, 'size': [0.106, 0.218, 0.098], 'min': [-0.053, 0, -0.045]}, 'headlamp': {'tris': 924, 'size': [0.118, 0.08, 0.133], 'min': [-0.058, 0, -0.066]}}
+painted {'headlamp': {'front (lens)': 0.838, 'side, lamp on left (+x side)': 0.81, 'back (battery box)': 0.711, 'top (lamp at bottom)': 0.362}, 'lantern': {'front (dimmer knob facing)': 0.893, 'side, knob on left (+x side)': 0.91, 'back': 0.856, 'side, knob hidden (-x side)': 0.908, 'top (knob at bottom)': 0.874}} 97s
+done
