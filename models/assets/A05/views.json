@@ -1,0 +1,9 @@
+{"objects": [
+  {"name": "door_badge", "size_m": [0.44, 0.44, 0.004],
+   "views": [{"label": "LAST ROAD badge (front)", "box": [18, 168, 739, 890], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "registration_letters", "size_m": [0.459, 0.18, 0.002],
+   "views": [{"label": "LR-OLV lettering (front)", "box": [762, 222, 1515, 518], "cam": [0, 0, 1], "up": [0, 1, 0]}]},
+  {"name": "name_plate", "size_m": [0.468, 0.113, 0.003],
+   "views": [{"label": "Wayfarer plate (front)", "box": [740, 641, 1508, 826], "cam": [0, 0, 1], "up": [0, 1, 0]}]}
+ ],
+ "notes": "Scale bar is 164 px = 10 cm. The round tin door badge (outfit name LAST ROAD) is about 44 cm across with a rolled cream rim. The plane's registration LR-OLV is about 18 cm tall and 46 cm long; it is modelled as 2 mm cut-out letters, with the letter shapes traced approximately from the condensed type. The 'Wayfarer' script sits on a flat 47 x 11 cm green plate. Only front views are drawn, so the backs get guessed colours."}

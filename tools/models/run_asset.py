@@ -15,7 +15,7 @@ log = open(os.path.join(D, 'log.txt'), 'a')
 def say(*a): s = ' '.join(str(x) for x in a); print(f'[{ID}] {s}', flush=True); log.write(s + '\n'); log.flush()
 def ask(prompt, out, imgs):
     pf = out + '.prompt.md'; open(pf, 'w').write(prompt)
-    r = subprocess.run(['python3', ASK, MODEL, EFF, pf, out, '-'] + imgs, capture_output=True, text=True, env=dict(os.environ, MAXTOK='96000'))
+    r = subprocess.run(['python3', ASK, MODEL, EFF, pf, out, '-'] + imgs, capture_output=True, text=True, env=dict(os.environ, MAXTOK=os.environ.get('MAXTOK', '96000')))
     say('helper:', (r.stdout.strip() or r.stderr.strip()[-300:])); return open(out).read() if os.path.exists(out) else ''
 def blocks(txt, lang): return re.findall(r'```' + lang + r'\s*\n(.*?)```', txt, re.S)
 def make():

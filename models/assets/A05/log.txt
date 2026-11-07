@@ -1,0 +1,6 @@
+helper: done claude-opus-5-5 xhigh 153 s 3719 in 16198 out end_turn
+built {'door_badge': {'tris': 768, 'size': [0.44, 0.44, 0.003], 'min': [-0.22, 0, -0.002]}, 'registration_letters': {'tris': 432, 'size': [0.459, 0.18, 0.002], 'min': [-0.23, 0, -0.001]}, 'name_plate': {'tris': 12, 'size': [0.468, 0.113, 0.003], 'min': [-0.234, 0, -0.002]}}
+painted {'door_badge': {'LAST ROAD badge (front)': 0.988}, 'name_plate': {'Wayfarer plate (front)': 0.953}, 'registration_letters': {'LR-OLV lettering (front)': 0.615}} 55s
+helper: done claude-opus-5-5 xhigh 138 s 8595 in 12468 out end_turn
+review: no changes
+done

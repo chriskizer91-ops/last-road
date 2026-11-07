@@ -71,7 +71,7 @@ swap("fogCol:[.03,.04,.07],fogDen:.0017,fogFall:.03,", "fogCol:[.03,.04,.07],fog
 swap("let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}", "let tp=0;for(const c of vis)if(c.st&&c.st.props&&c.vd<propD+40){atM(u,c.x0,0,c.z0);drawMesh(c.st.props);tp+=c.st.props.tris;}\n  tp+=lrPropsDraw(u,e,F,probe);")
 swap("gl.uniformMatrix4fv(u.uM,false,W_ID);\n  return tris+(DEVW.off.trees?0:drawTreeList(", "tris+=lrPropsShadow(u,F,e,maxD);\n  gl.uniformMatrix4fv(u.uM,false,W_ID);\n  return tris+(DEVW.off.trees?0:drawTreeList(")
 # THE TRUCK AND THE HERON (src/lr-game.js lrPark*, lrSwap): the one you're not in, drawn where it waits, and into the shadows
-swap("let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);", "let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);lrSwapUI();tris+=lrParkedDraw(c.eye);")
+swap("let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);", "let tris=drawWorldCar(GAME.car,GAME.voice,GAME.dirt,false,false);lrSwapUI();tris+=lrParkedDraw(c.eye);tris+=lrHandsDraw();")
 swap("if(kind!=='hl')one(GAME.car,k>=1);", "if(kind!=='hl')one(GAME.car,k>=1);if(kind!=='hl'&&lrParked())one(lrParked(),true);")
 # THE PAINTED EDGE (src/lr-game.js lrSkyBind): the sky shader looks his mountain strip up by compass and height
 swap("const SKY_FS=G.FRAME+G.NOISE+G.PACK+SKYFN+`\nin vec2 vT;layout(location=0) out vec4 oCol;", "const SKY_FS=G.FRAME+G.NOISE+G.PACK+SKYFN+`\nin vec2 vT;layout(location=0) out vec4 oCol;uniform sampler2D uHorz;uniform vec4 uHz;")
@@ -97,6 +97,8 @@ swap("    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;", 
 swap("  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;", "  {let f=$('jdFace');if(!f){f=document.createElement('img');f.id='jdFace';f.alt='';f.style.cssText='width:76px;height:76px;border-radius:12px;float:left;margin:2px 14px 8px 0;object-fit:cover;box-shadow:0 2px 10px rgba(0,0,0,.4)';$('jdEyebrow').parentNode.insertBefore(f,$('jdEyebrow'));}f.hidden=!(p&&p.img);if(p&&p.img)f.src=p.img;}\n  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;")
 # (Salt & Sand leaves the town's jobs out each frame; Ground Truth's run: the job you're on, anyone with work beside you)
 swap("else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}}", "else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}else if(WG.gtPlace){jobStep(dt,t);syncObj();}}")
+# (on foot the picture's near edge comes in close, for your hands)
+swap("function sasNear(){\n  if(APP.orbit)return .3;", "function sasNear(){\n  if(LRW.on)return .1;if(APP.orbit)return .3;")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
 B = "/* =====================================================================================\n   THE BOOT: the dots"
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)

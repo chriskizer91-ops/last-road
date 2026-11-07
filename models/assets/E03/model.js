@@ -9,6 +9,7 @@ function build(THREE) {
 
   const MAT = {
     leather: new THREE.MeshStandardMaterial({ color: 0x8a5c33, roughness: 0.85, metalness: 0.0 }),
+    skin: new THREE.MeshStandardMaterial({ color: 0x8c6a50, roughness: 0.7, metalness: 0.0 }),
     canvas: new THREE.MeshStandardMaterial({ color: 0x9f9474, roughness: 0.95, metalness: 0.0 }),
     tarnished_brass: new THREE.MeshStandardMaterial({ color: 0x5f4c3c, roughness: 0.6, metalness: 0.35 })
   };
@@ -37,7 +38,7 @@ function build(THREE) {
     return m;
   }
 
-  // ---- Palm: flat slab, palm face on z = 0 (stone), back of hand toward +z ----
+  // ---- Palm: thick slab, palm face on z = 0 (stone), back of hand toward +z ----
   const ps = new THREE.Shape();
   ps.moveTo(0.4, -1.2);
   ps.quadraticCurveTo(-3.4, -1.3, -4.9, 1.0);
@@ -50,25 +51,30 @@ function build(THREE) {
   ps.quadraticCurveTo(4.5, 1.6, 3.6, -0.2);
   ps.quadraticCurveTo(2.6, -1.2, 0.4, -1.2);
   const palmGeo = new THREE.ExtrudeGeometry(ps, {
-    depth: 2.2, bevelEnabled: true, bevelThickness: 0.4, bevelSize: 0.4,
+    depth: 2.6, bevelEnabled: true, bevelThickness: 0.5, bevelSize: 0.45,
     bevelSegments: 2, curveSegments: 4
   });
   const palm = mesh(g, palmGeo, 'leather');
-  palm.position.z = 0.4; // spans z 0 .. 3.0
+  palm.position.z = 0.5; // spans z 0 .. 3.6
 
-  // ---- Four fingers, spread, lying flat on the stone ----
+  // ---- Back-of-hand dome: thickens the hand toward the wrist (wedge seen in the side drawing) ----
+  const dome = mesh(g, new THREE.SphereGeometry(1, 16, 10, 0, Math.PI), 'leather'); // +z half only
+  dome.position.set(-0.3, 2.4, 0.05);
+  dome.scale.set(4.4, 6.2, 4.6);
+
+  // ---- Four fat gloved fingers, spread, lying flat on the stone ----
   const fingers = [
-    { b: [-4.9, 8.6], t: [-6.0, 18.0], r: 1.05 }, // index
-    { b: [-1.7, 9.6], t: [-2.0, 20.1], r: 1.12 }, // middle
-    { b: [1.4, 8.8], t: [2.4, 18.7], r: 1.05 },   // ring
-    { b: [3.9, 6.8], t: [5.6, 14.3], r: 0.92 }    // little
+    { b: [-4.6, 8.6], t: [-5.9, 18.0], r: 1.3 },  // index
+    { b: [-1.6, 9.6], t: [-2.0, 20.1], r: 1.38 }, // middle
+    { b: [1.4, 8.9], t: [2.4, 18.7], r: 1.3 },    // ring
+    { b: [3.8, 7.0], t: [5.5, 14.4], r: 1.15 }    // little
   ];
   const fr = [0, 0.45, 0.75, 1.0];
-  const rk = [1.12, 1.0, 0.94, 0.86];
+  const rk = [1.1, 1.0, 0.95, 0.88];
   for (const f of fingers) {
     const pts = fr.map((u, i) => {
       const rr = f.r * rk[i];
-      const z = i === 0 ? 1.55 : rr * FLAT;
+      const z = i === 0 ? 1.9 : rr * FLAT;
       return {
         p: new THREE.Vector3(
           f.b[0] + (f.t[0] - f.b[0]) * u,
@@ -79,25 +85,25 @@ function build(THREE) {
       };
     });
     for (let i = 0; i < 3; i++) {
-      bone(pts[i].p, pts[i + 1].p, pts[i].r * (i === 0 ? 0.92 : 1), pts[i + 1].r);
+      bone(pts[i].p, pts[i + 1].p, pts[i].r * (i === 0 ? 0.94 : 1), pts[i + 1].r);
     }
     pts.forEach((q, i) => knuckle(q.p, q.r, i === 3 ? 1.15 : 1));
   }
 
   // ---- Thumb, splayed out to -x ----
   const th = [
-    { p: new THREE.Vector3(-4.0, 1.8, 1.6), r: 1.5 },
-    { p: new THREE.Vector3(-6.9, 5.0, 1.4), r: 1.3 },
-    { p: new THREE.Vector3(-8.8, 7.7, 1.25), r: 1.2 },
-    { p: new THREE.Vector3(-10.2, 10.1, 1.1), r: 1.08 }
+    { p: new THREE.Vector3(-4.0, 1.8, 1.9), r: 1.75 },
+    { p: new THREE.Vector3(-6.9, 5.0, 1.45), r: 1.55 },
+    { p: new THREE.Vector3(-8.8, 7.7, 1.3), r: 1.45 },
+    { p: new THREE.Vector3(-10.1, 10.0, 1.15), r: 1.3 }
   ];
   for (let i = 0; i < 3; i++) bone(th[i].p, th[i + 1].p, th[i].r, th[i + 1].r);
   th.forEach((q) => knuckle(q.p, q.r, 1));
 
   // ---- Wrist heel, rounding the bend between hand and forearm ----
   const wrist = mesh(g, new THREE.SphereGeometry(1, 16, 12), 'leather');
-  wrist.position.set(0.4, -1.2, 2.0);
-  wrist.scale.set(3.8, 2.6, 2.0);
+  wrist.position.set(0.4, -1.2, 2.2);
+  wrist.scale.set(3.9, 2.7, 2.2);
 
   // ---- Forearm: comes toward +z, dipping 12 degrees; local +y runs along the arm ----
   const arm = new THREE.Group();
@@ -110,15 +116,16 @@ function build(THREE) {
     m.position.y = (s0 + s1) / 2;
     return m;
   }
-  tube(0.5, 19.0, 3.6, 4.4, 'leather', 20, 2); // glove gauntlet, flaring
-  tube(3.0, 5.6, 3.95, 4.05, 'leather', 20, 1); // wrist strap band
+  tube(0.5, 17.5, 3.5, 4.1, 'leather', 20, 2);   // glove cuff, flaring slightly
+  tube(13.0, 15.6, 4.12, 4.2, 'leather', 20, 1); // snap strap near the cuff's open end
   const snap = mesh(arm, new THREE.CylinderGeometry(0.8, 0.95, 0.45, 14), 'tarnished_brass');
   snap.rotation.x = -Math.PI / 2; // faces local -z = top (back-of-wrist) side
-  snap.position.set(0, 4.3, -4.15);
-  tube(18.0, 30.0, 5.0, 5.05, 'canvas', 20, 1); // sleeve
-  tube(17.0, 22.5, 5.3, 5.3, 'canvas', 20, 1); // rolled cuff
-  for (const s of [17.0, 22.5]) {
-    const lip = mesh(arm, new THREE.TorusGeometry(5.0, 0.42, 6, 20), 'canvas');
+  snap.position.set(0, 14.3, -4.38);
+  tube(17.0, 23.5, 3.8, 4.0, 'skin', 16, 1);     // bare wrist between glove and sleeve
+  tube(22.5, 30.5, 4.7, 4.75, 'canvas', 20, 1);  // sleeve
+  tube(22.5, 27.0, 5.0, 5.0, 'canvas', 20, 1);   // rolled cuff
+  for (const s of [22.5, 27.0]) {
+    const lip = mesh(arm, new THREE.TorusGeometry(4.8, 0.4, 6, 20), 'canvas');
     lip.rotation.x = Math.PI / 2;
     lip.position.y = s;
   }

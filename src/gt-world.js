@@ -71,6 +71,9 @@ const GT_PADS=[],GT_PROPS=[];
   {const S=GT_STRIPS[1],F=frame(S.x,S.z,S.dx,S.dz);pad(F,-470,-60,30,300,'dirt',()=>gtStripH(S));
     put('B16','model',...F.at(-300,150),F.face(0,-1));put('B17','model',...F.at(-170,250),F.face(0,-1));put('B18','model',...F.at(-410,70),F.face(0,-1));
     put('B19','model',...F.at(-140,140),F.face(1,0));put('B07','windsock',...F.at(0,28),F.face(1,0),true,900);}
+  /* Last Well: Ruben's shack beside his strip, the far outstation; a windsock */
+  {const S=GT_STRIPS[11],F=frame(S.x,S.z,S.dx,S.dz);pad(F,-110,-10,30,95,'sand',()=>gtStripH(S));
+    put('D16','model',...F.at(-60,62),F.face(0,-1),true,4000);put('B07','windsock',...F.at(40,26),F.face(1,0),true,900);}
 }
 /* the walk places and landmarks (Fable's map, brainstorm km), each on a small levelled pad where it needs one */
 {const put=(id,obj,x,z,yaw,solid,far)=>GT_PROPS.push({id,obj,x,z,yaw,solid:solid!==false,far:far||3000});

@@ -1,0 +1,29 @@
+{
+  "objects": [
+    {
+      "name": "tree_young",
+      "size_m": [5.1, 3.0, 4.85],
+      "views": [
+        {"label": "Young – Side", "box": [25, 275, 218, 390], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Young – Top", "box": [35, 644, 154, 758], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "tree_mature",
+      "size_m": [12.4, 6.3, 11.6],
+      "views": [
+        {"label": "Mature – Side", "box": [234, 150, 704, 390], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Mature – Top", "box": [209, 565, 491, 831], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    },
+    {
+      "name": "tree_old",
+      "size_m": [23.0, 9.9, 20.2],
+      "views": [
+        {"label": "Old – Side", "box": [654, 14, 1528, 390], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Old – Top", "box": [530, 477, 980, 872], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "Flat-topped umbrella acacia at three ages. The scale bar is 1 m ≈ 38 px, which gives heights of 3.0, 6.3 and 9.9 m (the mature tree's label says 7 m). The drawn side crowns are much wider than the labelled widths (≈5.1, 12.4 and 23 m against 4, 10 and 16 m), and I followed the drawing so the outlines overlay it. The top views are drawn at a smaller scale than the side views; depth comes from their aspect ratio. The old tree's grey dead limb (+x) reaches further out in the top view than in the side view. I modelled it as the side view shows it, and the old tree's top box leaves the protruding tip out."
+}

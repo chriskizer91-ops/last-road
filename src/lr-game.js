@@ -280,7 +280,7 @@ function lrWalkStep(dt){
   if(l>.05)LRW.bob+=dt*sp*2.2;const bob=Math.sin(LRW.bob*2)*.025*Math.min(1,l);
   const cp=Math.cos(LRW.pitch),eye=[p[0],p[1]+LRW_EYE+bob,p[2]],fwd=[Math.cos(LRW.yaw)*cp,Math.sin(LRW.pitch),-Math.sin(LRW.yaw)*cp];
   if(LRW.ui)LRW.ui.back.hidden=Math.hypot(GAME.car.p[0]-p[0],GAME.car.p[2]-p[2])>(GAME.car.rt?9:5);
-  return {eye,fwd,up:[0,1,0],fov:1.15};}
+  LRW.cam={eye,fwd};return {eye,fwd,up:[0,1,0],fov:1.15};}
 /* the controls on foot: a stick at the left, drag anywhere else to look, GET IN when you're beside it; the driving
    controls hidden meanwhile */
 function lrWalkUI(on){
@@ -321,7 +321,7 @@ function gtPeople(){
     haugen:P('Dr Ilse Haugen','Haugen','the archaeologist, at the roadhouse',[R.x,R.z+16],'#c39bff','J03'),
     nkem:P('Nkem Adeyemi','Nkem','the ranger, at Kettle Creek Station',[H.x+Math.sin(H.yaw)*16,H.z+Math.cos(H.yaw)*16],'#8dff5a','J06'),
     harker:P('Lyle Harker','Harker','Meridian Resources, at the delta camp',[D.x-70,D.z+40],'#ff6b5a','J04'),
-    ruben:P('Ruben Vos','Ruben','keeps Last Well',at(11,0,40),'#e0c070','J05')};}
+    ruben:P('Ruben Vos','Ruben','keeps Last Well',at(11,-60,44),'#e0c070','J05')};}
 function gtJobs(){
   const Q=(id,who,title,needs,intro,steps,outro,reward,tip)=>{JOB_NAMES[id]=`${PEOPLE[who].short}'s job, ${title}`;return {id,who,title,needs,intro,steps,outro,reward,tip};};
   const S=WG.GTS,C=WG.GTP.find(p=>p.id==='C04'),W=WG.GTP.find(p=>p.id==='C07'),K=WG.GTP.find(p=>p.id==='D05');
@@ -351,3 +351,21 @@ function gtJobs(){
 }
 /* (for the tests: the job system's own pieces, asked for when they exist) */
 window.__lrJ=()=>({PEOPLE,JOB,jActive,jobListen,closeJobDialog,jRec});
+
+/* ---------- YOUR HANDS on foot: his gloved hands (E01), held low in front of your eyes, swaying a little as you walk ---------- */
+const LRHD={M:new Float32Array(16)};
+function lrHandsDraw(){
+  if(!LRW.on||!LRW.cam||!window.LR_PROPS||!LR_PROPS.E01)return 0;const key='E01/model';
+  if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}return 0;}
+  const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)return 0;lrPropTex1();
+  const {eye,fwd}=LRW.cam,a=-.5,r=norm2([-fwd[2],0,fwd[0]]),u0=[r[1]*fwd[2]-r[2]*fwd[1],r[2]*fwd[0]-r[0]*fwd[2],r[0]*fwd[1]-r[1]*fwd[0]];
+  /* (the fingers a little down from the way you look; the up that goes with that) */
+  const f=norm2([fwd[0]*Math.cos(a)-u0[0]*Math.sin(a),fwd[1]*Math.cos(a)-u0[1]*Math.sin(a),fwd[2]*Math.cos(a)-u0[2]*Math.sin(a)]);
+  const u=[r[1]*f[2]-r[2]*f[1],r[2]*f[0]-r[0]*f[2],r[0]*f[1]-r[1]*f[0]],x=[u[1]*f[2]-u[2]*f[1],u[2]*f[0]-u[0]*f[2],u[0]*f[1]-u[1]*f[0]];
+  const sw=Math.sin(LRW.bob)*.012,p=[eye[0]+fwd[0]*.5-u0[0]*.4+r[0]*sw,eye[1]+fwd[1]*.5-u0[1]*.4+Math.abs(sw)*.5,eye[2]+fwd[2]*.5-u0[2]*.4+r[2]*sw],M=LRHD.M;
+  M[0]=x[0];M[1]=x[1];M[2]=x[2];M[3]=0;M[4]=u[0];M[5]=u[1];M[6]=u[2];M[7]=0;M[8]=f[0];M[9]=f[1];M[10]=f[2];M[11]=0;M[12]=p[0]-RO[0];M[13]=p[1]-RO[1];M[14]=p[2]-RO[2];M[15]=1;
+  const U=CUR.u;gl.uniformMatrix4fv(U.uM,false,M);if(U.uPrevM)gl.uniformMatrix4fv(U.uPrevM,false,M);
+  if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
+  const T=[[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]];
+  for(const [loc,t,unit] of T){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);
+  drawMesh(m);return m.tris;}

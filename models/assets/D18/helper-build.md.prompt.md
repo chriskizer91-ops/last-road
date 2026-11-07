@@ -39,7 +39,7 @@ Write two things, in this order, and nothing else:
      rivets, rust, cracks, writing).
    - Walls and roofs have thickness (thin boxes), so they can be seen from both sides. Interiors only where the sheet
      shows an open front (an open shed, a doorway you can see into: then a simple inside).
-   - Triangle budget for this model: at most 30,000 triangles in all (count cylinder segments wisely: 8 to 16 for
+   - Triangle budget for this model: at most 14,000 triangles in all (count cylinder segments wisely: 8 to 16 for
      posts and pipes, 24 to 32 for big round tanks). No loops that make more than 2,000 meshes.
    - No textures, images, randomness that changes between runs (use a fixed seeded sequence if you vary things), no
      imports, no DOM. It runs in Node with three.js passed in.

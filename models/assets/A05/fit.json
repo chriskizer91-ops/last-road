@@ -1,0 +1,32 @@
+{
+ "door_badge": {
+  "LAST ROAD badge (front)": {
+   "iou": 0.988,
+   "turn_deg": -1.2
+  },
+  "texels": {
+   "covered": 343276,
+   "seen": 336372
+  }
+ },
+ "name_plate": {
+  "Wayfarer plate (front)": {
+   "iou": 0.953,
+   "turn_deg": -0.17
+  },
+  "texels": {
+   "covered": 523156,
+   "seen": 499456
+  }
+ },
+ "registration_letters": {
+  "LR-OLV lettering (front)": {
+   "iou": 0.615,
+   "turn_deg": -0.09
+  },
+  "texels": {
+   "covered": 406339,
+   "seen": 255321
+  }
+ }
+}

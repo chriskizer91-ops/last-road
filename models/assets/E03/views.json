@@ -2,14 +2,13 @@
   "objects": [
     {
       "name": "gloved_hand",
-      "size_m": [0.177, 0.32, 0.32],
+      "size_m": [0.18, 0.32, 0.32],
       "views": [
         {"label": "Front", "box": [235, 28, 429, 372], "cam": [0, 0, 1], "up": [0, 1, 0]},
         {"label": "Back", "box": [733, 27, 946, 372], "cam": [0, 0, -1], "up": [0, 1, 0]},
-        {"label": "Right Side", "box": [548, 412, 828, 637], "cam": [1, 0, 0], "up": [0, 1, 0]},
-        {"label": "Top", "box": [1252, 457, 1440, 640], "cam": [0, 1, 0], "up": [0, 0, -1]}
+        {"label": "Right Side", "box": [548, 430, 826, 637], "cam": [1, 0, 0], "up": [0, 1, 0]}
       ]
     }
   ],
-  "notes": "Right hand in a worn tan leather glove with a snap wrist strap and a rolled khaki sleeve. The palm is pressed flat on a vertical stone face (palm toward -z, back of hand toward +z, thumb on -x), and the wrist is bent back so the forearm comes toward the viewer, dipping about 12 degrees as a compromise between the Front/Back drawings and the Right Side drawing. At the scale bar (10 cm = 87 px) the hand is about 21 cm long and the model is about 32 cm overall. The boxes use the pressed-hand drawings, the ones inside the stone outlines. The Left Side drawing is left out on purpose: it shows a relaxed hand in a different pose, with the sleeve on the opposite side to this model, so painting it would put the sleeve's colours on the hand."
+  "notes": "Right hand in a worn tan leather glove pressed palm-flat on a vertical stone face (palm toward -z, back of hand toward +z, thumb on -x). The wrist is bent back so the forearm comes toward the viewer, dipping about 12 degrees as a compromise between the Front/Back drawings and the Right Side drawing. The glove's cuff runs about 17 cm up the forearm with the snap strap near its open end, then bare wrist skin, then a rolled khaki sleeve. Scale bar: 10 cm = 87 px. Two drawings are left out on purpose. Left Side shows a relaxed hand in a different pose, with the sleeve on the opposite side to this model. Top shows the whole back of the hand from above, as if the hand lay flat; that contradicts Front, Back and Right Side, where the hand stands upright against the stone, and painting it put finger shapes and background grey onto the forearm. The top of the forearm and the -x side are therefore filled from neighbouring views."
 }

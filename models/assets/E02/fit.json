@@ -9,12 +9,12 @@
    "turn_deg": -3.0
   },
   "Back": {
-   "iou": 0.813,
-   "turn_deg": -4.38
+   "iou": 0.827,
+   "turn_deg": -4.66
   },
   "Left Side": {
-   "iou": 0.672,
-   "turn_deg": -2.9
+   "iou": 0.715,
+   "turn_deg": -2.98
   },
   "Top": {
    "iou": 0.719,
@@ -22,7 +22,7 @@
   },
   "texels": {
    "covered": 515159,
-   "seen": 343458
+   "seen": 373892
   }
  },
  "free_hand": {
@@ -30,13 +30,17 @@
    "iou": 0.729,
    "turn_deg": 2.28
   },
+  "Right Side": {
+   "iou": 0.75,
+   "turn_deg": -3.95
+  },
   "Back": {
    "iou": 0.656,
    "turn_deg": -4.55
   },
   "texels": {
    "covered": 467164,
-   "seen": 116122
+   "seen": 218313
   }
  },
  "lantern": {
