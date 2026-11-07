@@ -56,7 +56,7 @@ swap("function core(x,z,ctx,o){\n  if(DUNES)return duneCore(x,z,o);", open(sys.p
 swap("function baseAt(x,z){\n  if(DUNES)return rimAt(x,z);", "function baseAt(x,z){\n  if(GT)return gtBase(x,z);if(DUNES)return rimAt(x,z);")
 swap("if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];", "if(GT)gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R);if(DUNES){let bb=[0,1e9,0,CH,-1e9,CH];")
 swap("props:null,trees:new Float32Array(0),cols", "props:null,trees:new Float32Array(trees),cols")
-swap("return {L,HALF,CH,FT,ROAD_END,", "return {gtPlace,GTS:GT_STRIPS,GTR:GT_ROAD,GTP:GT_PROPS,GX,GZ,gtRegions,L,HALF,CH,FT,ROAD_END,")
+swap("return {L,HALF,CH,FT,ROAD_END,", "return {gtPlace,GTS:GT_STRIPS,GTR:GT_ROAD,GTP:GT_PROPS,GTB:GT_PROPBOX,GX,GZ,gtRegions,L,HALF,CH,FT,ROAD_END,")
 swap("if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';", "if(WG.gtPlace)return WG.gtPlace(x,z);if(DYB.dunes)return Math.abs(z)<6?'Highway 40':z<0?'The salt flats':'The white sands';")
 swap("const HOME=[0,1.9,0];", "const HOME=(()=>{const R=WG.GTR,s=R.len-2300;let i=0;while(i<R.S.length-2&&R.S[i+1]<s)i++;const a=R.P[i],b=R.P[i+1],l=Math.hypot(b[0]-a[0],b[1]-a[1]),dx=(b[0]-a[0])/l,dz=(b[1]-a[1])/l;\n  return [a[0]-dz*1.9,a[1]+dx*1.9,Math.atan2(-dz,dx)];})();")
 # THE DISTANT LAND (src/lr-game.js lrDist*): drawn after the far tiles; the camera sees as far as it reaches (its far

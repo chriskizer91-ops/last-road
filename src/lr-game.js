@@ -79,6 +79,8 @@ function lrPlaneChase(t,dt){
   return {eye:LRC.e.slice(),fwd:norm2(sub2(LRC.l,LRC.e)),up:[0,1,0],fov:1.0};}
 const LR_CA=camAuto;
 camAuto=function(t,dt){
+  /* (on foot: your own eyes) */
+  if(LRW.on){LRC.on=false;return lrWalkStep(dt);}
   /* (a fixed view for the tools, as the game's own camera has) */
   if(CAM.over){const o=CAM.over;LRC.on=false;return {eye:o.eye.slice(),fwd:norm2(sub2(o.at,o.eye)),up:[0,1,0],fov:o.fov||1};}
   if(t&&t.rt&&CAMS[APP.cam]==='Chase'&&GAME.state==='drive'&&!APP.orbit&&!CAM.rear&&!JUMP.on){const r=LR_CA(t,dt);if(r)return r;return lrPlaneChase(t,dt);}
@@ -201,7 +203,8 @@ function lrParkTick(){
   const sp=Math.hypot(t.v[0],t.v[1],t.v[2]);let can='';
   if(t.rt){const h=t.p[1]-RANCH.W.heightAt(t.p[0],t.p[2]);if(sp<3&&h<3&&lrStripAt(t.p[0],t.p[2],40)>=0)can='TRUCK';}
   else{const P=LRV.parked;if(P&&P.rt&&sp<3&&Math.hypot(P.p[0]-t.p[0],P.p[2]-t.p[2])<45)can='HERON';}
-  LRV.can=can;if(LRV.btn){LRV.btn.hidden=!can;if(can&&LRV.btn.textContent!==can)LRV.btn.textContent=can;}}
+  LRV.can=can;if(LRV.btn){LRV.btn.hidden=!can;if(can&&LRV.btn.textContent!==can)LRV.btn.textContent=can;}
+  if(LRV.foot)LRV.foot.hidden=!lrWalkCan();}
 function lrSwap(){
   const t=GAME.car;if(!t||GAME.state!=='drive')return false;lrParkTick();
   if(LRV.can==='TRUCK'){const i=lrStripAt(t.p[0],t.p[2],40),P=lrTruckSpot(WG.GTS[i]),keep=t;LRV.planePose={x:t.p[0],z:t.p[2],yaw:lrYaw(t)};
@@ -215,7 +218,9 @@ function lrParkedDraw(eye){
 /* the button, on the phone's right-hand column, at the top; E on a keyboard */
 function lrSwapUI(){if(LRV.btn)return;const col=document.querySelector('#touch .tside.R');if(!col)return;
   const b=document.createElement('button');b.className='tb';b.id='lrSwap';b.type='button';b.hidden=true;b.textContent='HERON';
-  b.addEventListener('click',e=>{e.preventDefault();b.blur();lrSwap();});col.insertBefore(b,col.firstChild);LRV.btn=b;}
+  b.addEventListener('click',e=>{e.preventDefault();b.blur();lrSwap();});col.insertBefore(b,col.firstChild);LRV.btn=b;
+  const f=document.createElement('button');f.className='tb';f.id='lrFoot';f.type='button';f.hidden=true;f.textContent='ON FOOT';
+  f.addEventListener('click',e=>{e.preventDefault();f.blur();lrWalkStart();});col.insertBefore(f,b.nextSibling);LRV.foot=f;}
 addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&GAME.state==='drive'&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))lrSwap();});
 window.__lr=Object.assign(window.__lr||{},{LRV,lrSwap,lrParkTick});
 
@@ -235,3 +240,67 @@ function lrSkyBind(G,Ps){lrHorzLoad();const on=LRH.tex&&typeof WG!=='undefined'&
   if(LRH.locP!==Ps.p){LRH.locP=Ps.p;LRH.loc=[gl.getUniformLocation(Ps.p,'uHorz'),gl.getUniformLocation(Ps.p,'uHz')];}
   if(LRH.loc[1])gl.uniform4f(LRH.loc[1],-2.5*Math.PI/180,9.5*Math.PI/180,on,0);
   if(on&&LRH.loc[0]){gl.activeTexture(gl.TEXTURE12);gl.bindTexture(gl.TEXTURE_2D,LRH.tex);gl.uniform1i(LRH.loc[0],12);gl.activeTexture(gl.TEXTURE0);}}
+
+/* ---------- ON FOOT: first person. Stop the truck (or the Heron, on the ground) and ON FOOT gets you out beside
+   it; walk with the stick (WASD or the arrows on a keyboard, Shift to hurry), look by dragging anywhere else. The
+   buildings, temples and big stones stop you (their boxes), and so do the truck and the Heron; you climb what a
+   person can (half a metre a step). Back beside the truck or the Heron, GET IN puts you back ---------- */
+const LRW={on:false,p:[0,0,0],yaw:0,pitch:0,ui:null,stick:{x:0,y:0},keys:{},bob:0,veh:null};
+const LRW_EYE=1.62,LRW_WALK=1.7,LRW_RUN=3.6;
+function lrWalkCan(){const t=GAME.car;if(!t||GAME.state!=='drive'||LRW.on)return false;const sp=Math.hypot(t.v[0],t.v[1],t.v[2]);
+  return sp<1.2&&t.p[1]-RANCH.W.heightAt(t.p[0],t.p[2])<3;}
+function lrWalkStart(){
+  if(!lrWalkCan())return false;const t=GAME.car,M=t.M,yaw=lrYaw(t),f=[Math.cos(yaw),-Math.sin(yaw)],r=[Math.sin(yaw),Math.cos(yaw)];
+  /* (out the left side: the driver's door; from the Heron, past the wing's end) */
+  const off=t.rt?6.2:2.1;LRW.p=[t.p[0]-r[0]*off+f[0]*(t.rt?1:0),0,t.p[2]-r[1]*off+f[1]*(t.rt?1:0)];LRW.p[1]=RANCH.W.heightAt(LRW.p[0],LRW.p[2]);
+  LRW.yaw=yaw+Math.PI/2;LRW.pitch=-.05;LRW.on=true;LRW.veh=t;setTestInput({steer:0,thr:0,brk:0,hb:1,nos:false});lrWalkUI(true);say('ON FOOT',1.4);return true;}
+function lrWalkEnd(){
+  if(!LRW.on)return false;const t=GAME.car;if(Math.hypot(t.p[0]-LRW.p[0],t.p[2]-LRW.p[2])>(t.rt?9:5)){say(t.rt?'WALK BACK TO THE HERON':'WALK BACK TO THE TRUCK',1.6);return false;}
+  LRW.on=false;setTestInput(null);lrWalkUI(false);CAM.cut=true;return true;}
+/* does anything stop a person standing at (x,z)? the placed models' boxes (turned to their yaw), the truck, the Heron */
+function lrWalkBlocked(x,z){
+  const B=WG.GTB||{};for(const p of WG.GTP){if(Math.abs(p.x-x)>80||Math.abs(p.z-z)>80||!p.solid)continue;const b=B[p.id+'/'+p.obj];if(!b)continue;
+    const c=Math.cos(p.yaw),s=Math.sin(p.yaw),dx=x-p.x,dz=z-p.z,lx=dx*c-dz*s,lz=dx*s+dz*c,m=.3;
+    if(lx>b[0]-m&&lx<b[3]+m&&lz>b[2]-m&&lz<b[5]+m)return true;}
+  for(const v of [GAME.car,LRV.parked])if(v){const d=Math.hypot(v.p[0]-x,v.p[2]-z);if(d<(v.rt?2.2:2.0))return true;}
+  return false;}
+function lrWalkStep(dt){
+  const K=LRW.keys,run=K.ShiftLeft||K.ShiftRight;let fw=-LRW.stick.y,sd=LRW.stick.x;
+  if(K.KeyW||K.ArrowUp)fw+=1;if(K.KeyS||K.ArrowDown)fw-=1;if(K.KeyD||K.ArrowRight)sd+=1;if(K.KeyA||K.ArrowLeft)sd-=1;
+  const l=Math.hypot(fw,sd);if(l>1){fw/=l;sd/=l;}
+  const sp=(run||l>.98&&Math.hypot(LRW.stick.x,LRW.stick.y)>.95?LRW_RUN:LRW_WALK),f=[Math.cos(LRW.yaw),-Math.sin(LRW.yaw)],r=[Math.sin(LRW.yaw),Math.cos(LRW.yaw)];
+  const mv=[(f[0]*fw+r[0]*sd)*sp*dt,(f[1]*fw+r[1]*sd)*sp*dt],p=LRW.p;
+  /* each way on its own, so you slide along a wall */
+  for(const [ax,d] of [[0,mv[0]],[2,mv[1]]]){if(!d)continue;const q=[p[0],p[2]];q[ax?1:0]+=d;const h=RANCH.W.heightAt(q[0],q[1]);
+    if(h-p[1]>.55||lrWalkBlocked(q[0],q[1]))continue;p[ax]=q[ax?1:0];}
+  const g=RANCH.W.heightAt(p[0],p[2]);p[1]+=(g-p[1])*Math.min(1,dt*14);
+  if(l>.05)LRW.bob+=dt*sp*2.2;const bob=Math.sin(LRW.bob*2)*.025*Math.min(1,l);
+  const cp=Math.cos(LRW.pitch),eye=[p[0],p[1]+LRW_EYE+bob,p[2]],fwd=[Math.cos(LRW.yaw)*cp,Math.sin(LRW.pitch),-Math.sin(LRW.yaw)*cp];
+  if(LRW.ui)LRW.ui.back.hidden=Math.hypot(GAME.car.p[0]-p[0],GAME.car.p[2]-p[2])>(GAME.car.rt?9:5);
+  return {eye,fwd,up:[0,1,0],fov:1.15};}
+/* the controls on foot: a stick at the left, drag anywhere else to look, GET IN when you're beside it; the driving
+   controls hidden meanwhile */
+function lrWalkUI(on){
+  if(!LRW.ui){const st=document.createElement('style');st.textContent=
+    '#lrWalk{position:fixed;inset:0;z-index:6;touch-action:none}#lrWalk[hidden]{display:none}'+
+    '#lrWStick{position:absolute;left:calc(env(safe-area-inset-left) + 60px);bottom:calc(env(safe-area-inset-bottom) + 30px);width:150px;height:150px;border-radius:50%;border:2px solid rgba(255,255,255,.35);background:rgba(16,20,26,.28)}'+
+    '#lrWStick b{position:absolute;left:50%;top:50%;width:60px;height:60px;margin:-30px 0 0 -30px;border-radius:50%;background:rgba(255,255,255,.6);pointer-events:none}'+
+    '#lrWBack{position:absolute;right:calc(env(safe-area-inset-right) + 24px);bottom:calc(env(safe-area-inset-bottom) + 40px);padding:16px 22px;border-radius:14px;border:2px solid rgba(255,255,255,.5);background:rgba(16,20,26,.55);color:#fff;font:800 14px system-ui,sans-serif;letter-spacing:.1em}'+
+    '#lrWHint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 6px);text-align:center;font:700 10px system-ui,sans-serif;letter-spacing:.14em;color:rgba(255,255,255,.5);pointer-events:none}';
+    document.head.appendChild(st);
+    const W=document.createElement('div');W.id='lrWalk';W.hidden=true;W.innerHTML='<div id="lrWStick"><b></b></div><button id="lrWBack" type="button">GET IN</button><div id="lrWHint">DRAG TO LOOK</div>';document.body.appendChild(W);
+    const sk=W.querySelector('#lrWStick'),kn=sk.querySelector('b'),back=W.querySelector('#lrWBack');let sid=null,lid=null,lx=0,ly=0;
+    const at=e=>{const r=sk.getBoundingClientRect(),R=r.width*.4;let x=(e.clientX-(r.left+r.width/2))/R,y=(e.clientY-(r.top+r.height/2))/R;const l=Math.hypot(x,y);if(l>1){x/=l;y/=l;}
+      kn.style.transform=`translate(${(x*R).toFixed(1)}px,${(y*R).toFixed(1)}px)`;LRW.stick.x=Math.abs(x)<.08?0:x;LRW.stick.y=Math.abs(y)<.08?0:y;};
+    sk.addEventListener('pointerdown',e=>{e.preventDefault();e.stopPropagation();sid=e.pointerId;try{sk.setPointerCapture(sid);}catch(_){}at(e);});
+    sk.addEventListener('pointermove',e=>{if(e.pointerId===sid)at(e);});
+    const up=e=>{if(e.pointerId!==sid)return;sid=null;LRW.stick.x=LRW.stick.y=0;kn.style.transform='';};for(const ev of ['pointerup','pointercancel','lostpointercapture'])sk.addEventListener(ev,up);
+    W.addEventListener('pointerdown',e=>{if(e.target!==W)return;lid=e.pointerId;lx=e.clientX;ly=e.clientY;try{W.setPointerCapture(lid);}catch(_){}});
+    W.addEventListener('pointermove',e=>{if(e.pointerId!==lid)return;const k=3.2/Math.max(innerWidth,innerHeight);LRW.yaw-=(e.clientX-lx)*k;LRW.pitch=Math.max(-1.2,Math.min(1.2,LRW.pitch-(e.clientY-ly)*k));lx=e.clientX;ly=e.clientY;});
+    for(const ev of ['pointerup','pointercancel'])W.addEventListener(ev,e=>{if(e.pointerId===lid)lid=null;});
+    back.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();lrWalkEnd();});
+    LRW.ui={W,back};}
+  LRW.ui.W.hidden=!on;const T=document.getElementById('touch');if(T)T.style.visibility=on?'hidden':'';LRW.stick.x=LRW.stick.y=0;}
+addEventListener('keydown',e=>{if(LRW.on)LRW.keys[e.code]=true;if(e.code==='KeyF'&&!e.repeat&&GAME.state==='drive'&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')){if(LRW.on)lrWalkEnd();else lrWalkStart();}});
+addEventListener('keyup',e=>{LRW.keys[e.code]=false;});
+window.__lr=Object.assign(window.__lr||{},{LRW,lrWalkStart,lrWalkEnd,lrWalkStep});

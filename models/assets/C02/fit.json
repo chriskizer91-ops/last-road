@@ -1,0 +1,412 @@
+{
+ "glyph_arc_dot": {
+  "front": {
+   "iou": 0.973,
+   "turn_deg": -0.11
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435779
+  }
+ },
+ "glyph_arch": {
+  "front": {
+   "iou": 0.972,
+   "turn_deg": -0.52
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435013
+  }
+ },
+ "glyph_bar_dot": {
+  "front": {
+   "iou": 0.943,
+   "turn_deg": -0.18
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435483
+  }
+ },
+ "glyph_basin": {
+  "front": {
+   "iou": 0.973,
+   "turn_deg": -0.43
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436015
+  }
+ },
+ "glyph_boat": {
+  "front": {
+   "iou": 0.958,
+   "turn_deg": -0.98
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 410365
+  }
+ },
+ "glyph_bowl": {
+  "front": {
+   "iou": 0.926,
+   "turn_deg": 0.63
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 408692
+  }
+ },
+ "glyph_branch": {
+  "front": {
+   "iou": 0.949,
+   "turn_deg": -0.46
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435371
+  }
+ },
+ "glyph_chevron_down": {
+  "front": {
+   "iou": 0.953,
+   "turn_deg": -0.54
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435388
+  }
+ },
+ "glyph_chevron_up": {
+  "front": {
+   "iou": 0.977,
+   "turn_deg": -0.12
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436033
+  }
+ },
+ "glyph_circle_dot": {
+  "front": {
+   "iou": 0.965,
+   "turn_deg": -0.1
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 410576
+  }
+ },
+ "glyph_corner": {
+  "front": {
+   "iou": 0.969,
+   "turn_deg": -0.21
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435170
+  }
+ },
+ "glyph_crosshair": {
+  "front": {
+   "iou": 0.968,
+   "turn_deg": -0.08
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435992
+  }
+ },
+ "glyph_dash_steps": {
+  "front": {
+   "iou": 0.983,
+   "turn_deg": -0.15
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436033
+  }
+ },
+ "glyph_diamond": {
+  "front": {
+   "iou": 0.971,
+   "turn_deg": -0.09
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436016
+  }
+ },
+ "glyph_dome": {
+  "front": {
+   "iou": 0.945,
+   "turn_deg": -0.58
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 433225
+  }
+ },
+ "glyph_doorway_dot": {
+  "front": {
+   "iou": 0.98,
+   "turn_deg": -0.12
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436033
+  }
+ },
+ "glyph_double_arc": {
+  "front": {
+   "iou": 0.978,
+   "turn_deg": 0.14
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436033
+  }
+ },
+ "glyph_double_wave": {
+  "front": {
+   "iou": 0.975,
+   "turn_deg": -0.35
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435938
+  }
+ },
+ "glyph_equals": {
+  "front": {
+   "iou": 0.962,
+   "turn_deg": 0.03
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 411148
+  }
+ },
+ "glyph_fork": {
+  "front": {
+   "iou": 0.942,
+   "turn_deg": -0.78
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 433552
+  }
+ },
+ "glyph_four_dots": {
+  "front": {
+   "iou": 0.971,
+   "turn_deg": -0.34
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435900
+  }
+ },
+ "glyph_horizon_disc": {
+  "front": {
+   "iou": 0.938,
+   "turn_deg": -0.41
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 432473
+  }
+ },
+ "glyph_mountain": {
+  "front": {
+   "iou": 0.922,
+   "turn_deg": 0.0
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 408843
+  }
+ },
+ "glyph_person": {
+  "front": {
+   "iou": 0.972,
+   "turn_deg": -0.22
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435186
+  }
+ },
+ "glyph_plus_cross": {
+  "front": {
+   "iou": 0.944,
+   "turn_deg": -0.37
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435183
+  }
+ },
+ "glyph_rainbow": {
+  "front": {
+   "iou": 0.973,
+   "turn_deg": -0.64
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435697
+  }
+ },
+ "glyph_ring": {
+  "front": {
+   "iou": 0.97,
+   "turn_deg": 0.06
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435131
+  }
+ },
+ "glyph_s_curve": {
+  "front": {
+   "iou": 0.975,
+   "turn_deg": -0.53
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435835
+  }
+ },
+ "glyph_slashes": {
+  "front": {
+   "iou": 0.977,
+   "turn_deg": -0.48
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436033
+  }
+ },
+ "glyph_stairs": {
+  "front": {
+   "iou": 0.936,
+   "turn_deg": -0.09
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 410311
+  }
+ },
+ "glyph_sun": {
+  "front": {
+   "iou": 0.933,
+   "turn_deg": -0.25
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 410496
+  }
+ },
+ "glyph_tee": {
+  "front": {
+   "iou": 0.98,
+   "turn_deg": -0.13
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436033
+  }
+ },
+ "glyph_three_bars": {
+  "front": {
+   "iou": 0.941,
+   "turn_deg": -0.44
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 433393
+  }
+ },
+ "glyph_three_dots": {
+  "front": {
+   "iou": 0.944,
+   "turn_deg": -0.4
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 434824
+  }
+ },
+ "glyph_tree_rune": {
+  "front": {
+   "iou": 0.972,
+   "turn_deg": -0.43
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435880
+  }
+ },
+ "glyph_two_bars": {
+  "front": {
+   "iou": 0.977,
+   "turn_deg": -0.36
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 436033
+  }
+ },
+ "glyph_wave": {
+  "front": {
+   "iou": 0.974,
+   "turn_deg": -0.63
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 434838
+  }
+ },
+ "glyph_waves": {
+  "front": {
+   "iou": 0.963,
+   "turn_deg": 0.02
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 410799
+  }
+ },
+ "glyph_x_cross": {
+  "front": {
+   "iou": 0.973,
+   "turn_deg": -0.1
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435988
+  }
+ },
+ "glyph_zigzags": {
+  "front": {
+   "iou": 0.953,
+   "turn_deg": -0.32
+  },
+  "texels": {
+   "covered": 578066,
+   "seen": 435781
+  }
+ },
+ "hand_tablet": {
+  "front": {
+   "iou": 0.993,
+   "turn_deg": -0.22
+  },
+  "texels": {
+   "covered": 587047,
+   "seen": 490376
+  }
+ }
+}

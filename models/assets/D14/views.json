@@ -1,0 +1,16 @@
+{
+  "objects": [
+    {
+      "name": "drill_camp",
+      "size_m": [144, 64.5, 80],
+      "views": [
+        {"label": "Front View", "box": [955, 11, 1516, 263], "cam": [0, 0, 1], "up": [0, 1, 0]},
+        {"label": "Right Side View", "box": [942, 294, 1516, 512], "cam": [1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Back View", "box": [930, 545, 1516, 763], "cam": [0, 0, -1], "up": [0, 1, 0]},
+        {"label": "Left Side View", "box": [927, 785, 1516, 1001], "cam": [-1, 0, 0], "up": [0, 1, 0]},
+        {"label": "Top View", "box": [52, 550, 786, 959], "cam": [0, 1, 0], "up": [0, 0, -1]}
+      ]
+    }
+  ],
+  "notes": "The whole D14 site is one model. It is a raised gravel pad about 144 x 77 m (scale bar about 5.1 px/m) with 4.5 m earth slopes and a front access ramp. On it: a derrick about 60 m tall on a 14.5 m substructure, a gen house with stack, three containers, an office trailer with awning, a tank bund with two tanks, pipe racks, a comms mast and a floodlight. Layout follows the Top and Front views. Taken at face value, the scale bar makes the equipment oversized (containers about 7 x 16.7 x 6 m), but I followed it. The two side views don't match the plan: the pad is drawn as wide as in the front view and the derrick is shifted forward. Trailer and mast x positions differ by a few metres between views, so expect weaker registration on the sides."
+}

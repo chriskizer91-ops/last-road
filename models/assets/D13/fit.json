@@ -1,0 +1,46 @@
+{
+ "tower_short": {
+  "Front": {
+   "iou": 0.939,
+   "turn_deg": 0.03
+  },
+  "Back": {
+   "iou": 0.948,
+   "turn_deg": -0.03
+  },
+  "Side": {
+   "iou": 0.943,
+   "turn_deg": 0.01
+  },
+  "Top": {
+   "iou": 0.876,
+   "turn_deg": -3.49
+  },
+  "texels": {
+   "covered": 65641,
+   "seen": 22392
+  }
+ },
+ "tower_tall": {
+  "Front": {
+   "iou": 0.928,
+   "turn_deg": 0.16
+  },
+  "Back": {
+   "iou": 0.936,
+   "turn_deg": -0.42
+  },
+  "Side": {
+   "iou": 0.94,
+   "turn_deg": 0.2
+  },
+  "Top": {
+   "iou": 0.888,
+   "turn_deg": -3.26
+  },
+  "texels": {
+   "covered": 53245,
+   "seen": 18235
+  }
+ }
+}

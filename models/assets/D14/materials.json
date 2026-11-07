@@ -1,0 +1,19 @@
+{
+ "gravel": "#857b6f",
+ "earth": "#9c5e3c",
+ "galvanised_steel": "#8c8a85",
+ "dark_steel": "#403b37",
+ "paint_yellow": "#c99a2e",
+ "rusty_iron": "#96532f",
+ "steel_cable": "#4a4744",
+ "steel_grey": "#78736c",
+ "plastic_white": "#c4c3bc",
+ "corrugated_iron": "#a48c76",
+ "container_steel": "#a65c38",
+ "concrete": "#9a948a",
+ "glass": "#e4e0cc",
+ "paint_cream": "#cfc0a6",
+ "paint_white": "#d6cfc0",
+ "timber": "#7a6248",
+ "canvas": "#c4ae88"
+}

@@ -1,0 +1,31 @@
+{
+  "objects": [
+    {
+      "name": "winch",
+      "size_m": [0.565, 0.255, 0.23],
+      "views": [
+        {"label": "winch (front, seen slightly from above)", "box": [205, 36, 918, 413], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "light_bar",
+      "size_m": [1.22, 0.182, 0.095],
+      "views": [
+        {"label": "light bar (front)", "box": [120, 437, 1036, 588], "cam": [0, 0, 1], "up": [0, 1, 0]}
+      ]
+    },
+    {
+      "name": "roof_rack",
+      "size_m": [1.53, 0.236, 1.23],
+      "views": []
+    },
+    {
+      "name": "snorkel",
+      "size_m": [0.16, 1.25, 0.71],
+      "views": [
+        {"label": "snorkel (outer side, intake facing right)", "box": [1042, 28, 1486, 808], "cam": [-1, 0, 0], "up": [0, 1, 0]}
+      ]
+    }
+  ],
+  "notes": "Four separate add-ons: an electric winch with a roller fairlead and red hook, an 8-lamp light bar on L-brackets, a tubular basket roof rack, and a raised-air-intake snorkel (the intake faces +z; the flange bolts to the body on +x). The 1 m bar (about 335 px) does not fit these parts: it would make the winch 2.1 m long and the light bar 2.7 m. So I sized them as real parts (winch 0.56 m, bar 1.22 m, rack 1.5 x 1.1 m, snorkel 1.25 m tall) and kept the drawn proportions. The winch and light bar views are taken slightly from above. The roof rack is drawn only in perspective, so it has no flat view and gets a colour guess."
+}

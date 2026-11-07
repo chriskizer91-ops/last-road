@@ -1,0 +1,6 @@
+- **Heights and footprints match the sheet.** The tall tower is 110 m and the short one is 90 m, and their widths come from the drawn outlines. The tall tower's right-hand shoulder and the short tower's left-hand ledge are in place. The front, back and side fits are all 0.93–0.95.
+- **Side cameras are correct.** Tall seen from +x and short seen from −x matches the sheet in two ways. The long talus tails fall on the correct screen side for each tower (the left side for tall, the right side for short). The summit offsets in the top views agree with that.
+- **The top views are the weakest fit (0.88), but the sheet causes most of that.** Its top views don't agree with its own elevations. The tall tower's plan is drawn wider in x than in z, but its front and side views show it deeper in z than in x. The leftover differences are the lobed, boulder-fringed outline and a turn of about 3°. Making the apron lumpier would gain little and could cost fit in the elevations.
+- **Parts and budget are fine.** Nothing is missing, extra, misplaced or facing the wrong way. All four drawn flat views are used, and the triangle count is about 11.7k.
+
+NO CHANGES

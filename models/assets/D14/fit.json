@@ -1,0 +1,28 @@
+{
+ "model": {
+  "Front View": {
+   "iou": 0.674,
+   "turn_deg": 0.06
+  },
+  "Right Side View": {
+   "iou": 0.308,
+   "turn_deg": -0.65
+  },
+  "Back View": {
+   "iou": 0.639,
+   "turn_deg": 0.0
+  },
+  "Left Side View": {
+   "iou": 0.291,
+   "turn_deg": -0.24
+  },
+  "Top View": {
+   "iou": 0.995,
+   "turn_deg": 0.13
+  },
+  "texels": {
+   "covered": 110065,
+   "seen": 71296
+  }
+ }
+}
