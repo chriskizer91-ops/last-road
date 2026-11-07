@@ -1,0 +1,8 @@
+{"objects": [{"name": "water_tower", "size_m": [5.3, 10.2, 5.4],
+  "views": [
+    {"label": "Front", "box": [42, 17, 321, 549], "cam": [0, 0, 1], "up": [0, 1, 0]},
+    {"label": "Side", "box": [397, 17, 679, 549], "cam": [1, 0, 0], "up": [0, 1, 0]},
+    {"label": "Back", "box": [750, 17, 1025, 549], "cam": [0, 0, -1], "up": [0, 1, 0]},
+    {"label": "Top", "box": [417, 613, 729, 958], "cam": [0, 1, 0], "up": [0, 0, -1]}
+  ]}],
+ "notes": "Riveted sage-green steel water tower. The scale bar is about 52 px/m, so it is about 10.2 m tall. It has a 4.25 m tank with a shallow cone roof and a curved bottom on a 5 m round balcony, four splayed legs with X-bracing on concrete footings, a central riser pipe, and a caged ladder on the front-right (+x,+z) with a roof hatch nearby. The top view reads about 10% larger than the elevations. The sheet's ladder foot is inconsistent between views, so I resolved it at the front-right footing."}
