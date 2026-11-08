@@ -141,6 +141,10 @@ swap("const SHOW={full:false,stage:'dark',", "const SHOW={full:false,stage:'ligh
 # the maps show the job you're on; the big map is the whole world (lr-game.js: lrMapRoute, lrBigMap)
 swap("  mapArrow(x0+size/2,y0+size/2);\n  hFrame(x0-1,y0-1,size+2,size+2,pack(255,255,255,60));", "  lrMapRoute(x0,y0,size,MINI_SPAN);mapArrow(x0+size/2,y0+size/2);\n  hFrame(x0-1,y0-1,size+2,size+2,pack(255,255,255,60));")
 swap("function drawBigMap(){\n", "function drawBigMap(){if(WG.gtPlace){lrBigMap();return;}\n")
+# a photograph on foot is taken from the picture just drawn (lr-game.js: lrFdSnap)
+swap("  gl.bindVertexArray(null);APP.tris=LAND.tris+(APP.carTris||0);rperfAcc();", "  if(LRFD.snap)lrFdSnap();gl.bindVertexArray(null);APP.tris=LAND.tris+(APP.carTris||0);rperfAcc();")
+# on foot: no instruments, no car chips (the job's line and the finds' marks stay)
+swap("  /* shift lights, tach, gear, speed */\n  engShiftLights(", "  /* shift lights, tach, gear, speed */\n  if(LRW.on){drawFeatsHud();drawJobHud(lx,sc);lrFindHud();return;}\n  engShiftLights(")
 swap("  /* top left: the car and its build, the place, the driving level, the money */\n", "  if(APP.bigMap&&WG.gtPlace){lrBigMap();return;}\n  /* top left: the car and its build, the place, the driving level, the money */\n")
 # the dust storm of the job Dust (lr-game.js: lrDust)
 swap("if(DYB.dunes){const A=DYB.air;E.fogDen*=A.fog;E.fogAmb=E.fogAmb.map(v=>v*A.fog);E.ambUp=E.ambUp.map(v=>v*A.amb);E.key*=A.key;}", "if(DYB.dunes){const A=DYB.air;E.fogDen*=A.fog;E.fogAmb=E.fogAmb.map(v=>v*A.fog);E.ambUp=E.ambUp.map(v=>v*A.amb);E.key*=A.key;}if(typeof lrDust!=='undefined')lrDust(E);")
@@ -163,7 +167,7 @@ i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else No
 assert i is not None, 'the plane data script'
 import base64, os, json
 HERON = os.path.join(sys.path[0], '..', 'models/heron/paint/redtail-2-heron.webp')
-heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_FACES=' + json.dumps({k: base64.b64encode(open(os.path.join(sys.path[0], '..', f'models/portraits/{k}.webp'), 'rb').read()).decode() for k in ['J01','J02','J03','J04','J05','J06','J07']}) + ';\n' + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-wmap.js'), encoding='utf-8').read() + open(os.path.join(sys.path[0], 'lr-shop.js'), encoding='utf-8').read()
+heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_FACES=' + json.dumps({k: base64.b64encode(open(os.path.join(sys.path[0], '..', f'models/portraits/{k}.webp'), 'rb').read()).decode() for k in ['J01','J02','J03','J04','J05','J06','J07']}) + ';\n' + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-wmap.js'), encoding='utf-8').read() + open(os.path.join(sys.path[0], 'lr-shop.js'), encoding='utf-8').read() + open(os.path.join(sys.path[0], 'lr-walk.js'), encoding='utf-8').read() + open(os.path.join(sys.path[0], 'lr-finds.js'), encoding='utf-8').read() + open(os.path.join(sys.path[0], 'lr-book.js'), encoding='utf-8').read()
 s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '\n' + heron + '</script>\n' + s[i:]
 open(dst, 'w', encoding='utf-8').write(s)
 print('written', dst, len(s))

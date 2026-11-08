@@ -2,13 +2,14 @@
 game as shape plus picture, into src/lr-props.js (window.LR_PROPS): per object one gzipped block (base64) of its
 points (16-bit, across its box), facings (8-bit), picture coordinates (16-bit, v turned for WebGL) and triangles, its
 box, and its colour picture with the crease shade in
-(<object>_albedo_ao.webp): 1024 for a building, 512 for something under 3 m (phones halve them when they load).
+(<object>_albedo_ao.webp): 1024 for a building, 512 for something under 3 m, 256 for a glyph tile (phones halve them when they load).
 A model with a far shape (model_far.obj, from tools/models/lod.py) also gets <object>~far: the thinned shape, wearing
 the near one's picture (texOf), for what the game draws many of far off (trees, bushes, rocks).
 usage: python3 tools/props_pack.py B02 B06 ...  (from last-road's top)"""
 import sys, os, io, json, base64, gzip
 import numpy as np
 from PIL import Image
+PX = {'C02': 256}   # (the glyph tiles: small, and forty-one of them)
 b64 = lambda a: base64.b64encode(np.ascontiguousarray(a).tobytes()).decode()
 out = {}
 def read(path):
@@ -39,7 +40,7 @@ for ID in sys.argv[1:]:
          P = np.array(P, np.float32); UV = np.array(UV, np.float32); UV[:, 1] = 1 - UV[:, 1]; N = np.array(N, np.float32)
          I = np.array(I, np.uint32 if len(P) > 65535 else np.uint16)
          size = (P.max(0) - P.min(0)).tolist()
-         b = io.BytesIO(); px = 1024 if max(size) >= 3 else 512
+         b = io.BytesIO(); px = PX.get(ID, 1024 if max(size) >= 3 else 512)
          if not tag:
              tex = Image.open(D + f'{name}_albedo_ao.webp').convert('RGB')
              if tex.width > px: tex = tex.resize((px, px), Image.LANCZOS)

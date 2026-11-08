@@ -90,6 +90,39 @@ window.LRT_T = (() => {
     money(n) { return { money: L.lrMoney(n || 0) }; },
     towBtn() { const b = document.getElementById('lrTow'); return { shown: !!(b && !b.hidden), text: b ? b.textContent : null, bog: +L.LRWD.bog.toFixed(1), deep: L.LRWD.deep, safe: !!L.LRWD.safe }; },
     jobCardTip(who) { const J = __lrJ(); J.jobListen(who); const d = document.getElementById('jdTip') || document.querySelector('#jobDlg .tip, #jd .hint'); return { tip: d ? d.textContent : null }; },
+    /* on foot: stand at a model's own spot (lx, lz in its frame), facing yaw (the world's) */
+    walkAt(id, obj, lx, lz, yaw, pitch) { const p = L.WG.GTP.find(q => q.id === id && q.obj === obj); if (!p) return null; const c = Math.cos(p.yaw), s = Math.sin(p.yaw);
+      const x = p.x + lx * c + lz * s, z = p.z - lx * s + lz * c, W = L.LRW; if (!W.on) { this.park(x + 30, z, 0); L.lrWalkStart(); }
+      W.p[0] = x; W.p[2] = z; const f = L.lrWalkFloor(x, z, 999); W.p[1] = f === f ? f : L.WG.sample(x, z, {}).h; W.fl = W.p[1]; W.yaw = yaw === undefined || yaw === null ? Math.atan2(-(p.z - z), p.x - x) : yaw; W.pitch = pitch || 0;
+      return { at: W.p.map(v => +v.toFixed(2)), floor: f === f ? +f.toFixed(2) : 'none', ground: +L.WG.sample(x, z, {}).h.toFixed(2) }; },
+    /* walk straight on (yaw) for secs, as the stick would; where you got to and how high you stand */
+    walkSim(yaw, secs, run) { const W = L.LRW; if (yaw !== null && yaw !== undefined) W.yaw = yaw; W.stick.x = 0; W.stick.y = run ? -1 : -.9; const y0 = W.p[1], P0 = W.p.slice(); let hi = -1e9, lo = 1e9;
+      for (let i = 0; i < Math.round(secs * 30); i++) { L.lrWalkStep(1 / 30); hi = Math.max(hi, W.p[1]); lo = Math.min(lo, W.p[1]); } W.stick.y = 0;
+      return { from: P0.map(v => +v.toFixed(1)), to: W.p.map(v => +v.toFixed(2)), moved: +Math.hypot(W.p[0] - P0[0], W.p[2] - P0[2]).toFixed(2), rose: +(W.p[1] - y0).toFixed(2), hi: +hi.toFixed(2), lo: +lo.toFixed(2) }; },
+    /* from a model's frame to the world's, and the world's to its frame */
+    local(id, obj, x, z) { const p = L.WG.GTP.find(q => q.id === id && q.obj === obj), c = Math.cos(p.yaw), s = Math.sin(p.yaw), dx = x - p.x, dz = z - p.z; return [+(dx * c - dz * s).toFixed(2), +(dx * s + dz * c).toFixed(2)]; },
+    /* on foot at a world spot, facing yaw */
+    walkW(x, z, yaw, pitch) { const W = L.LRW; if (!W.on) { this.park(x + 30, z, 0); const t = car(); t.p[1] = Math.min(t.p[1], L.WG.sample(t.p[0], t.p[2], {}).h + .8); t.v[0] = t.v[1] = t.v[2] = 0; L.lrWalkStart(); } W.p[0] = x; W.p[2] = z; const f = L.lrWalkFloor(x, z, 999); W.p[1] = f === f ? f : L.WG.sample(x, z, {}).h; W.fl = W.p[1];
+      W.yaw = yaw || 0; W.pitch = pitch || 0; return { at: W.p.map(v => +v.toFixed(2)), floor: f === f ? +f.toFixed(2) : 'none' }; },
+    /* the finds: all of them, or one place's */
+    finds(site) { const F = L.lrFdInit(); if (!F) return null; const R = L.lrFdRec(); return F.filter(f => !site || f.site.id === site).map(f => ({ id: f.id, kind: f.kind, P: f.P.map(v => +v.toFixed(1)), n: f.n ? f.n.map(v => +v.toFixed(2)) : null, noted: !!R.n[f.id], photo: !!R.p[f.id] })); },
+    /* stand in front of a find (d metres off), looking at it; where you could stand */
+    goFind(id, d) { const F = L.lrFdInit(), f = F.find(q => q.id === id); if (!f) return null; d = d || 2.2; const tries = [];
+      if (f.n) for (const k of [1, .8, .6, 1.3, 1.6]) tries.push([f.P[0] + f.n[0] * d * k, f.P[2] + f.n[2] * d * k]);
+      for (let a = 0; a < 16; a++) for (const k of [1, 1.5, .7]) tries.push([f.P[0] + Math.cos(a / 16 * 6.283) * d * k, f.P[2] + Math.sin(a / 16 * 6.283) * d * k]);
+      for (const [x, z] of tries) { const fl = L.lrWalkFloor(x, z, f.P[1]); if (!(fl === fl) || fl > f.P[1] + .3) continue; const eye = [x, fl + 1.62, z]; if (!L.lrWalkSees(eye, f.P, f.kind === 'glyph' ? 0 : 1.4)) continue;
+        const dx = f.P[0] - x, dz = f.P[2] - z, dy = f.P[1] - eye[1]; this.walkW(x, z, Math.atan2(-dz, dx), Math.atan2(dy, Math.hypot(dx, dz))); L.LRW.p[1] = fl; L.LRW.fl = fl; return { id, at: [+x.toFixed(1), +fl.toFixed(2), +z.toFixed(1)], dist: +Math.hypot(dx, dy, dz).toFixed(2) }; }
+      return { id, err: 'nowhere to stand' }; },
+    /* (the k-th find at a place: ids have underscores, which the runner turns into commas) */
+    goFindN(site, k, d) { const F = L.lrFdInit().filter(f => f.site.id === site); return F[k] ? this.goFind(F[k].id, d) : null; },
+    /* every find at a place into the book (as if looked at) */
+    noteAll(site) { const F = L.lrFdInit().filter(f => f.site.id === site); for (const f of F) L.lrFdNote(f); return F.length; },
+    standDbg(id) { const f = L.lrFdInit().find(q => q.id === id); const out = []; for (let a = 0; a < 8; a++) for (const d of [2.2, 3.5]) { const x = f.P[0] + Math.cos(a / 8 * 6.283) * d, z = f.P[2] + Math.sin(a / 8 * 6.283) * d, fl = L.lrWalkFloor(x, z, f.P[1]);
+      out.push([a, d, fl === fl ? +(fl - f.P[1]).toFixed(2) : 'X', fl === fl ? L.lrWalkSees([x, fl + 1.62, z], f.P, 1.4) : '-', +(L.WG.sample(x, z, {}).h - f.P[1]).toFixed(2)]); } return { P: f.P.map(v => +v.toFixed(1)), out }; },
+    fd() { const D = L.LRFD, R = L.lrFdRec(); return { cur: D.cur ? D.cur.id : null, dwell: +D.dwell.toFixed(2), near: D.near.length, noted: Object.keys(R.n).length, photos: Object.keys(R.p).length, paid: R.paid, shot: L.LRW.ui && L.LRW.ui.shot ? !L.LRW.ui.shot.hidden : null }; },
+    book(page) { L.LRFD.page = page || 'places'; L.lrBookOpen(true); return { open: !L.LRFD.ui.hidden }; },
+    bookShut() { L.lrBookOpen(false); return 1; },
+    own(id) { L.LRG.own[id] = 1; return Object.keys(L.LRG.own); },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();

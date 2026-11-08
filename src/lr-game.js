@@ -160,10 +160,10 @@ async function lrDecode(E,mt){const bin=Uint8Array.from(atob(E.z),c=>c.charCodeA
   for(let k=0;k<nv;k++){for(let c=0;c<3;c++){pos[k*3+c]=E.min[c]+q[k*3+c]/65535*(E.max[c]-E.min[c]);nrm[k*3+c]=nq[k*4+c]/127;}uv[k*2]=uq[k*2]/65535;uv[k*2+1]=uq[k*2+1]/65535;col[k*4+3]=0;}
   const idx=E.i32?new Uint32Array(ib):new Uint16Array(ib),m=makeMesh({pos,nrm,col,mat,idx,uv});m.tris=E.n/3;return m;}
 /* a placed model's matrix: turned by its yaw, stood on the ground where it is (the world's own height there) */
-function lrPropM(p){if(p.y===undefined){const o={};p.y=WG.sample(p.x,p.z,o).h+(p.dy||0);}const c=Math.cos(p.yaw),s=Math.sin(p.yaw),M=LRP.M;
-  M[0]=c;M[1]=0;M[2]=-s;M[3]=0;M[4]=0;M[5]=1;M[6]=0;M[7]=0;M[8]=s;M[9]=0;M[10]=c;M[11]=0;M[12]=p.x-RO[0];M[13]=p.y-RO[1];M[14]=p.z-RO[2];M[15]=1;return M;}
-function lrPropBox(p){if(!p.mn){const E=LR_PROPS[p.id]&&LR_PROPS[p.id][p.obj];if(!E)return null;const r=Math.hypot(Math.max(-E.min[0],E.max[0]),Math.max(-E.min[2],E.max[2]));if(p.y===undefined)lrPropM(p);
-    p.mn=[p.x-r,p.y+E.min[1]-1,p.z-r];p.mx=[p.x+r,p.y+E.max[1]+1,p.z+r];}return p.mn;}
+function lrPropM(p){lrPropY(p);const c=Math.cos(p.yaw),s=Math.sin(p.yaw),M=LRP.M,k=p.s||1;
+  M[0]=c*k;M[1]=0;M[2]=-s*k;M[3]=0;M[4]=0;M[5]=k;M[6]=0;M[7]=0;M[8]=s*k;M[9]=0;M[10]=c*k;M[11]=0;M[12]=p.x-RO[0];M[13]=p.y-RO[1];M[14]=p.z-RO[2];M[15]=1;return M;}
+function lrPropBox(p){if(!p.mn){const E=LR_PROPS[p.id]&&LR_PROPS[p.id][p.obj];if(!E)return null;const k=p.s||1,r=k*Math.hypot(Math.max(-E.min[0],E.max[0]),Math.max(-E.min[2],E.max[2]));lrPropY(p);
+    p.mn=[p.x-r,p.y+k*E.min[1]-1,p.z-r];p.mx=[p.x+r,p.y+k*E.max[1]+1,p.z+r];}return p.mn;}
 function lrPropsDraw(u,e,F,probe){
   if(probe||!window.LR_PROPS||typeof WG==='undefined'||!WG.GTP)return 0;lrPropTex1();let tris=0,n=0;
   if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
@@ -177,7 +177,7 @@ function lrPropsDraw(u,e,F,probe){
   LRP.drawn=n;LRP.tris=tris;return tris;}
 function lrPropsShadow(u,F,e,maxD){
   if(!window.LR_PROPS||typeof WG==='undefined'||!WG.GTP)return 0;let tris=0;
-  for(const p of WG.GTP){if(Math.hypot(p.x-e[0],p.z-e[2])>Math.min(maxD+60,p.far))continue;const m=LRP.mesh.get(p.id+'/'+p.obj);if(!m||!lrPropBox(p)||!boxVisible(F,p.mn,p.mx))continue;
+  for(const p of WG.GTP){if(p.fd||Math.hypot(p.x-e[0],p.z-e[2])>Math.min(maxD+60,p.far))continue;const m=LRP.mesh.get(p.id+'/'+p.obj);if(!m||!lrPropBox(p)||!boxVisible(F,p.mn,p.mx))continue;
     gl.uniformMatrix4fv(u.uM,false,lrPropM(p));drawMesh(m);tris+=m.tris;}
   return tris;}
 window.__lr=Object.assign(window.__lr||{},{LRP});
@@ -274,7 +274,8 @@ function lrSkyBind(G,Ps){lrHorzLoad();const on=LRH.tex&&typeof WG!=='undefined'&
 
 /* ---------- ON FOOT: first person. Stop the truck (or the Heron, on the ground) and ON FOOT gets you out beside
    it; walk with the stick (WASD or the arrows on a keyboard, Shift to hurry), look by dragging anywhere else. The
-   buildings, temples and big stones stop you (their boxes), and so do the truck and the Heron; you climb what a
+   temples and landmarks have floors and walls (below: their grids), other buildings stop you at their boxes, and so
+   do the truck and the Heron; you climb what a
    person can (half a metre a step). Back beside the truck or the Heron, GET IN puts you back ---------- */
 const LRW={on:false,p:[0,0,0],yaw:0,pitch:0,ui:null,stick:{x:0,y:0},keys:{},bob:0,veh:null};
 const LRW_EYE=1.62,LRW_WALK=1.7,LRW_RUN=3.6;
@@ -284,17 +285,46 @@ function lrWalkStart(){
   if(!lrWalkCan())return false;const t=GAME.car,M=t.M,yaw=lrYaw(t),f=[Math.cos(yaw),-Math.sin(yaw)],r=[Math.sin(yaw),Math.cos(yaw)];
   /* (out the left side: the driver's door; from the Heron, past the wing's end) */
   const off=t.rt?6.2:2.1;LRW.p=[t.p[0]-r[0]*off+f[0]*(t.rt?1:0),0,t.p[2]-r[1]*off+f[1]*(t.rt?1:0)];LRW.p[1]=RANCH.W.heightAt(LRW.p[0],LRW.p[2]);
-  LRW.yaw=yaw+Math.PI/2;LRW.pitch=-.05;LRW.on=true;LRW.veh=t;setTestInput({steer:0,thr:0,brk:0,hb:1,nos:false});lrWalkUI(true);say('ON FOOT',1.4);return true;}
+  LRW.yaw=yaw+Math.PI/2;LRW.pitch=-.05;LRW.fl=undefined;LRW.on=true;LRW.veh=t;setTestInput({steer:0,thr:0,brk:0,hb:1,nos:false});lrWalkUI(true);say('ON FOOT',1.4);return true;}
 function lrWalkEnd(){
   if(!LRW.on)return false;const t=GAME.car;if(Math.hypot(t.p[0]-LRW.p[0],t.p[2]-LRW.p[2])>(t.rt?9:5)){say(t.rt?'WALK BACK TO THE HERON':'WALK BACK TO THE TRUCK',1.6);return false;}
   LRW.on=false;setTestInput(null);lrWalkUI(false);CAM.cut=true;return true;}
-/* does anything stop a person standing at (x,z)? the placed models' boxes (turned to their yaw), the truck, the Heron */
-function lrWalkBlocked(x,z){
-  const B=WG.GTB||{};for(const p of WG.GTP){if(Math.abs(p.x-x)>80||Math.abs(p.z-z)>80||!p.solid)continue;const b=B[p.id+'/'+p.obj];if(!b)continue;
-    const c=Math.cos(p.yaw),s=Math.sin(p.yaw),dx=x-p.x,dz=z-p.z,lx=dx*c-dz*s,lz=dx*s+dz*c,m=.3;
-    if(lx>b[0]-m&&lx<b[3]+m&&lz>b[2]-m&&lz<b[5]+m)return true;}
-  for(const v of [GAME.car,LRV.parked])if(v){const d=Math.hypot(v.p[0]-x,v.p[2]-z);if(d<(v.rt?2.2:2.0))return true;}
-  return false;}
+/* ---------- WHERE YOU CAN STAND in his big models (src/lr-walk.js, from tools/world/walkgrid.py): for each cell of a
+   model's ground plan, the free space straight up through it (from the ground to an underside; a room part way up;
+   the top, under the sky), a person's width already in it. You stand on the highest floor you can step up to (half a
+   metre) that leaves you room (1.75 m) in every model over you: down the Cistern's steps, up the Terraces, under the
+   Arches. A model without a grid still stops you at its box; the truck and the Heron stop you too ---------- */
+const LRWK={g:new Map(),ready:false};
+(async()=>{try{if(!window.LR_WALK)return;for(const [k,m] of Object.entries(LR_WALK)){const bin=Uint8Array.from(atob(m.z),c=>c.charCodeAt(0));
+    const a=new Uint8Array(await new Response(new Blob([bin]).stream().pipeThrough(new DecompressionStream('gzip'))).arrayBuffer());LRWK.g.set(k,{c:m.c,nx:m.nx,nz:m.nz,x0:m.x0,z0:m.z0,y0:m.y0,st:m.st,a});}
+  LRWK.ready=true;}catch(e){console.warn('walk grid: '+(e&&e.message||e));}})();
+function lrPropY(p){if(p.y===undefined){const o={};p.y=WG.sample(p.x,p.z,o).h+(p.dy||0);}return p.y;}
+/* a model's column at (x,z): its free spans in the world's heights (false where it has nothing) */
+function lrWkCol(p,G,x,z,o){const c=Math.cos(p.yaw),s=Math.sin(p.yaw),dx=x-p.x,dz=z-p.z,lx=dx*c-dz*s,lz=dx*s+dz*c;
+  const i=Math.floor((lx-G.x0)/G.c),j=Math.floor((lz-G.z0)/G.c);if(i<0||j<0||i>=G.nx||j>=G.nz)return false;
+  const n=G.nx*G.nz,k=j*G.nx+i,a=G.a,c0=a[k];if(c0===255)return false;const b=lrPropY(p)+G.y0,f1=a[n+k];
+  o.c0=b+c0*G.st;o.f1=f1?b+f1*G.st:NaN;o.c1=f1?b+a[2*n+k]*G.st:NaN;o.f2=b+a[3*n+k]*G.st;return true;}
+/* does a person's body (a to b, in height) fit in that column? */
+const lrWkFits=(o,a,b)=>b<=o.c0||a>=o.f1-.03&&b<=o.c1||a>=o.f2-.03;
+/* the floor a person at (x,z), standing at height foot, can be on there (NaN: they can't be there) */
+const LRWF=[];
+function lrWalkFloor(x,z,foot){
+  const h=RANCH.W.heightAt(x,z),B=WG.GTB||{},cand=[h];let n=0;
+  for(const p of WG.GTP){if(!p.solid||Math.abs(p.x-x)>130||Math.abs(p.z-z)>130)continue;const key=p.id+'/'+p.obj,G=LRWK.g.get(key);
+    if(G){const o=LRWF[n]||(LRWF[n]={});if(lrWkCol(p,G,x,z,o)){n++;if(o.f1===o.f1)cand.push(o.f1);cand.push(o.f2);}continue;}
+    const b=B[key];if(!b)continue;const c=Math.cos(p.yaw),s=Math.sin(p.yaw),dx=x-p.x,dz=z-p.z,lx=dx*c-dz*s,lz=dx*s+dz*c,m=.3;
+    if(lx>b[0]-m&&lx<b[3]+m&&lz>b[2]-m&&lz<b[5]+m)return NaN;}
+  for(const v of [GAME.car,LRV.parked])if(v){const d=Math.hypot(v.p[0]-x,v.p[2]-z);if(d<(v.rt?2.2:2.0))return NaN;}
+  cand.sort((a,b)=>b-a);
+  for(const c of cand){if(c>foot+.55||c<h-.05)continue;let ok=true;for(let i=0;i<n;i++)if(!lrWkFits(LRWF[i],c+.05,c+1.75)){ok=false;break;}if(ok)return c;}
+  return NaN;}
+/* can you see from a to b (the models' walls between)? the last part, at b, is not asked: a find is on a wall (and
+   a thing, skip metres of it: a figure's knees, a tree's roots) */
+function lrWalkSees(a,b,skip){const L=Math.hypot(b[0]-a[0],b[1]-a[1],b[2]-a[2]),o={};const N=Math.floor((L-(skip||0))/.2);
+  const near=WG.GTP.filter(p=>p.solid&&LRWK.g.has(p.id+'/'+p.obj)&&Math.hypot(p.x-a[0],p.z-a[2])<140);
+  for(let k=1;k<N;k++){const t=k*.2/L,x=a[0]+(b[0]-a[0])*t,y=a[1]+(b[1]-a[1])*t,z=a[2]+(b[2]-a[2])*t,left=L-k*.2;
+    for(const p of near){const G=LRWK.g.get(p.id+'/'+p.obj);if(left<G.c*1.5+.35)continue;if(lrWkCol(p,G,x,z,o)&&!lrWkFits(o,y-.01,y+.01))return false;}}
+  return true;}
 function lrWalkStep(dt){
   const K=LRW.keys,run=K.ShiftLeft||K.ShiftRight;let fw=-LRW.stick.y,sd=LRW.stick.x;
   if(K.KeyW||K.ArrowUp)fw+=1;if(K.KeyS||K.ArrowDown)fw-=1;if(K.KeyD||K.ArrowRight)sd+=1;if(K.KeyA||K.ArrowLeft)sd-=1;
@@ -302,13 +332,15 @@ function lrWalkStep(dt){
   const sp=(run||l>.98&&Math.hypot(LRW.stick.x,LRW.stick.y)>.95?LRW_RUN:LRW_WALK),f=[Math.cos(LRW.yaw),-Math.sin(LRW.yaw)],r=[Math.sin(LRW.yaw),Math.cos(LRW.yaw)];
   const mv=[(f[0]*fw+r[0]*sd)*sp*dt,(f[1]*fw+r[1]*sd)*sp*dt],p=LRW.p;
   /* each way on its own, so you slide along a wall */
-  for(const [ax,d] of [[0,mv[0]],[2,mv[1]]]){if(!d)continue;const q=[p[0],p[2]];q[ax?1:0]+=d;const h=RANCH.W.heightAt(q[0],q[1]);
-    if(h-p[1]>.55||lrWalkBlocked(q[0],q[1]))continue;p[ax]=q[ax?1:0];}
-  const g=RANCH.W.heightAt(p[0],p[2]);p[1]+=(g-p[1])*Math.min(1,dt*14);
+  /* (your feet: where you stand, or where you are stepping up to; if you are somewhere you can't be, you can walk out) */
+  const ft=Math.max(p[1],LRW.fl===undefined?p[1]:LRW.fl),here=lrWalkFloor(p[0],p[2],ft),stuck=!(here===here);
+  for(const [ax,d] of [[0,mv[0]],[2,mv[1]]]){if(!d)continue;const q=[p[0],p[2]];q[ax?1:0]+=d;const f=lrWalkFloor(q[0],q[1],ft);
+    if(!(f===f)&&!stuck)continue;p[ax]=q[ax?1:0];}
+  const g=lrWalkFloor(p[0],p[2],ft);LRW.fl=g===g?g:RANCH.W.heightAt(p[0],p[2]);p[1]+=(LRW.fl-p[1])*Math.min(1,dt*14);
   if(l>.05)LRW.bob+=dt*sp*2.2;const bob=Math.sin(LRW.bob*2)*.025*Math.min(1,l);
   const cp=Math.cos(LRW.pitch),eye=[p[0],p[1]+LRW_EYE+bob,p[2]],fwd=[Math.cos(LRW.yaw)*cp,Math.sin(LRW.pitch),-Math.sin(LRW.yaw)*cp];
   if(LRW.ui)LRW.ui.back.hidden=Math.hypot(GAME.car.p[0]-p[0],GAME.car.p[2]-p[2])>(GAME.car.rt?9:5);
-  LRW.cam={eye,fwd};return {eye,fwd,up:[0,1,0],fov:1.15};}
+  LRW.cam={eye,fwd};lrFdTick(dt,eye,fwd);return {eye,fwd,up:[0,1,0],fov:1.15};}
 /* the controls on foot: a stick at the left, drag anywhere else to look, GET IN when you're beside it; the driving
    controls hidden meanwhile */
 function lrWalkUI(on){
@@ -319,7 +351,7 @@ function lrWalkUI(on){
     '#lrWBack{position:absolute;right:calc(env(safe-area-inset-right) + 24px);bottom:calc(env(safe-area-inset-bottom) + 40px);padding:16px 22px;border-radius:14px;border:2px solid rgba(255,255,255,.5);background:rgba(16,20,26,.55);color:#fff;font:800 14px system-ui,sans-serif;letter-spacing:.1em}'+
     '#lrWHint{position:absolute;left:0;right:0;bottom:calc(env(safe-area-inset-bottom) + 6px);text-align:center;font:700 10px system-ui,sans-serif;letter-spacing:.14em;color:rgba(255,255,255,.5);pointer-events:none}';
     document.head.appendChild(st);
-    const W=document.createElement('div');W.id='lrWalk';W.hidden=true;W.innerHTML='<div id="lrWStick"><b></b></div><button id="lrWBack" type="button">GET IN</button><div id="lrWHint">DRAG TO LOOK</div>';document.body.appendChild(W);
+    const W=document.createElement('div');W.id='lrWalk';W.hidden=true;W.innerHTML='<div id="lrWStick"><b></b></div><button id="lrWBack" type="button">GET IN</button><button id="lrWShot" type="button" hidden>PHOTO</button><button id="lrWBook" type="button">BOOK</button><div id="lrWHint">DRAG TO LOOK</div>';lrBookUI();document.body.appendChild(W);
     const sk=W.querySelector('#lrWStick'),kn=sk.querySelector('b'),back=W.querySelector('#lrWBack');let sid=null,lid=null,lx=0,ly=0;
     const at=e=>{const r=sk.getBoundingClientRect(),R=r.width*.4;let x=(e.clientX-(r.left+r.width/2))/R,y=(e.clientY-(r.top+r.height/2))/R;const l=Math.hypot(x,y);if(l>1){x/=l;y/=l;}
       kn.style.transform=`translate(${(x*R).toFixed(1)}px,${(y*R).toFixed(1)}px)`;LRW.stick.x=Math.abs(x)<.08?0:x;LRW.stick.y=Math.abs(y)<.08?0:y;};
@@ -330,11 +362,217 @@ function lrWalkUI(on){
     W.addEventListener('pointermove',e=>{if(e.pointerId!==lid)return;const k=3.2/Math.max(innerWidth,innerHeight);LRW.yaw-=(e.clientX-lx)*k;LRW.pitch=Math.max(-1.2,Math.min(1.2,LRW.pitch-(e.clientY-ly)*k));lx=e.clientX;ly=e.clientY;});
     for(const ev of ['pointerup','pointercancel'])W.addEventListener(ev,e=>{if(e.pointerId===lid)lid=null;});
     back.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();lrWalkEnd();});
-    LRW.ui={W,back};}
+    const shot=W.querySelector('#lrWShot'),book=W.querySelector('#lrWBook');
+    shot.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();lrFdShoot();});book.addEventListener('click',e=>{e.preventDefault();e.stopPropagation();lrBookOpen(true);});
+    LRW.ui={W,back,shot,book};}
   LRW.ui.W.hidden=!on;const T=document.getElementById('touch');if(T)T.style.visibility=on?'hidden':'';LRW.stick.x=LRW.stick.y=0;}
 addEventListener('keydown',e=>{if(LRW.on)LRW.keys[e.code]=true;if(e.code==='KeyF'&&!e.repeat&&GAME.state==='drive'&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')){if(LRW.on)lrWalkEnd();else lrWalkStart();}});
 addEventListener('keyup',e=>{LRW.keys[e.code]=false;});
-window.__lr=Object.assign(window.__lr||{},{LRW,lrWalkStart,lrWalkEnd,lrWalkStep});
+window.__lr=Object.assign(window.__lr||{},{LRW,lrWalkStart,lrWalkEnd,lrWalkStep,LRWK,lrWalkFloor,lrWalkSees});
+
+/* ---------- THE FINDS (Fable's walk sites: "the satisfying part is arriving ... and the finding"): the Old Hands'
+   forty glyphs, cut on the walls of their temples and ruins and on the stones (his C02 tiles, on walls a person can
+   walk up to: src/lr-finds.js, from tools/world/finds.py), open hands that show which way the water went, and the
+   things to find (the marker stone, the Map Stone, the seated figures, the sighting stone, Venn's camp, the Pan
+   Wreck's plate, the Bottle Tree's bark). On foot, within 24 metres, a faint mark on each you haven't found; close
+   and looking at it, with nothing between: its ring and name, and a moment's look puts it in the field book. With
+   the camera (Teo's wall; free play has it) PHOTO puts its picture in the book, and in the campaign Haugen pays for
+   each: $40 a glyph, $75 anything else. All of a place's glyphs, and the book reads what they say; a hand, and the
+   book and the big map have the way the water went. One book for the campaign, one for free play ---------- */
+const LRFD_W={waves:'water',basin:'tank',chevron_down:'down',equals:'level',three_bars:'three',circle_dot:'spring',doorway_dot:'inside',
+  arch:'gate',s_curve:'channel',plus_cross:'crossing',x_cross:'shut',bar_dot:'one',dash_steps:'fields',stairs:'climb',sun:'sun',slashes:'cut',
+  branch:'branch',tee:'hold',wave:'river',fork:'divide',two_bars:'two',four_dots:'families',double_arc:'roof',bowl:'lake',boat:'boat',arc_dot:'sky',
+  horizon_disc:'sunrise',dome:'sunset',ring:'always',rainbow:'season',zigzags:'rain',double_wave:'running',mountain:'hills',person:'people',
+  three_dots:'many',crosshair:'here',tree_rune:'grove',diamond:'stone',chevron_up:'up',corner:'shelter'};
+const LRFD_PAY={glyph:40,thing:75,hand:75};
+/* the places, in the story's order: where each is (at), the models its glyphs are cut on (h), its glyphs in the order
+   the water runs (g), what they say (read), where its hand points (hand) and its things (t: on a model's point) */
+function lrFdSites(){return [
+  {id:'cistern',name:'The Cistern',at:['C04','model'],h:[['C04','model']],g:['waves','basin','chevron_down','equals'],read:'The water is kept in the tank, below, and level.',
+    t:[{id:'marker',name:'the marker stone',on:['C03','model','hand'],to:'threewells',text:'A hand cut in a niche, and under it a groove running down to a little basin. The groove points west.'}]},
+  {id:'threewells',name:'Three Wells',at:['C07','model'],h:[['C07','model']],g:['three_bars','circle_dot','doorway_dot'],read:'Three springs, inside.',hand:'city'},
+  {id:'gate',name:'The Causeway Gate',at:['C14','model'],h:[['C14','model']],g:['arch','s_curve','plus_cross','x_cross','bar_dot'],read:'The gate where the channel crosses: shut it one way at a time.',hand:'cistern',
+    t:[{id:'mapstone',name:'the Map Stone',on:['C16','model','top'],text:'The whole system cut in one slab: channels off the hills, the Causeway, the tanks, and at the end of it, in the dunes, a city.'}]},
+  {id:'terraces',name:'The Terraces',at:['C21','model'],h:[['C21','model']],g:['dash_steps','stairs','sun','slashes','branch'],read:'The fields climb to the sun; cut the channels like branches.',hand:'weir',
+    t:[{id:'figure',name:'the seated figure',on:['C28','model','figure',['C21','model']],text:'Worn almost smooth. One open hand is held out over the fields, and there are glyphs round its base.'}]},
+  {id:'weir',name:'The Weir',at:['C32','model'],h:[['C32','model']],g:['tee','wave','fork','two_bars'],read:'Hold the river and divide it in two.',hand:'gate'},
+  {id:'arches',name:'The Arches',at:['D10','arch_wide'],h:[['D10','arch_wide'],['D10','arch_round'],['D10','arch_broken']],g:['zigzags','double_wave','mountain'],read:'The rain runs off the hills.'},
+  {id:'congregation',name:'The Congregation',at:'D12',h:'D12',g:['person','three_dots','crosshair','tree_rune'],read:'Many people met here, in the grove of stone.'},
+  {id:'marbles',name:'The Marbles',at:['D03','model'],h:[['D03','model']],g:['diamond','chevron_up','corner'],read:'Shelter up among the stones.'},
+  {id:'ring',name:'The Observatory Ring',at:['C35','model'],h:[['C35','model']],g:['horizon_disc','dome','ring','rainbow'],read:'Watch the sunrise and the sunset, always, and know the season.',
+    t:[{id:'stone',name:'the sighting stone',on:['C35','model','stone'],text:'Grooves across its top line up with gaps in the ring: sunrise and sunset, midsummer and midwinter.'}]},
+  {id:'venn',name:'Venn\'s camp',at:['D18','wreck'],h:[],g:[],t:[
+    {id:'notebook',name:'Venn\'s notebook',on:['D18','table','top'],text:'Under a stone on the table. The last pages are a list of cairns, by compass and pace, from Three Wells to the city.'},
+    {id:'cockpit',name:'his cockpit',on:['D18','wreck','cockpit'],text:'His logbook is still in the door pocket. The last entry: sand in the carburettor, down at the old strip, will walk.'},
+    {id:'fire',name:'his last fire',on:['D18','fire_ring','ash'],text:'A ring of stones. Under the crust the ash is still black.'}]},
+  {id:'city',name:'The Sunken City',at:['C26','model'],h:[['C26','model']],g:['four_dots','double_arc','bowl','boat','arc_dot'],read:'The families\' roof, by the lake; boats under the sky.',
+    t:[{id:'figure',name:'the figure on the dais',on:['C28','model','figure',['C26','model']],text:'The same seated figure, sand to its waist. Its hand is held out west, over where the lake was.'}]},
+  {id:'panwreck',name:'The Pan Wreck',at:['D05','model'],h:[],g:[],t:[{id:'plate',name:'the maker\'s plate',on:['D05','model','cab'],text:'A Bedford, 1952. Someone has scratched a date beside the plate, and an arrow pointing north.'}]},
+  {id:'bottletree',name:'The Bottle Tree',at:['D02','model'],h:[],g:[],t:[{id:'bark',name:'letters in the bark',on:['D02','model','trunk'],text:'Cut high in the bark, and stretched wide by ninety years of growing: M.V. 1934.'}]}];}
+const LRFD={list:null,sites:null,cur:null,dwell:0,near:[],snap:null,ui:null,card:null,rec:null,mode:null,told:false};
+const lrFdKey=()=>'gt-book-'+(LRM.mode==='free'?'free':'campaign');
+function lrFdRec(){const m=LRM.mode==='free'?'free':'campaign';if(!LRFD.rec||LRFD.mode!==m){LRFD.mode=m;let r={};try{r=JSON.parse(store.get(lrFdKey(),'{}'))||{};}catch(e){}
+    LRFD.rec={n:r.n||{},p:r.p||{},paid:r.paid||0};}return LRFD.rec;}
+function lrFdSave(){store.set(lrFdKey(),JSON.stringify(LRFD.rec));}
+/* a point in a placed model's own frame, in the world */
+function lrFdW(p,l){const c=Math.cos(p.yaw),s=Math.sin(p.yaw);return [p.x+l[0]*c+l[2]*s,lrPropY(p)+l[1],p.z-l[0]*s+l[2]*c];}
+/* (made once, when the world is there: the tiles go up on their walls, among the placed models) */
+function lrFdInit(){
+  if(LRFD.list)return LRFD.list;if(!window.LR_SPOTS||typeof WG==='undefined'||!WG.GTP||!WG.GTP.length)return null;
+  const GP=(id,obj)=>WG.GTP.find(p=>p.id===id&&p.obj===obj),near=(id,obj,q)=>{let b=null,bd=1e18;for(const p of WG.GTP)if(p.id===id&&p.obj===obj){const d=Math.hypot(p.x-q.x,p.z-q.z);if(d<bd){bd=d;b=p;}}return b;};
+  const L=[],sites=lrFdSites();
+  for(const S of sites){let hosts;
+    if(S.h==='D12'){const A=WG.GTP.filter(p=>p.id==='D12'),cx=A.reduce((a,p)=>a+p.x,0)/A.length,cz=A.reduce((a,p)=>a+p.z,0)/A.length;
+      hosts=A.filter(p=>(LR_SPOTS['D12/'+p.obj]||[]).length).sort((a,b)=>Math.hypot(a.x-cx,a.z-cz)-Math.hypot(b.x-cx,b.z-cz)).slice(0,S.g.length);S.c=[cx,cz];}
+    else{hosts=S.h.map(h=>GP(h[0],h[1])).filter(Boolean);const a=GP(S.at[0],S.at[1]);S.c=a?[a.x,a.z]:[0,0];}
+    /* the walls, round the models in turn, the best first */
+    const sp=[];for(let k=0;k<12;k++)for(const p of hosts){const A=LR_SPOTS[p.id+'/'+p.obj]||[];if(A[k])sp.push([p,A[k]]);}
+    const tile=(obj,[p,s],sc,hh)=>{const P=lrFdW(p,s),yaw=p.yaw+s[3];WG.GTP.push({id:'C02',obj,x:P[0],z:P[2],y:P[1]-hh*sc,yaw,s:sc,solid:false,far:140,fd:1});
+      return {P,n:[Math.sin(yaw),0,Math.cos(yaw)]};};
+    S.g.forEach((g,i)=>{if(sp[i])L.push({id:S.id+':'+g,site:S,kind:'glyph',g,name:'the glyph for “'+LRFD_W[g]+'”',...tile('glyph_'+g,sp[i],2.5,.08)});});
+    if(S.hand&&sp[S.g.length])L.push({id:S.id+':hand',site:S,kind:'hand',name:'an open hand',to:S.hand,...tile('hand_tablet',sp[S.g.length],1.4,.31)});
+    for(const t of S.t||[]){const p=t.on[3]?near(t.on[0],t.on[1],GP(t.on[3][0],t.on[3][1])):GP(t.on[0],t.on[1]),T=window.LR_THINGS&&LR_THINGS[t.on[0]+'/'+t.on[1]],l=T&&T[t.on[2]];
+      /* (a thing with a face, the hand on the marker stone, a figure, is seen from in front of it) */
+      if(p&&l)L.push({id:S.id+':'+t.id,site:S,kind:t.to?'hand':'thing',name:t.name,text:t.text,to:t.to,P:lrFdW(p,l),
+        n:l.length>3?[l[3]*Math.cos(p.yaw)+l[4]*Math.sin(p.yaw),0,-l[3]*Math.sin(p.yaw)+l[4]*Math.cos(p.yaw)]:null});}
+    S.finds=L.filter(f=>f.site===S);}
+  LRFD.sites=sites;LRFD.list=L;return L;}
+const lrFdSite=id=>(LRFD.sites||[]).find(S=>S.id===id);
+/* where a point is on the screen (0..1 across, 0..1 up; null behind you) */
+function lrFdProj(P){const c=CAM.last;if(!c||!c.VPw)return null;const m=c.VPw,x=P[0],y=P[1],z=P[2],w=m[3]*x+m[7]*y+m[11]*z+m[15];if(w<.1)return null;
+  return [((m[0]*x+m[4]*y+m[8]*z+m[12])/w+1)/2,((m[1]*x+m[5]*y+m[9]*z+m[13])/w+1)/2];}
+/* each step on foot: what's near, and what you're looking at */
+function lrFdTick(dt,eye,fwd){const L=lrFdInit();if(!L)return;const R=lrFdRec();let best=null,ba=1e9;LRFD.near.length=0;
+  for(const f of L){const dx=f.P[0]-eye[0],dy=f.P[1]-eye[1],dz=f.P[2]-eye[2],d=Math.hypot(dx,dy,dz);if(d>24||d<.05)continue;
+    /* (a glyph is seen from in front of its wall) */
+    if(f.n&&dx*f.n[0]+dz*f.n[2]>-.15*d)continue;
+    const cs=(dx*fwd[0]+dy*fwd[1]+dz*fwd[2])/d;if(cs<.45)continue;
+    if(!R.n[f.id]&&d<24)LRFD.near.push(f);
+    const a=Math.acos(Math.min(1,cs));if(d<=(f.kind==='glyph'?4.5:5.5)&&a<.2+.3/d&&a<ba){ba=a;best=f;}}
+  if(best&&!lrWalkSees(eye,best.P,best.kind==='glyph'||best.n&&best.kind==='hand'&&!best.text?0:1.4))best=null;
+  if(best!==LRFD.cur){LRFD.cur=best;LRFD.dwell=0;}
+  if(best&&!R.n[best.id]){LRFD.dwell+=dt;if(LRFD.dwell>.6)lrFdNote(best);}
+  lrFdButtons();}
+/* into the book */
+function lrFdNote(f){const R=lrFdRec();R.n[f.id]=Date.now();lrFdSave();const S=f.site,got=S.finds.filter(q=>R.n[q.id]).length;
+  let body=f.kind==='glyph'?'':f.text||'';const gl=S.g.length&&S.g.every(g=>R.n[S.id+':'+g])&&f.kind==='glyph';
+  if(gl)body='All of its glyphs: '+S.g.map(g=>LRFD_W[g]).join(' · ')+'. “'+S.read+'”';
+  if(f.to){const T=lrFdSite(f.to);body=(body?body+' ':'')+'The hand shows where the water went: to '+(T?T.name.replace(/^The /,'the '):'the west')+'. It\'s on the big map.';}
+  lrFdCard(f,S.name+' · '+got+' of '+S.finds.length,body);
+  say('IN THE BOOK: '+(f.kind==='glyph'?'“'+LRFD_W[f.g].toUpperCase()+'”':f.name.toUpperCase()),2.4,PAL.gold);
+  if(LRM.mode!=='free'&&!lrHas('camera')&&!LRFD.told){LRFD.told=true;setTimeout(()=>say('HAUGEN PAYS FOR PHOTOGRAPHS: THE CAMERA IS ON TEO\'S WALL',3.2,PAL.ink),2600);}}
+/* the photograph: one picture drawn without the marks and your hands, then taken */
+function lrFdShoot(){const f=LRFD.cur,R=lrFdRec();if(!f||!lrHas('camera')||R.p[f.id]||LRFD.snap)return false;if(!R.n[f.id])lrFdNote(f);LRFD.snap={f};return true;}
+function lrFdSnap(){const S=LRFD.snap;LRFD.snap=null;if(!S)return;const f=S.f,R=lrFdRec();
+  try{const w=gl.drawingBufferWidth,h=gl.drawingBufferHeight,q=lrFdProj(f.P)||[.5,.5],sz=Math.max(32,Math.round(Math.min(w,h)*.5));
+    const x0=Math.max(0,Math.min(w-sz,Math.round(q[0]*w-sz/2))),y0=Math.max(0,Math.min(h-sz,Math.round(q[1]*h-sz/2))),px=new Uint8Array(sz*sz*4);
+    gl.bindFramebuffer(gl.FRAMEBUFFER,null);gl.readPixels(x0,y0,sz,sz,gl.RGBA,gl.UNSIGNED_BYTE,px);
+    const cv=document.createElement('canvas');cv.width=cv.height=sz;const g=cv.getContext('2d'),im=g.createImageData(sz,sz);
+    for(let r=0;r<sz;r++)im.data.set(px.subarray((sz-1-r)*sz*4,(sz-r)*sz*4),r*sz*4);g.putImageData(im,0,0);
+    const o=document.createElement('canvas');o.width=o.height=160;const og=o.getContext('2d');og.drawImage(cv,0,0,160,160);
+    store.set('gt-photo-'+LRFD.mode+':'+f.id,o.toDataURL('image/jpeg',.72));}
+  catch(e){console.warn('photo: '+(e&&e.message||e));}
+  R.p[f.id]=Date.now();let paid=0;if(LRM.mode!=='free'){paid=LRFD_PAY[f.kind]||40;R.paid+=paid;lrMoney(paid);}lrFdSave();
+  const fl=document.createElement('div');fl.style.cssText='position:fixed;inset:0;z-index:9400;background:#fff;opacity:.85;pointer-events:none;transition:opacity .45s';document.body.appendChild(fl);
+  requestAnimationFrame(()=>requestAnimationFrame(()=>{fl.style.opacity='0';setTimeout(()=>fl.remove(),600);}));
+  say(paid?'PHOTOGRAPHED · HAUGEN PAYS '+Feats.fmtMoney(paid):'PHOTOGRAPHED',2.2,PAL.gold);}
+/* the marks: faint on what's near and not yet found, a ring and a name on what you're looking at */
+function lrFindHud(){if(!LRW.on||LRFD.snap||!LRFD.list)return;const R=lrFdRec(),col=pack(255,238,200,140);
+  for(const f of LRFD.near){if(f===LRFD.cur)continue;const q=lrFdProj(f.P);if(!q)continue;const x=q[0]*W,y=(1-q[1])*H;
+    hLine(x,y-2,x+2,y,col);hLine(x+2,y,x,y+2,col);hLine(x,y+2,x-2,y,col);hLine(x-2,y,x,y-2,col);}
+  const f=LRFD.cur;if(!f)return;const q=lrFdProj(f.P),q2=lrFdProj([f.P[0],f.P[1]+(f.kind==='glyph'?.32:.5),f.P[2]]);if(!q||!q2)return;
+  const x=q[0]*W,y=(1-q[1])*H,got=!!R.n[f.id],fc=got?PAL.gold:PAL.white,r=Math.max(5,Math.min(40,Math.hypot((q2[0]-q[0])*W,(q2[1]-q[1])*H)))*(got?1:1.25-.25*Math.min(1,LRFD.dwell/.6)),k=Math.max(2,r*.35);
+  /* (a camera's frame: four corners, closing in as it goes in the book) */
+  for(const [sx,sy] of [[-1,-1],[1,-1],[1,1],[-1,1]]){const cx=x+sx*r,cy=y+sy*r;hLine(cx,cy,cx-sx*k,cy,fc);hLine(cx,cy,cx,cy-sy*k,fc);}
+  otxt3((f.kind==='glyph'?'A GLYPH: “'+LRFD_W[f.g].toUpperCase()+'”':f.name.toUpperCase()),x,y+r+5,got?PAL.gold:PAL.ink,1,'c');
+  if(R.p[f.id])otxt3('PHOTOGRAPHED',x,y+r+12,PAL.dim,1,'c');}
+/* the card that comes up when something goes in the book */
+function lrFdCard(f,head,body){lrBookUI();const C=LRFD.card;clearTimeout(C.t);
+  C.el.innerHTML=(f.kind==='glyph'||f.kind==='hand'&&f.n?lrBookIcon(f.kind==='glyph'?'glyph_'+f.g:'hand_tablet',46):'')+'<div><small>'+head+'</small><b>'+
+    (f.kind==='glyph'?'“'+LRFD_W[f.g]+'”':f.name.replace(/^./,c=>c.toUpperCase()))+'</b>'+(body?'<p>'+body+'</p>':'')+'</div>';
+  C.el.hidden=false;C.t=setTimeout(()=>{C.el.hidden=true;},body?7500:3500);}
+/* PHOTO (when there's something to take and you have the camera) and BOOK, beside GET IN */
+function lrFdButtons(){const U=LRW.ui;if(!U||!U.shot)return;const f=LRFD.cur,R=lrFdRec(),can=!!f&&lrHas('camera')&&!R.p[f.id];if(U.shot.hidden===can)U.shot.hidden=!can;}
+/* the big map: the way the water went, from each hand you've read */
+function lrFdMap(toM){if(!LRFD.list)return;const R=lrFdRec();
+  for(const f of LRFD.list){if(!f.to||!R.n[f.id])continue;const T=lrFdSite(f.to);if(!T)continue;const [a,b]=toM(f.site.c[0],f.site.c[1]),[c,d]=toM(T.c[0],T.c[1]);
+    lrDash(a,b,c,d,PAL.cyan,1.5,1.5);hDisc(c,d,1.4,PAL.cyan);}
+  for(const S of LRFD.sites){const n=S.finds.filter(f=>R.n[f.id]).length;if(!n)continue;const [a,b]=toM(S.c[0],S.c[1]);hRing(a,b,2,n===S.finds.length?PAL.gold:PAL.cyan);}}
+
+/* ---------- THE FIELD BOOK: every place, what you've found there (a glyph's picture and its word; the things, with
+   your photograph), what its glyphs say once you have them all, and where its hand pointed; and the Old Hands'
+   alphabet, filling in. BOOK on foot, B on a keyboard, or the Jobs tab ---------- */
+function lrBookIcon(name,px){const B=window.LR_BOOK;if(!B)return '<i class="ic"></i>';const k=B.names.indexOf(name),rows=Math.ceil(B.names.length/B.cols);
+  return `<i class="ic" style="width:${px}px;height:${px}px;background-size:${B.cols*px}px ${rows*px}px;background-position:-${(k%B.cols)*px}px -${Math.floor(k/B.cols)*px}px"></i>`;}
+function lrBookUI(){if(LRFD.ui)return LRFD.ui;const st=document.createElement('style');st.textContent=`
+#lrBook{position:fixed;inset:0;z-index:9500;background:rgba(10,8,6,.55);display:flex;align-items:center;justify-content:center;font-family:Georgia,'Times New Roman',serif}
+#lrBook[hidden],#lrFdCard[hidden]{display:none}
+#lrBook .pg{width:min(1000px,calc(100vw - 12px));height:calc(100vh - 12px);max-height:680px;background:#ece2c8;color:#2a2016;border-radius:10px;box-shadow:0 10px 40px rgba(0,0,0,.5);display:flex;flex-direction:column;overflow:hidden}
+#lrBook header{display:flex;align-items:center;gap:6px;padding:6px 8px 6px 14px;border-bottom:1px solid #c9b994}
+#lrBook h2,#lrBook h3,#lrBook p,#lrBook b{font-family:Georgia,'Times New Roman',serif;text-transform:none;letter-spacing:normal;color:#2a2016}
+#lrBook h2{margin:0;font-weight:400;font-style:italic;font-size:21px;flex:1;white-space:nowrap}
+#lrBook header button{font:700 11px system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;border:1px solid #8a7550;background:transparent;color:#3a2c1c;border-radius:999px;padding:9px 13px;cursor:pointer}
+#lrBook header button.on{background:#3a2c1c;color:#ece2c8}
+#lrBook header .x{border:0;font-size:22px;padding:2px 10px;line-height:1}
+#lrBook .body{flex:1;overflow:auto;padding:4px 14px 14px;-webkit-overflow-scrolling:touch}
+#lrBook .site{padding:8px 0 10px;border-bottom:1px dashed #c9b994}
+#lrBook .site h3{margin:0 0 2px;font-size:17px;font-weight:700;display:flex;justify-content:space-between;align-items:baseline;gap:8px}
+#lrBook small,#lrFdCard small{font:600 10px system-ui,sans-serif;letter-spacing:.12em;text-transform:uppercase;color:#7a6648}
+#lrBook .row{display:flex;flex-wrap:wrap;gap:6px 10px;margin:4px 0}
+#lrBook .g{width:54px;text-align:center;font-size:12px;color:#4a3826;line-height:1.15}
+.ic{display:block;margin:0 auto 2px;border-radius:5px;background-color:#d9cba8;background-repeat:no-repeat}
+#lrBook .g:not(.on) .ic{background:#e3d7b8!important;border:1px dashed #a8936a;box-sizing:border-box}
+#lrBook .g:not(.on){color:#a8936a}
+#lrBook .read{font-style:italic;margin:4px 0 0;font-size:15px}
+#lrBook .th{display:flex;gap:10px;align-items:flex-start;margin:6px 0;max-width:640px;font-size:14px}
+#lrBook .th img,#lrBook .th .ph{width:72px;height:72px;border-radius:4px;flex:none;object-fit:cover}
+#lrBook .th .ph{border:1px dashed #a8936a;display:grid;place-items:center;font:600 9px system-ui,sans-serif;letter-spacing:.06em;color:#8a7550;text-align:center;padding:4px;box-sizing:border-box}
+#lrBook .th b{display:block;font-size:15px}
+#lrBook .dim{color:#9a8664}
+#lrBook .alpha{display:grid;grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:10px 6px;padding-top:8px}
+#lrBook footer{padding:7px 14px;border-top:1px solid #c9b994;font:600 11px system-ui,sans-serif;letter-spacing:.06em;color:#6a5638}
+#lrFdCard{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 18px);z-index:8;max-width:min(560px,calc(100vw - 420px));min-width:240px;display:flex;gap:10px;align-items:flex-start;
+  background:rgba(236,226,200,.95);color:#2a2016;border-radius:10px;padding:9px 12px;font:14px/1.3 Georgia,serif;box-shadow:0 6px 24px rgba(0,0,0,.35);pointer-events:none}
+#lrFdCard b{display:block;font-size:16px;margin:1px 0}#lrFdCard p{margin:3px 0 0}
+@media (max-width:700px){#lrFdCard{max-width:calc(100vw - 24px);bottom:auto;top:calc(env(safe-area-inset-top) + 64px)}}
+#lrWShot,#lrWBook{position:absolute;right:calc(env(safe-area-inset-right) + 24px);border-radius:14px;font:800 14px system-ui,sans-serif;letter-spacing:.1em;color:#fff}
+#lrWShot{bottom:calc(env(safe-area-inset-bottom) + 112px);padding:16px 22px;border:2px solid #e2b85c;background:rgba(60,44,16,.7)}
+#lrWBook{right:auto;left:calc(env(safe-area-inset-left) + 74px);bottom:calc(env(safe-area-inset-bottom) + 196px);padding:10px 16px;border:2px solid rgba(255,255,255,.4);background:rgba(16,20,26,.5);font-size:12px}
+#lrWShot[hidden]{display:none}`;document.head.appendChild(st);
+  const D=document.createElement('div');D.id='lrBook';D.hidden=true;D.innerHTML='<div class="pg"><header><h2>Field book</h2><button type="button" data-p="places" class="on">Places</button><button type="button" data-p="glyphs">Glyphs</button><button type="button" class="x" aria-label="Close">✕</button></header><div class="body"></div><footer></footer></div>';
+  document.body.appendChild(D);if(window.LR_BOOK)D.style.setProperty('--sh','url('+LR_BOOK.sheet+')');
+  const st2=document.createElement('style');st2.textContent='.ic{background-image:var(--sh)}';document.head.appendChild(st2);
+  document.documentElement.style.setProperty('--sh',window.LR_BOOK?'url('+LR_BOOK.sheet+')':'none');
+  D.addEventListener('click',e=>{const b=e.target.closest('button');if(e.target===D||b&&b.classList.contains('x')){lrBookOpen(false);return;}
+    if(b&&b.dataset.p){LRFD.page=b.dataset.p;lrBookFill();}});
+  D.addEventListener('pointerdown',e=>e.stopPropagation());
+  const C=document.createElement('div');C.id='lrFdCard';C.hidden=true;document.body.appendChild(C);LRFD.card={el:C,t:0};
+  LRFD.ui=D;return D;}
+function lrBookFill(){const D=lrBookUI(),L=lrFdInit()||[],R=lrFdRec(),pg=LRFD.page||'places',body=D.querySelector('.body');
+  for(const b of D.querySelectorAll('header [data-p]'))b.classList.toggle('on',b.dataset.p===pg);
+  const ph=id=>store.get('gt-photo-'+LRFD.mode+':'+id,'');let h='';
+  if(pg==='places'){
+    for(const S of LRFD.sites||[]){const n=S.finds.filter(f=>R.n[f.id]).length;
+      h+=`<div class="site"><h3><span>${S.name}</span><small>${n?n+' of '+S.finds.length+' found':'not yet visited'}</small></h3>`;
+      if(!n){h+='</div>';continue;}
+      if(S.g.length){h+='<div class="row">'+S.g.map(g=>{const on=!!R.n[S.id+':'+g];return `<div class="g${on?' on':''}">${lrBookIcon('glyph_'+g,44)}${on?LRFD_W[g]:'?'}</div>`;}).join('')+'</div>';
+        h+=S.g.every(g=>R.n[S.id+':'+g])?`<p class="read">“${S.read}”</p>`:'<p class="dim" style="margin:2px 0 0;font-size:13px">Find all its glyphs and the book can read them.</p>';}
+      for(const f of S.finds){if(f.kind==='glyph')continue;const on=!!R.n[f.id],p=on&&ph(f.id),T=f.to&&lrFdSite(f.to);
+        if(!on){h+='<div class="th"><div class="ph">?</div><div class="dim">Something else is here.</div></div>';continue;}
+        h+=`<div class="th">${p?`<img src="${p}" alt="">`:`<div class="ph">${lrHas('camera')?'NO PHOTO YET':'NEEDS THE CAMERA'}</div>`}<div><b>${f.name.replace(/^./,c=>c.toUpperCase())}</b>${f.text?f.text+' ':''}${T?'<i>The hand shows the water went to '+T.name.replace(/^The /,'the ')+'.</i>':''}</div></div>`;}
+      const gp=S.g.filter(g=>R.p[S.id+':'+g]).map(g=>ph(S.id+':'+g)).filter(Boolean);
+      if(gp.length)h+='<div class="row">'+gp.map(u=>`<img src="${u}" alt="" style="width:56px;height:56px;border-radius:4px;object-fit:cover">`).join('')+'</div>';
+      h+='</div>';}}
+  else{const names=Object.keys(LRFD_W).sort(),got=names.filter(g=>L.some(f=>f.g===g&&R.n[f.id]));
+    h+=`<p style="margin:8px 0 0">The Old Hands’ alphabet: <b>${got.length} of ${names.length}</b> glyphs. Each place has a few, cut in the order the water runs.</p><div class="alpha">`+
+      names.map(g=>{const on=got.includes(g);return `<div class="g${on?' on':''}" style="width:auto">${lrBookIcon('glyph_'+g,48)}${on?LRFD_W[g]:'?'}</div>`;}).join('')+'</div>';}
+  body.innerHTML=h;
+  const all=L.length,n=L.filter(f=>R.n[f.id]).length,p=L.filter(f=>R.p[f.id]).length;
+  D.querySelector('footer').textContent=`Found ${n} of ${all} · photographs ${p}`+(LRFD.mode==='campaign'?` · Haugen has paid ${Feats.fmtMoney(R.paid)}`:' · free play');}
+function lrBookOpen(on){const D=lrBookUI();if(on===undefined)on=D.hidden;if(on){lrFdInit();lrBookFill();}D.hidden=!on;if(on&&LRW.on)LRW.stick.x=LRW.stick.y=0;}
+addEventListener('keydown',e=>{if(/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||'')||e.repeat)return;
+  if(e.code==='KeyB'&&GAME.state==='drive')lrBookOpen();if(e.code==='Escape'&&LRFD.ui&&!LRFD.ui.hidden)lrBookOpen(false);if(e.code==='KeyE'&&LRW.on)lrFdShoot();});
+window.__lr=Object.assign(window.__lr||{},{LRFD,lrFdInit,lrFdRec,lrFdShoot,lrBookOpen,lrFdNote,lrFdProj});
 
 /* ---------- THE PEOPLE AND THE JOBS (the engine's own job system: someone with work is a column of light in their
    colour; stop beside it, Start, and the dialog has their face, from his portraits J01-J06). Two new kinds of step:
@@ -448,7 +686,7 @@ window.__lrJ=()=>({PEOPLE,JOB,jActive,jobListen,closeJobDialog,jRec});
 /* ---------- YOUR HANDS on foot: his gloved hands (E01), held low in front of your eyes, swaying a little as you walk ---------- */
 const LRHD={M:new Float32Array(16)};
 function lrHandsDraw(){
-  if(!LRW.on||!LRW.cam||!window.LR_PROPS||!LR_PROPS.E01)return 0;const key='E01/model';
+  if(!LRW.on||!LRW.cam||LRFD.snap||!window.LR_PROPS||!LR_PROPS.E01)return 0;const key='E01/model';
   if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}return 0;}
   const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)return 0;lrPropTex1();
   const {eye,fwd}=LRW.cam,a=-.5,r=norm2([-fwd[2],0,fwd[0]]),u0=[r[1]*fwd[2]-r[2]*fwd[1],r[2]*fwd[0]-r[0]*fwd[2],r[0]*fwd[1]-r[1]*fwd[0]];
@@ -535,7 +773,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-24';
+const LR_BUILD='last-road-25';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
@@ -571,6 +809,9 @@ body.gtCampaign #menu section:has(#mLevel),#mSim .simrows>div:has(#mSimWx),#mSim
   document.head.appendChild(st);
   const h=document.querySelector('#menu .mhead h1');if(h)h.innerHTML='Ground Truth <small class="tagw">'+LR_BUILD+'</small>';
   const jt=document.querySelector('#mTabs [data-t=chals]');if(jt)jt.textContent='Jobs';
+  {const tab=document.querySelector('[data-tab=chals]');if(tab&&!$('lrBookSec')){const sec=document.createElement('section');sec.id='lrBookSec';
+    sec.innerHTML='<h2>Field book</h2><p class="hint" style="margin:0 0 8px">What you\'ve found on foot at the old places: the Old Hands\' glyphs, what they say, and where the water went. B on a keyboard.</p><button class="btn" id="lrBookOpen" type="button">Open the field book</button>';
+    tab.insertBefore(sec,tab.firstChild);sec.querySelector('button').addEventListener('click',()=>lrBookOpen(true));}}
   {const L=$('jbList');const sec=L&&L.closest('section');if(sec){const h2=sec.querySelector('h2');if(h2)h2.textContent='The people';
     const ps=sec.querySelectorAll('p.hint');if(ps[1])ps[1].textContent='A column of light in someone\'s colour means they have work for you: stop beside them and listen. One job at a time.';}}
   document.title='Ground Truth';lrBayUI();lrShopBtn();lrOutfitApply();
@@ -655,6 +896,8 @@ function lrBigMap(){const t=GAME.car,size=Math.min(H-14,W-14)|0,x0=Math.round((W
   const toM=(x,z)=>[x0+(x+HH)/(2*HH)*size,y0+(z+HH)/(2*HH)*size];
   /* the strips by name; Roadhead in gold */
   for(const S of WG.GTS){const [a,b]=toM(S.x,S.z),home=S.name==='Roadhead';hDisc(a,b,1.3,home?PAL.gold:PAL.white);otxt3(S.name.replace(/ Strip$/,'').toUpperCase(),a+3,b-3,home?PAL.gold:PAL.ink);}
+  /* the way the water went, from the hands you've read; the places you've found things */
+  lrFdMap(toM);
   /* who has work for you */
   for(const k of Object.keys(PEOPLE)){const p=PEOPLE[k];if(!jOffer(k))continue;const [a,b]=toM(p.x,p.z);hDisc(a,b,1.6,hx(p.col));}
   /* the job: its stop, the line to it, and what it is */
