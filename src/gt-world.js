@@ -163,7 +163,7 @@ function gtLand(x,z,o){
   let h=(fbm(x/3200+1.1,z/3200+2.3,3,711)-.5)*34+(fbm(x/650-3.3,z/650+5.1,2,712)-.5)*8+(vn(x/80,z/80,713)-.5)*1.1;
   let grass=sst(.3,.62,fbm(x/40+5,z/40,2,714)+.14),rock=0,sand=0,salt=0,mud=0,wet=0,wl=-1e9,code=0,gravel=0;
   /* the savanna: kopjes and creek lines */
-  if(R.sav>.02||R.delta>.02){gtKopje(x,z,GK);const kk=R.sav;h+=GK.kh*kk;rock=Math.max(rock,GK.kr*kk*.85);
+  let gran=false;if(R.sav>.02||R.delta>.02){gtKopje(x,z,GK);const kk=R.sav;h+=GK.kh*kk;rock=Math.max(rock,GK.kr*kk*.85);gran=GK.kh>.3&&kk>.3;
     const c=fbm(x/2400+7,z/2400-3,3,721),w=.011,cd=Math.abs(c-.5);
     if(cd<w*1.8){const f=1-sst(w*.5,w*1.8,cd);h-=2.4*f*(R.sav+R.delta);if(f>.55){grass*=.3;sand=Math.max(sand,.0);gravel=f;}
       if(cd<w*.45&&R.delta>.3){wet=1;wl=h+1.4;}}}
@@ -189,10 +189,14 @@ function gtLand(x,z,o){
     mud=Math.max(mud,.55*R.delta*sst(.4,.7,vn(x/60,z/60,784)));grass=Math.max(grass,.6*R.delta);}
   /* the Black Range: cinder cones, lava fields, the caldera */
   if(R.black>0){const k=sst(0,.8,R.black);h+=(60+gtCone(x,z))*k;const lava=sst(.5,.58,fbm(x/2000+4,z/2000+1,2,791));
-    if(lava>0){h+=(vn(x/24,z/24,792)-.5)*2.2*lava*k;rock=Math.max(rock,lava*k);}rock=Math.max(rock,.45*k);grass*=1-.85*k;
+    /* (the lava flows: a'a, broken into ridges and blocks up to 2.6 m high a few metres apart, that no truck crosses:
+       you fly over them, or land at a strip beside them) */
+    if(lava>0){h+=(vn(x/24,z/24,792)-.5)*2.2*lava*k+Math.pow(Math.abs(vn(x/6.5,z/6.5,793)-.5)*2,1.4)*2.6*sst(.25,.75,lava)*k;rock=Math.max(rock,lava*k);}rock=Math.max(rock,.8*k);grass*=1-.9*k;
     const C=GT_BIG.cald,dc=Math.hypot(x-C[0],z-C[1])/C[2];if(dc<1.6){const ring=C[3]*Math.exp(-Math.pow((dc-1)/.22,2)),floor=dc<1?-C[3]*.2*sst(1,.6,dc):0;h+=ring+floor;
       /* (the crater lake in its east half; the strip on the west of the floor) */
       if(Math.hypot(x-C[0]-.33*C[2],z-C[1])/C[2]<.3){wet=1;wl=60;}}}
+  /* (each region's own rock: the Black Range's basalt, the kopjes' granite, sandstone elsewhere) */
+  o.gm=R.black>.45?38:gran?39:40;
   o.h=h;o.grass=grass*(1-sand)*(1-salt);o.rock=rock;o.sand=sand*(1-salt);o.salt=salt;o.mud=mud;o.wet=wet;o.wl=wl;o.gravel=gravel;o.R=R;return o;}
 
 /* ---------- Last Road's height: the land's own, smoothed along the road (made once, the first time it's asked) ---------- */
@@ -230,7 +234,7 @@ function gtCore(x,z,o){
     if(bare>0){if(P.surf==='sand'){if(bare>.5)code=SF.sand;}else{if(bare>.5)code=P.surf==='gravel'?SF.gravel:SF.dirt;grass*=1-.75*bare;rock*=1-bare;sand*=1-.7*bare;}}}
   h+=rimAt(x,z);
   if(wet&&h<wl){code=SF.water;}else wet=0;
-  o.h=h;o.code=code;o.grass=grass;o.rock=rock;o.mud=Math.max(mud,wet?.8:0);o.salt=salt;o.sand=sand;o.ramp=0;o.wet=wet;o.wl=wet?wl:h;o.B=h;o.rk=rock;o.k=0;o.tm=0;o.tin=0;
+  o.h=h;o.code=code;o.grass=grass;o.rock=rock;o.mud=Math.max(mud,wet?.8:0);o.salt=salt;o.sand=sand;o.ramp=0;o.wet=wet;o.wl=wet?wl:h;o.B=h;o.rk=rock;o.k=0;o.tm=0;o.tin=0;o.gm=GL.gm;
   return o;}
 /* the road base (for ribbons laid over the land) */
 function gtBase(x,z){gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<40)return gtRoadH(GRQ.s)+rimAt(x,z);const o={};return gtCore(x,z,o).h;}

@@ -37,12 +37,27 @@ import json as _j, re as _re
 TP = _j.loads(open(sys.path[0] + '/lr-texpack.js', encoding='utf-8').read().split('window.LR_TEXPACK=', 1)[1].rstrip().rstrip(';'))
 lay = lambda L: '{id:"%s",t:"%s",m:[%s],scale:%s,has:true,src:"%s"}' % (L['id'], L['t'], ', '.join('%.4f' % v for v in L['m']), L['scale'], L['src'])
 for t, L in TP.items():
-    if t == 'SAND': continue
+    if t in ('SAND', 'BASALT', 'GRANITE'): continue
     m = _re.findall(r'\{id:"[a-z_0-9]+",t:"%s",m:\[[^\]]*\],scale:[0-9.]+,has:false,src:""\}' % t, s)
     assert len(m) == 1, t
     swap(m[0], lay(L))
-swap('{id:"clay_track",t:"CLAYTRACK",m:[0.5, 0.5, 0.5],scale:3,has:false,src:""}\n]};', '{id:"clay_track",t:"CLAYTRACK",m:[0.5, 0.5, 0.5],scale:3,has:false,src:""},\n' + lay(TP['SAND']) + '\n]};')
-swap("'SALT','BRICK','STUCCO','FORECOURT','PAINT','CLAYTRACK'];", "'SALT','BRICK','STUCCO','FORECOURT','PAINT','CLAYTRACK','SAND'];")
+NEWL = ('SAND', 'BASALT', 'GRANITE')
+swap('{id:"clay_track",t:"CLAYTRACK",m:[0.5, 0.5, 0.5],scale:3,has:false,src:""}\n]};', '{id:"clay_track",t:"CLAYTRACK",m:[0.5, 0.5, 0.5],scale:3,has:false,src:""},\n' + ',\n'.join(lay(TP[k]) for k in NEWL) + '\n]};')
+swap("'SALT','BRICK','STUCCO','FORECOURT','PAINT','CLAYTRACK'];", "'SALT','BRICK','STUCCO','FORECOURT','PAINT','CLAYTRACK','SAND','BASALT','GRANITE'];")
+# each region's own rock (gt-world.js's o.gm, per point of the ground): 38 the Black Range's basalt (H19), 39 the
+# kopjes' granite (H11), 40 the rest (sandstone, H15); numbered next to each other, so where two meet the ground's
+# material steps from one to the other across a triangle with nothing else between
+swap("const Hb=new Float64Array(nb*nb),code=new Uint8Array(n*n),", "const Hb=new Float64Array(nb*nb),GMv=new Uint8Array(n*n).fill(40),code=new Uint8Array(n*n),")
+swap("wet[k]=o.wet;wl[k]=o.wl;\n", "wet[k]=o.wet;wl[k]=o.wl;GMv[k]=o.gm||40;\n")
+swap("C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];return v++;};\n  for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);\n  /* a track's corner",
+     "C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];M[v]=GMv[k];return v++;};\n  for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);\n  /* a track's corner")
+swap("Hh=new Float64Array((n+2)*(n+2)),Wt=new Float32Array(n*n*4);\n  const nb=n+2;", "Hh=new Float64Array((n+2)*(n+2)),Wt=new Float32Array(n*n*4),GMf=new Uint8Array(n*n).fill(40);\n  const nb=n+2;")
+swap("Wt[k*4+2]=o.salt>.02?-o.salt:o.mud*.5;Wt[k*4+3]=1-wd*.5;}}", "Wt[k*4+2]=o.salt>.02?-o.salt:o.mud*.5;Wt[k*4+3]=1-wd*.5;GMf[k]=o.gm||40;}}")
+swap("C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];return v++;};\n  for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);\n  for(let j=0;j<n-1;j++)",
+     "C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];M[v]=GMf[k];return v++;};\n  for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);\n  for(let j=0;j<n-1;j++)")
+swap("  else if(m>=40){\n    vec2 wp=Pw.xz;ground=true;\n    if(m==40){", "  else if(m>=38){\n    vec2 wp=Pw.xz;ground=true;\n    if(m<=40){")
+swap("if(rw>.004){alb=mix(alb,photoTri(rockCol(Pw),T_ROCK,Pw,N),rw);", "if(rw>.004){alb=mix(alb,photoTri(rockCol(Pw),m==38?T_BASALT:m==39?T_GRANITE:T_ROCK,Pw,N),rw);")
+swap("float por=m==40||", "float por=m==40||m==38||m==39||")
 sm = TP['SAND']['m']
 swap("if(dw>.004){vec3 sd=vec3(.80,.77,.70)*(.9+.12*vn(wp*.012)+.05*vn(wp*.37));", "if(dw>.004){vec3 sd=vec3(%.3f,%.3f,%.3f)*(.9+.12*vn(wp*.012)+.05*vn(wp*.37));" % tuple(sm))
 swap("alb=mix(alb,sd,dw);gw*=1.-dw;rw*=1.-dw;}", "sd=photoG(sd,T_SAND,wp);alb=mix(alb,sd,dw);gw*=1.-dw;rw*=1.-dw;}")
@@ -96,7 +111,7 @@ swap("  if(s.t==='goto'||s.t==='deliver')return {x:s.x,z:s.z,name:s.name,r:s.r||
 swap("    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;", "    else if(s.t==='land')ok=!!car.rt&&!LRW.on&&car.speed<2&&lrStripAt(car.p[0],car.p[2],30)===s.strip;\n    else if(s.t==='foot')ok=LRW.on&&Math.hypot(LRW.p[0]-s.x,LRW.p[2]-s.z)<(s.r||12);\n    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;")
 swap("  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;", "  {let f=$('jdFace');if(!f){f=document.createElement('img');f.id='jdFace';f.alt='';f.style.cssText='width:76px;height:76px;border-radius:12px;float:left;margin:2px 14px 8px 0;object-fit:cover;box-shadow:0 2px 10px rgba(0,0,0,.4)';$('jdEyebrow').parentNode.insertBefore(f,$('jdEyebrow'));}f.hidden=!(p&&p.img);if(p&&p.img)f.src=p.img;}\n  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;")
 # (Salt & Sand leaves the town's jobs out each frame; Ground Truth's run: the job you're on, anyone with work beside you)
-swap("else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}}", "else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}else if(WG.gtPlace){jobStep(dt,t);syncObj();}}")
+swap("else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}}", "else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}else if(WG.gtPlace){jobStep(dt,t);syncObj();lrWade(dt,t);}}")
 # (on foot the picture's near edge comes in close, for your hands)
 swap("function sasNear(){\n  if(APP.orbit)return .3;", "function sasNear(){\n  if(LRW.on)return .1;if(APP.orbit)return .3;")
 # the code, just before the boot (after the plane's); the truck's data before the game's script (beside the plane's)
@@ -112,6 +127,17 @@ swap("const word='REDLINE COUNTY',", "const word='GROUND TRUTH',")
 # the driving screen, less crowded (his rule): no nitrous or exhaust-bang lights in the HUD's row
 swap("if(e.nosKw)C.push(['N2O',pt.nosOn,PAL.cyan]);", "")
 swap("}C.push(['BANG',performance.now()-GAME.voice.popT<140,PAL.red]);", "}")
+# each way in (campaign, free play) keeps its own job record (lr-game.js: LRM)
+swap("const chSave=()=>{MARKS_V++;CAREER.on?careerSave():store.set('rt-fchal',JSON.stringify(CHAL.free));};",
+     "const chSave=()=>{MARKS_V++;CAREER.on?careerSave():store.set(LRM.mode==='campaign'?'gt-campaign':'rt-fchal',JSON.stringify(CHAL.free));};")
+# the Outfitter's turntable can hold the Heron (lr-game.js: lrBayHeron)
+swap("tris+=drawShowCar(APP.bi,this.Mcar,SHOW.hoodA,true,false,depth?0:GAME.dirt||0,du);}",
+     "tris+=LRO.heron?lrBayHeron(this.Mcar,depth):drawShowCar(APP.bi,this.Mcar,SHOW.hoodA,true,false,depth?0:GAME.dirt||0,du);}")
+swap("sz=showShed()?1:clamp(T.D.L/4.9,.55,1.8),hz=showShed()?1:clamp(T.D.Hr/1.8,.55,2),", "sz=showShed()?1:LRO.heron?2.2:clamp(T.D.L/4.9,.55,1.8),hz=showShed()?1:LRO.heron?1.25:clamp(T.D.Hr/1.8,.55,2),")
+# free play remembers the physics he picks (Sim or Realistic); the campaign is always Sim
+swap("id=>{const was=APP.level==='sim';APP.level=id;saveGame();", "id=>{const was=APP.level==='sim';APP.level=id;if(LRM.mode==='free')store.set('gt-free-level',id);saveGame();")
+# the Outfitter in its light cyclorama at first (the dark bay's red lights turn the Heron's olive to rust)
+swap("const SHOW={full:false,stage:'dark',", "const SHOW={full:false,stage:'light',")
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'

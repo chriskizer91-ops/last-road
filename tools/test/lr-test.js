@@ -46,6 +46,11 @@ window.LRT_T = (() => {
     stat() { return L.lrStat(); },
     hit(id) { const e = document.getElementById(id); if (!e) return null; const r = e.getBoundingClientRect(), t = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2); return { box: [r.left, r.top, r.width, r.height].map(Math.round), top: t ? t.tagName + '#' + t.id + '.' + t.className : null, z: t ? getComputedStyle(t).zIndex : null }; },
     tap(id) { const e = document.getElementById(id); if (!e) return null; e.click(); return { tapped: id, st: D.GAME.state }; },
+    bayHeron(on) { __rt2.rtFly(!!on); return { st: D.GAME.state, rt: !!car().rt }; },
+    tapq(q) { const e = document.querySelector(q); if (!e) return null; e.click(); return { tapped: q, st: D.GAME.state, heron: L.LRO ? L.LRO.heron : null }; },
+    gas(th) { D.setTestInput({ steer: 0, thr: th === undefined ? 1 : th, brk: 0, hb: 0, nos: false }); return { gas: th === undefined ? 1 : th }; },
+    where() { const t = car(), o = {}; L.WG.sample(t.p[0], t.p[2], o); return { p: [Math.round(t.p[0]), Math.round(t.p[2])], mph: +(t.speed * 2.23694).toFixed(1), code: o.code, depth: o.code === L.WG.SF.water ? +(o.wl - o.h).toFixed(2) : 0, rock: +o.rock.toFixed(2), deep: L.LRWD.deep }; },
+    rtp() { const R = __rt2.RT; return { paint: R.paint, texN: R.texN, texP: !!R.texP, isOrig: R.tex ? R.tex.a === R.tex.a0 : null, mesh: !!R.mesh }; },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();

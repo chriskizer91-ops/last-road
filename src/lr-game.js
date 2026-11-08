@@ -98,15 +98,15 @@ const LRD={tiles:new Map(),FT:4096,st:256,R:26000,R0:26000,on:true,made:0,ms:0,t
 function LRD_FAR(){return LRD.on&&typeof WG!=="undefined"&&WG.gtPlace?LRD.R:0;}
 function lrDistReach(e){LRD.R=Math.min(70000,LRD.R0+12*Math.max(0,e[1]-50));}
 function lrDistMake(tx,tz){
-  const t0=performance.now(),st=LRD.st,FT=LRD.FT,n=FT/st+1,nb=n+2,x0=tx*FT,z0=tz*FT,o={},Hh=new Float64Array(nb*nb),Wt=new Float32Array(n*n*4);
+  const t0=performance.now(),st=LRD.st,FT=LRD.FT,n=FT/st+1,nb=n+2,x0=tx*FT,z0=tz*FT,o={},Hh=new Float64Array(nb*nb),Wt=new Float32Array(n*n*4),GM=new Uint8Array(n*n).fill(40);
   for(let j=0;j<nb;j++)for(let i=0;i<nb;i++){const x=x0+(i-1)*st,z=z0+(j-1)*st;WG.sample(x,z,o);Hh[j*nb+i]=o.code===WG.SF.water?Math.min(o.h,o.wl):o.h;
-    if(i>0&&j>0&&i<=n&&j<=n){const k=(j-1)*n+i-1;Wt[k*4]=o.sand>.02?-o.sand:o.grass;Wt[k*4+1]=o.rock;Wt[k*4+2]=o.salt>.02?-o.salt:o.mud*.5;Wt[k*4+3]=o.code===WG.SF.water?.6:1;}}
+    if(i>0&&j>0&&i<=n&&j<=n){const k=(j-1)*n+i-1;Wt[k*4]=o.sand>.02?-o.sand:o.grass;Wt[k*4+1]=o.rock;Wt[k*4+2]=o.salt>.02?-o.salt:o.mud*.5;Wt[k*4+3]=o.code===WG.SF.water?.6:1;GM[k]=o.gm||40;}}
   /* (rock where it's steep, as the near ground has it) */
   for(let j=0;j<n;j++)for(let i=0;i<n;i++){const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],ny=2*st/Math.hypot(hx,2*st,hz),sl=Math.sqrt(Math.max(0,1-ny*ny))/Math.max(ny,.05);
     const rs=(sl<.3?0:Math.min(1,(sl-.3)/.45))*(Wt[k*4]<0||Wt[k*4+2]<0?.6:1);if(rs>Wt[k*4+1]){Wt[k*4+1]=rs;if(Wt[k*4]>0)Wt[k*4]*=1-rs*.8;}}
   const nv=n*n+4*n*2,P=new Float32Array(nv*3),N=new Float32Array(nv*3),C=new Float32Array(nv*4),M=new Float32Array(nv).fill(40),I=[];let v=0,ymin=1e9,ymax=-1e9;
   const put=(i,j,dy)=>{const b=(j+1)*nb+i+1,k=j*n+i,hx=Hh[b-1]-Hh[b+1],hz=Hh[b-nb]-Hh[b+nb],l=Math.hypot(hx,2*st,hz);
-    P[v*3]=i*st;P[v*3+1]=Hh[b]-dy;P[v*3+2]=j*st;N[v*3]=hx/l;N[v*3+1]=2*st/l;N[v*3+2]=hz/l;C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];
+    P[v*3]=i*st;P[v*3+1]=Hh[b]-dy;P[v*3+2]=j*st;N[v*3]=hx/l;N[v*3+1]=2*st/l;N[v*3+2]=hz/l;C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];M[v]=GM[k];
     if(!dy){ymin=Math.min(ymin,Hh[b]);ymax=Math.max(ymax,Hh[b]);}return v++;};
   for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);
   for(let j=0;j<n-1;j++)for(let i=0;i<n-1;i++){const p=j*n+i,q=p+1,r=p+n,s=r+1;I.push(p,s,q,p,r,s);}
@@ -463,33 +463,86 @@ function lraDraw(u,e,F,probe){
   LRA.drawn=n;LRA.tris=tris;return tris;}
 window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
 
-/* ---------- GROUND TRUTH'S FRONT DOOR. The page starts on its own title over the bay: START drives out at Roadhead
-   on Last Road; OUTFITTER is the bay (the Rock & Mud, and the Heron by its button). Salt & Sand's garage of other
-   cars, its races, challenges, career and traffic stay out of this game's menus. The build's name in the corner, so
-   you can tell which one you opened. On the phone's driving screen, no N2O, O/D OFF, REAR or HORN buttons ---------- */
-const LR_BUILD='last-road-18';
+/* ---------- GROUND TRUTH'S FRONT DOOR. The page starts on its own title over the bay, with two ways in, as Salt &
+   Sand has (his call, Nov 7 2026): CAMPAIGN (the story from First Light, the truck always in Sim physics, its own
+   save) and FREE PLAY (roam anywhere; the truck starts in Sim and the menu can switch it to Realistic; the jobs are
+   there too, on their own save). OUTFITTER is the bay: the Rock & Mud or the Heron on the turntable. Salt & Sand's
+   garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
+   screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
+   opened ---------- */
+const LR_BUILD='last-road-19';
+var LRM={mode:null};
+/* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
+const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
+function lrModeSet(m){LRM.mode=m;store.set('gt-mode',m);let r={};try{r=JSON.parse(store.get(lrModeKey(m),'{}'))||{};}catch(e){}
+  for(const k of Object.keys(CHAL.free))delete CHAL.free[k];Object.assign(CHAL.free,{medals:{},best:{},runs:{}},r);MARKS_V++;JOB.tmemo=null;
+  const was=APP.level;APP.level=m==='campaign'?'sim':(store.get('gt-free-level','sim')==='real'?'real':'sim');if(was!==APP.level)saveGame();
+  document.body.classList.toggle('gtCampaign',m==='campaign');spawnRig(false);}
+const lrHasRun=m=>{try{const r=JSON.parse(store.get(lrModeKey(m),'{}'))||{};return !!(r.active||Object.keys(r.quests||{}).length);}catch(e){return false;}};
+function lrStart(m){lrModeSet(m);const d=$('lrTitle');if(d)d.remove();if(LRO.heron)lrBaySet(false);const b=$('sasDrive');if(b)b.click();
+  /* (a new campaign: Dell calls you over the radio with the first job) */
+  if(m==='campaign')setTimeout(()=>{if(GAME.state==='drive'&&!jDone('firstlight')&&!jRec().active)jobListen('dell');},1400);}
 function lrTitle(){
   const st=document.createElement('style');st.textContent=`
-#tNos,#tOD,#tRear,#touch [data-k=horn],#shBack,#mTabs [data-t=chals],#mTabs [data-t=races],#mTabs [data-t=garage],#mTabs [data-t=cool],
-#menu section:has(#mCars),#menu section:has(#mModes),#menu section:has(#mPresets),#menu section:has(#mTraffic),#menu section:has(#mSim){display:none!important}
+#tNos,#tOD,#tRear,#touch [data-k=horn],#shBack,#rtFly,#mTabs [data-t=races],#mTabs [data-t=garage],#mTabs [data-t=cool],
+#menu section:has(#mCars),#menu section:has(#mModes),#menu section:has(#mPresets),#menu section:has(#mTraffic),#menu section:has(#mSim),
+#menu section:has(#chCount),#menu section:has(#clList),#menu section:has(#chList),#mLevel [data-v=middle],#mLevel [data-v=kids],
+body.gtCampaign #menu section:has(#mLevel),body.gtHeron #shEng,body.gtHeron #shPad,body.gtHeron #shTab{display:none!important}
 #lrTitle{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;color:#f4ead8;font-family:Georgia,'Times New Roman',serif;
   background:linear-gradient(180deg,rgba(18,22,30,.25),rgba(18,14,10,.15) 55%,rgba(14,10,8,.82)),var(--lrh) center 62%/auto 46% repeat-x,linear-gradient(180deg,#9fb3c4,#e3c79c 70%,#b98a5a)}
 #lrTitle .lrT{text-align:center;padding:16px 24px;max-width:680px}
 #lrTitle small{letter-spacing:.32em;text-transform:uppercase;font-size:13px;opacity:.85;font-family:system-ui,sans-serif}
-#lrTitle h1{font-size:min(9vw,15vh,92px);white-space:nowrap;font-weight:400;font-style:italic;margin:4px 0 2px;text-shadow:0 2px 18px rgba(0,0,0,.45)}
-#lrTitle p{font-size:clamp(14px,2.2vw,18px);margin:0 0 22px;opacity:.92;text-shadow:0 1px 8px rgba(0,0,0,.5)}
-#lrTitle button{font:600 18px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;border:0;border-radius:999px;cursor:pointer;margin:6px}
-#lrGo{background:#e2b85c;color:#1d160c;padding:16px 54px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
-#lrOut{background:rgba(20,16,12,.55);color:#f4ead8;padding:12px 26px;font-size:14px!important;border:1px solid rgba(244,234,216,.35)!important}
-#lrTitle i{position:absolute;right:12px;bottom:8px;font:12px system-ui,sans-serif;opacity:.6}`;
+#lrTitle h1{font-size:min(9vw,14vh,92px);white-space:nowrap;font-weight:400;font-style:italic;margin:4px 0 2px;text-shadow:0 2px 18px rgba(0,0,0,.45)}
+#lrTitle p{font-size:clamp(13px,2.1vw,17px);margin:0 0 16px;opacity:.92;text-shadow:0 1px 8px rgba(0,0,0,.5)}
+#lrTitle button{font:600 17px system-ui,sans-serif;letter-spacing:.14em;text-transform:uppercase;border:0;border-radius:999px;cursor:pointer;margin:5px}
+#lrCamp{background:#e2b85c;color:#1d160c;padding:15px 40px;box-shadow:0 6px 24px rgba(0,0,0,.35)}
+#lrFree{background:rgba(244,234,216,.92);color:#1d160c;padding:15px 30px}
+#lrOut{background:rgba(20,16,12,.55);color:#f4ead8;padding:10px 24px;font-size:13px!important;border:1px solid rgba(244,234,216,.35)!important}
+#lrTitle .lrH{font:12px system-ui,sans-serif;opacity:.75;margin:2px 0 8px}
+#lrTitle i{position:absolute;right:12px;bottom:8px;font:12px system-ui,sans-serif;opacity:.6}
+#lrBaySeg{display:inline-flex}`;
   document.head.appendChild(st);
   const h=document.querySelector('#menu .mhead h1');if(h)h.innerHTML='Ground Truth <small class="tagw">'+LR_BUILD+'</small>';
-  document.title='Ground Truth';
-  const d=document.createElement('div');d.id='lrTitle';
+  const jt=document.querySelector('#mTabs [data-t=chals]');if(jt)jt.textContent='Jobs';
+  {const L=$('jbList');const sec=L&&L.closest('section');if(sec){const h2=sec.querySelector('h2');if(h2)h2.textContent='The people';
+    const ps=sec.querySelectorAll('p.hint');if(ps[1])ps[1].textContent='A column of light in someone\'s colour means they have work for you: stop beside them and listen. One job at a time.';}}
+  document.title='Ground Truth';lrBayUI();
+  const d=document.createElement('div');d.id='lrTitle';const c=lrHasRun('campaign');
   d.innerHTML='<div class="lrT"><small>A survey of the interior</small><h1>Ground Truth</h1><p>Roadhead, at the end of Last Road. The truck is fuelled; the Heron waits on the apron.</p>'+
-    '<button id="lrGo" type="button">Start</button><br><button id="lrOut" type="button">Outfitter</button></div><i>'+LR_BUILD+'</i>';
+    '<button id="lrCamp" type="button">'+(c?'Continue campaign':'Campaign')+'</button><button id="lrFree" type="button">Free play</button>'+
+    '<div class="lrH">Campaign: the story, in Sim physics · Free play: go anywhere, Sim or Realistic</div><button id="lrOut" type="button">Outfitter</button></div><i>'+LR_BUILD+'</i>';
   if(window.LR_HORZ)d.style.setProperty('--lrh','url(data:image/webp;base64,'+LR_HORZ+')');
   document.body.appendChild(d);
-  d.querySelector('#lrGo').addEventListener('click',()=>{d.remove();const b=$('sasDrive');if(b)b.click();});
-  d.querySelector('#lrOut').addEventListener('click',()=>d.remove());}
-window.__lr=Object.assign(window.__lr||{},{lrTitle,LR_BUILD});
+  d.querySelector('#lrCamp').addEventListener('click',()=>lrStart('campaign'));
+  d.querySelector('#lrFree').addEventListener('click',()=>lrStart('free'));
+  d.querySelector('#lrOut').addEventListener('click',()=>{if(!LRM.mode)lrModeSet(store.get('gt-mode','campaign')==='free'?'free':'campaign');d.remove();});}
+/* ---------- THE OUTFITTER'S TURNTABLE: the Rock & Mud, or the Heron in its paint (TRUCK | HERON); DRIVE takes out the
+   one that's on it ---------- */
+const LRO={heron:false,t:null,M:new Float32Array(9)};
+function lrBayUI(){const fly=$('rtFly'),go=$('sasDrive');if(!go)return;const seg=document.createElement('div');seg.className='seg';seg.id='lrBaySeg';seg.setAttribute('role','group');
+  seg.innerHTML='<button type="button" data-v="truck" aria-pressed="true">Truck</button><button type="button" data-v="heron" aria-pressed="false">✈ Heron</button>';
+  go.parentNode.insertBefore(seg,fly||go);
+  seg.addEventListener('click',e=>{const b=e.target.closest('button');if(b)lrBaySet(b.dataset.v==='heron');});
+  /* (DRIVE with the Heron on the turntable: out in the Heron) */
+  go.addEventListener('click',e=>{if(!LRO.heron)return;e.stopImmediatePropagation();go.blur();lrBaySet(false,true);rtFly(true);showFull(false);closeMenu();},true);}
+function lrBaySet(on,keep){LRO.heron=on;document.body.classList.toggle('gtHeron',on);const go=$('sasDrive');if(go&&!keep)go.textContent=on?'Fly ▶':'Drive ▶';
+  if(keep&&go)go.textContent='Drive ▶';
+  for(const b of document.querySelectorAll('#lrBaySeg button'))b.setAttribute('aria-pressed',String((b.dataset.v==='heron')===on));
+  if(on){if(!RT.mesh)rtBuild();if(!RT.texP)rtPaint(RT.paint,true);}}
+/* the Heron where the bay puts the car (Mc: the turntable's frame), its wheels on the deck */
+function lrBayHeron(Mc,depth){const t=GAME.car;if(!t)return 0;if(!RT.mesh&&!rtBuild())return 0;
+  if(!LRO.t)LRO.t=Object.create(t);const q=LRO.t,M=LRO.M;Object.setPrototypeOf(q,t);
+  for(let i=0;i<3;i++)for(let j=0;j<3;j++)M[i*3+j]=Mc[j*4+i];q.M=M;q.p=[Mc[12]+RO[0],Mc[13]+RO[1]+LRO.lift,Mc[14]+RO[2]];
+  return rtDraw(q,null,0,false,depth);}
+LRO.lift=RT.hcg;
+window.__lr=Object.assign(window.__lr||{},{lrTitle,LR_BUILD,LRM,lrModeSet,lrStart,LRO,lrBaySet});
+
+/* ---------- WHERE THE TRUCK CAN'T GO (his call, Nov 7 2026: ground that only the Heron gets you across). Water
+   deeper than the truck can ford (about 1.1 m, its snorkel's reach): it bogs down to a crawl and says so; back out.
+   The lava flows of the Black Range (gt-world.js) are broken ground no truck crosses. The escarpment's 600 m wall
+   (but for the Switchback) and the canyons' cliffs were already so ---------- */
+const LRWD={o:{},deep:false,t:0};
+function lrWade(dt,t){if(!t||t.rt||LRW.on)return;const o=LRWD.o;WG.sample(t.p[0],t.p[2],o);const d=o.code===WG.SF.water?o.wl-o.h:0,lava=o.gm===38&&o.rock>.93,deep=d>1.1||lava;
+  if(deep){const k=Math.exp(-dt*2.6);t.v[0]*=k;t.v[2]*=k;if(!LRWD.deep&&performance.now()-LRWD.t>6000){LRWD.t=performance.now();say(lava?'A LAVA FIELD: NO TRUCK CROSSES THIS':'TOO DEEP FOR THE TRUCK',2.6,PAL.amber);say('BACK OUT, OR FLY IT',2.6,PAL.amber);}}
+  LRWD.deep=deep;}
+window.__lr=Object.assign(window.__lr||{},{LRWD,lrWade});

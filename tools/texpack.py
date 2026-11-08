@@ -17,9 +17,11 @@ PACK = [  # (engine surface, his picture, metres a tile, what it is)
     ('PLAYA', 'H09', 4.0, 'cracked mud'),
     ('PLANKS', 'H06', 1.5, 'weathered timber boards'),
     ('SAND', 'H13', 4.0, 'the Dune Sea\'s rippled orange sand'),
+    ('BASALT', 'H19', 5.0, 'basalt lava (the Black Range\'s rock)'),
+    ('GRANITE', 'H11', 4.0, 'granite (the kopjes\' rock)'),
 ]
 ID = {'DIRT': 'dirt_red', 'DIRT2': 'dirt_red_2', 'GRASS': 'grass_dry', 'ROCK': 'rock', 'MUD': 'mud_wet', 'SALT': 'salt_crust', 'GRAVEL': 'gravel',
-      'PLAYA': 'playa', 'PLANKS': 'wood_planks', 'SAND': 'sand'}
+      'PLAYA': 'playa', 'PLANKS': 'wood_planks', 'SAND': 'sand', 'BASALT': 'basalt', 'GRANITE': 'granite'}
 out = {}
 for t, pic, sc, what in PACK:
     im = Image.open(f'models/textures/{pic}.webp').convert('RGB')

@@ -28,7 +28,8 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
   - a chase camera that follows the Heron's climbs, dives and banks.
 
   Tested in the test browser at phone size (`tools/test/lr-run.py`). Still the car in the bay: the Outfitter is next.
-- **The newest build: `builds/last-road-18.html`** (Nov 7 2026, 33 MB). Each step has its own file (never overwritten):
+- **The newest build: `builds/last-road-19.html`** (Nov 7 2026, 34 MB). Each step has its own file (never overwritten):
+  - **last-road-19: Campaign and Free play** (his call, Nov 7 2026: "a free play and campaign start like the other game"). The title has **CAMPAIGN** (the story from First Light: Dell calls you with the first job as you start; the truck always in **Sim** physics) and **FREE PLAY** (go anywhere; the truck starts in Sim and the menu's Driving row switches it to Realistic, remembered); each keeps its own jobs. The menu's Jobs tab lists the people and their work. **The Outfitter's turntable holds the Heron too** (TRUCK | ✈ HERON; DRIVE becomes FLY), in the light cyclorama by default. **Ground the truck can't cross** (his call: places you have to fly): water deeper than 1.1 m (it bogs to a crawl: "TOO DEEP FOR THE TRUCK"), the Black Range's lava flows (a'a ridges up to 2.6 m, and "A LAVA FIELD: NO TRUCK CROSSES THIS"), as well as the escarpment and the canyon walls. **Each region's own rock:** the Black Range in his basalt (H19), the kopjes in his granite (H11), sandstone (H15) elsewhere.
   - **last-road-18: its own front door.** He opened an early build and saw Salt & Sand's bay with its other cars (Nov 7 2026): every build until now still started in Salt & Sand's Dyno Bay. Now the page starts on Ground Truth's title (his painted mountains behind it, the build's name in the corner): **START** drives out at Roadhead on Last Road; **OUTFITTER** is the bay, with the Rock & Mud and the Heron only (no Garage button, GROUND TRUTH on its wall). The menu keeps only this game's tabs (no Challenges, Races, Garage, Cool stuff, career, other cars, traffic). The phone's driving screen without N2O, O/D OFF, REAR and HORN, and the HUD without the N2O and BANG lights.
   - **last-road-3:** the Heron in its own paint, from his picture A06 (olive over cream, yellow wingtips and tail band, LR-OLV), with the cowl's "Wayfarer" lettering repainted as **Heron** (`tools/heron_paint.py`, then salt-mini-plus `redtail/tools/livery.py`; fits 0.86 sides, 0.96 top and underside). The bay's Studio 2 truck in Station Sand's colour (#bca081, weathered).
   - **last-road-4:** the ground painted with his textures (`tools/texpack.py` -> `src/lr-texpack.js`, the engine's texture pack): grass H01, red dirt H04, creek sand H10, sandstone H15, reed mud H18, salt H12, gravel H16, cracked mud H09, timber H06, and a new surface, SAND, for the dunes (H13). The pictures' own colour at 85%.
@@ -67,6 +68,7 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
 - **The truck is the SUV Rock & Mud** (the game's build id is `crawler`), with a new paint (a skin).
 - **The plane is the Heron** (his pick from Fable's list, Nov 7 2026): the bush plane (redtail-2) in Wilderness Olive, "the green bush plane". **It can land in shallow water as well:** a river sandbar right at the surface, or a flat beach.
 - **Both keep the racing game's real physics and its Digital Engine sound.** How the plane and the truck perform stays the racing game's.
+- **The truck drives in Sim physics** (his call, Nov 7 2026): always in the campaign, so you can't tear across the savanna at silly speeds; in free play it starts in Sim and can be switched to Realistic, so it can also be a fun driving game.
 - **On foot: first person.** You see only your gloved hands and what you're holding, so no person has to be modelled. Gear, supplies and materials are modelled instead.
 - **The plane can fly over everything you can explore,** but it can touch down only on certain strips.
 - **The truck is already waiting at every strip you can land on.** When you land, a small model of the truck is there beside the runway. When you switch to it, the plane stays parked (or goes away).
@@ -118,7 +120,7 @@ Each vehicle and asset is made detailed first and baked down. These figures are 
 - **The truck's paint.**
 - **Fuel** for the plane and the truck: yes or no.
 - **People:** a radio voice with a portrait card and short lines of text is suggested, rather than 3D people.
-- **Where the truck can go:** everywhere off-road inside driving areas, kept out of fly-over-only lands by cliffs, deep rivers or thick bush? Or roads and tracks only?
+- ~~Where the truck can go~~ **Decided (Nov 7 2026): off-road anywhere it physically can, with ground that only the Heron gets you across** (deep water, lava flows, cliffs); more such places to add as the regions fill in.
 
 ## What it's built from (in `chriskizer91-ops/salt-mini-plus`)
 
