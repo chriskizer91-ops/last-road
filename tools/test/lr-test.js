@@ -144,6 +144,20 @@ window.LRT_T = (() => {
       for (let i = 0; i < 360; i++) { D.step(1 / 120); lo = Math.min(lo, t.p[1] - y0); fz = Math.max(fz, ...t.wheels.map(w => w.Fz || 0)); if (t.v[1] < -1) landed = true; if (landed) bounce = Math.max(bounce, t.p[1] - y0); }
       IN.brk = 0; IN.hb = 0; IN.thr = 1; D.setTestInput(IN); const x0 = t.p[0], z0 = t.p[2]; for (let i = 0; i < secs * 120; i++) D.step(1 / 120);
       return { drop: h, lowest: +lo.toFixed(3), bounceAbove: +bounce.toFixed(3), maxFz: Math.round(fz), mph: +(Math.hypot(t.v[0], t.v[2]) * 2.23694).toFixed(1), metres: Math.round(Math.hypot(t.p[0] - x0, t.p[2] - z0)) }; },
+    /* the Heron touching down at v0 m/s, 1.2 m up, heading along a water landing (w: its index; off: metres across
+       from its middle: 0 the sand, more into the shallows and the deep water) or a strip (w = 's8': Delta Strip):
+       how far it rolls, how far its nose goes down, whether it ends in the water */
+    heronRoll(w, off, v0, secs) { const R2 = __rt2; if (!car().rt) R2.rtFly(true); const t = car(), str = String(w)[0] === 's', S = str ? L.WG.GTS[+String(w).slice(1)] : L.WG.GTW[w];
+      const u = -S.len / 2 + 40, x = S.x + S.dx * u - S.dz * off, z = S.z + S.dz * u + S.dx * off, yaw = Math.atan2(-S.dz, S.dx); D.placeCar(x, z, yaw);
+      const o = {}; L.WG.sample(x, z, o); const wl = o.code === L.WG.SF.water ? o.wl : o.h, IN = { steer: 0, thr: 0, brk: 0, hb: 0, nos: false, elev: .3, flap: 2 }; D.setTestInput(IN);
+      t.p[1] = Math.max(t.p[1], wl + 1.4); t.v[0] = S.dx * v0; t.v[2] = S.dz * v0; t.v[1] = -1; t.w.fill(0);
+      const x0 = t.p[0], z0 = t.p[2], th = R2.RT.th0; let minP = 9, stop = null, tmax = 0; const pitch = () => Math.asin(t.M[3] * Math.cos(th) + t.M[4] * Math.sin(th)) * 57.3;
+      for (let i = 0; i < secs * 120; i++) { if (i > 240) IN.brk = .6; D.step(1 / 120); minP = Math.min(minP, pitch()); if (stop === null && Math.hypot(t.v[0], t.v[2]) < .5 && i > 60) stop = +(i / 120).toFixed(1); }
+      L.WG.sample(t.p[0], t.p[2], o); return { w, off, depth: +(o.code === L.WG.SF.water ? o.wl - o.h : 0).toFixed(2), v0mph: Math.round(v0 * 2.237), rolled_m: Math.round(Math.hypot(t.p[0] - x0, t.p[2] - z0)), stopped_s: stop, nosePitchMin: Math.round(minP), ditched: L.LRHW.ditch, surf: t.wheels.map(q => q.contact ? q.surf : '-').join(',') }; },
+    /* the Heron stopped on a water landing (w), u metres along it, off metres across, facing along it */
+    heronAt(w, u, off) { const R2 = __rt2; if (!car().rt) R2.rtFly(true); const t = car(), S = L.WG.GTW[w], x = S.x + S.dx * u - S.dz * off, z = S.z + S.dz * u + S.dx * off;
+      D.placeCar(x, z, Math.atan2(-S.dz, S.dx)); t.v.fill(0); t.w.fill(0); D.setTestInput({ steer: 0, thr: 0, brk: 1, hb: 0, nos: false, elev: 0, flap: 0 }); for (let i = 0; i < 120; i++) D.step(1 / 120);
+      const o = {}; L.WG.sample(x, z, o); return { name: S.name, ground: o.code === L.WG.SF.water ? 'water ' + (o.wl - o.h).toFixed(2) + ' m deep' : 'dry, ' + (o.h - S.wl).toFixed(2) + ' m above the water', place: L.WG.gtPlace(x, z) }; },
     fd() { const D = L.LRFD, R = L.lrFdRec(); return { cur: D.cur ? D.cur.id : null, dwell: +D.dwell.toFixed(2), near: D.near.length, noted: Object.keys(R.n).length, photos: Object.keys(R.p).length, paid: R.paid, shot: L.LRW.ui && L.LRW.ui.shot ? !L.LRW.ui.shot.hidden : null }; },
     book(page) { L.LRFD.page = page || 'places'; L.lrBookOpen(true); return { open: !L.LRFD.ui.hidden }; },
     bookShut() { L.lrBookOpen(false); return 1; },

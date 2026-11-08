@@ -22,6 +22,21 @@ const GT_STRIPS=[
   ['Switchback',26,31,0,550,'dirt'],['Terrace Strip',28,37,15,800,'dirt'],['Delta Strip',43,42,40,700,'dirt'],
   ['Caldera',6.2,44,30,500,'cinder'],['Old Survey Strip',12,30,-20,400,'sand'],['Last Well',4,38,5,650,'sand']]
   .map(([name,bx,by,hd,len,surf])=>{const a=hd*Math.PI/180;return {name,x:GX(bx),z:GZ(by),dx:Math.cos(a),dz:-Math.sin(a),len,surf,hw:15,h:null};});
+/* ---------- WATER LANDINGS (his ask, Nov 2026: the Heron "can land in shallow water as well: a river sandbar right
+   at the surface, or a flat beach"): two sandbars, each an island of firm sand a few centimetres above the water in
+   the broadest reaches of open water there are (tools: the points furthest from the banks), one in a Delta channel
+   and one where the gorge river widens into the Delta, the water round them too deep to land in (you land on the bar,
+   not beside it); and a beach on the Lake's south shore, where it's a smooth curve, dry firm sand sloping into the
+   lake. Their sand is pale river sand (the pans' pale grey with a quarter of the dunes' orange in it). No truck waits at these: you can't
+   drive there ---------- */
+const GT_WATERS=[
+  ['Crane Bar','bar',38.31,45.61,58,380,16,'r'],['River Mouth Bar','bar',39.935,41.41,3,380,16,'r'],['South Beach','beach',44.5,42.886,180,520,22,'b']]
+  .map(([name,kind,bx,by,hd,len,hw,lab])=>{const a=hd*Math.PI/180;return {name,kind,x:GX(bx),z:GZ(by),dx:Math.cos(a),dz:-Math.sin(a),len,hw,wl:-1.1,lab};});
+/* which water place (x,z) is in or near: along its length (ax), across (ac: + is the lake's side of a beach), and
+   how far outside its sand (e) */
+function gtWaterQ(x,z,Q){for(const S of GT_WATERS){const ax=(x-S.x)*S.dx+(z-S.z)*S.dz,ac=-(x-S.x)*S.dz+(z-S.z)*S.dx,
+    e=Math.hypot(Math.max(0,Math.abs(ax)-S.len/2+S.hw),Math.max(0,Math.abs(ac)))-S.hw;if(e<150){Q.S=S;Q.ax=ax;Q.ac=ac;Q.e=e;return Q;}}return null;}
+const GWQ={};
 /* named places for the HUD (within a radius, metres) */
 const GT_NAMES=[['Roadhead',32.4,7.4,900],['The End',34,7,250],['Kettle Creek Station',20,11,700],['The Cistern',24,13,300],
   ['The Bottle Tree',27,16,250],['The Marbles',29,20,1200],['Three Wells',17,22,500],['The Sunken City',8,27,1500],['Big Daddy',9,24,2500],
@@ -233,6 +248,17 @@ function gtCore(x,z,o){
     const eb=e+(vn(x/11,z/11,797)-.5)*14,bare=1-sst(-10,2,eb);
     if(bare>0){if(P.surf==='sand'){if(bare>.5)code=SF.sand;}else{if(bare>.5)code=P.surf==='gravel'?SF.gravel:SF.dirt;grass*=1-.75*bare;rock*=1-bare;sand*=1-.7*bare;}}}
   h+=rimAt(x,z);
+  /* the water landings: a bar is a stadium of sand (rounded ends) at the water's top, shallows round it, then open
+     water a metre and a bit deep, joining the river's own; a beach is dry sand on its land side sloping into the lake
+     on the other */
+  {const W=gtWaterQ(x,z,GWQ);if(W){const S=W.S,L=S.wl;
+    if(S.kind==='bar'){const e=W.e,top=L+.07,deep=L-1.3;let hb;
+      if(e<0)hb=top+.05*sst(0,-S.hw,e);else if(e<10)hb=top-(.42)*sst(0,10,e);else if(e<40)hb=L-.35-(.95)*sst(10,40,e);else hb=Math.min(h,deep);
+      const f=1-sst(40,80,e);h=h+(hb-h)*f;if(e<80){wet=1;wl=L;}if(e<0){code=SF.sand;sand=.22;salt=.85;grass=0;rock=0;mud=0;}else if(e<12){code=SF.sand;sand=.18;salt=.6;grass*=.2;mud=0;}}
+    else{const ac=W.ac,end=1-sst(S.len/2-40,S.len/2+30,Math.abs(W.ax));let hb;
+      if(ac<-S.hw)hb=L+.30;else if(ac<6)hb=L+.30-.11*(ac+S.hw)/(S.hw+6);else if(ac<42)hb=L+.19-1.4*sst(6,42,ac);else hb=Math.min(h,L-1.21);
+      const f=end*(ac<-S.hw?1-sst(-S.hw,-S.hw-40,ac):1)*(ac>42?1-sst(42,90,ac):1);h=h+(hb-h)*f;
+      if(f>.3&&ac>-2){wet=1;wl=L;}if(f>.5&&ac<20){code=SF.sand;sand=.22;salt=.85;grass=0;rock=0;mud=0;}}}}
   if(wet&&h<wl){code=SF.water;}else wet=0;
   o.h=h;o.code=code;o.grass=grass;o.rock=rock;o.mud=Math.max(mud,wet?.8:0);o.salt=salt;o.sand=sand;o.ramp=0;o.wet=wet;o.wl=wet?wl:h;o.B=h;o.rk=rock;o.k=0;o.tm=0;o.tin=0;o.gm=GL.gm;
   return o;}
@@ -280,6 +306,7 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
      Causeway or a pad; the trees, mounds and boulders stop you (a post at the trunk, the mound, the rock) */
   const G=9,n=Math.floor(CH/G),o={},K={};
   const clear=(x,z,m)=>{gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<12+m)return false;const Q=gtStripQ(x,z);if(Q&&Q.e<18+m)return false;
+    {const W=gtWaterQ(x,z,GWQ);if(W&&(W.e<110+m||Math.abs(W.ac)<45+m))return false;}
     {const C=GT_CAUSE,ux=x-C.ax,uz=z-C.az,t=(ux*C.dx+uz*C.dz)/C.len;if(t>-.01&&t<1.01&&Math.abs(ux*C.dz-uz*C.dx)<8+m)return false;}
     for(const P of GT_PADS){const F=P.F,u=(x-F.x)*F.dx+(z-F.z)*F.dz,v=-(x-F.x)*F.dz+(z-F.z)*F.dx;if(Math.max(P.u0-u,u-P.u1,P.v0-v,v-P.v1)<20+m)return false;}return true;};
   const gtTint=(a,b,c)=>[.9+(a-.5)*.14,1+(b-.5)*.12,.8+(c-.5)*.1];
@@ -318,6 +345,7 @@ function gtStatic(x0,z0,x1,z1,RB,inC,cols,trees,R){
 function gtPlace(x,z){
   gtRoadQ(x,z,GRQ);if(Math.abs(GRQ.d)<12)return GRQ.s>GT_ROAD.len-80?'The End of Last Road':'Last Road';
   const Q=gtStripQ(x,z);if(Q&&Q.e<0)return Q.S.name+' strip';
+  {const W=gtWaterQ(x,z,GWQ);if(W&&W.e<60)return W.S.name;}
   {const C=GT_CAUSE,ux=x-C.ax,uz=z-C.az,t=(ux*C.dx+uz*C.dz)/C.len;if(t>0&&t<1&&Math.abs(ux*C.dz-uz*C.dx)<10)return 'The Causeway';}
   let best=null,bd=1e9;for(const N of GT_NAMES){const d=Math.hypot(x-N.x,z-N.z);if(d<N.r&&d/N.r<bd){bd=d/N.r;best=N.n;}}if(best)return best;
   if(Math.max(Math.abs(x),Math.abs(z))>HALF-900)return 'The edge of the map';

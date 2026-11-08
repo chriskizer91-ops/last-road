@@ -695,23 +695,35 @@ function gtJobs(){
 /* (for the tests: the job system's own pieces, asked for when they exist) */
 window.__lrJ=()=>({PEOPLE,JOB,jActive,jobListen,closeJobDialog,jRec});
 
-/* ---------- YOUR HANDS on foot: his gloved hands (E01), held low in front of your eyes, swaying a little as you walk ---------- */
+/* ---------- YOUR HANDS on foot: his gloved hands (E01, each hand its own shape), held out in front as a person's are
+   (his picture, Nov 8 2026): a torso's width apart, each turned 45 degrees on its forearm (the thumbs' edges up, the
+   palms facing in and down, as if about to take a ball), the forearms coming in from the picture's bottom corners, the fingers forward and in, swaying a little
+   as you walk ---------- */
 const LRHD={M:new Float32Array(16)};
 function lrHandsDraw(){
-  if(!LRW.on||!LRW.cam||LRFD.snap||!window.LR_PROPS||!LR_PROPS.E01)return 0;const key='E01/model';
-  if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}return 0;}
-  const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)return 0;lrPropTex1();
-  const {eye,fwd}=LRW.cam,a=-.5,r=norm2([-fwd[2],0,fwd[0]]),u0=[r[1]*fwd[2]-r[2]*fwd[1],r[2]*fwd[0]-r[0]*fwd[2],r[0]*fwd[1]-r[1]*fwd[0]];
-  /* (the fingers a little down from the way you look; the up that goes with that) */
-  const f=norm2([fwd[0]*Math.cos(a)-u0[0]*Math.sin(a),fwd[1]*Math.cos(a)-u0[1]*Math.sin(a),fwd[2]*Math.cos(a)-u0[2]*Math.sin(a)]);
-  const u=[r[1]*f[2]-r[2]*f[1],r[2]*f[0]-r[0]*f[2],r[0]*f[1]-r[1]*f[0]],x=[u[1]*f[2]-u[2]*f[1],u[2]*f[0]-u[0]*f[2],u[0]*f[1]-u[1]*f[0]];
-  const sw=Math.sin(LRW.bob)*.012,p=[eye[0]+fwd[0]*.5-u0[0]*.4+r[0]*sw,eye[1]+fwd[1]*.5-u0[1]*.4+Math.abs(sw)*.5,eye[2]+fwd[2]*.5-u0[2]*.4+r[2]*sw],M=LRHD.M;
-  M[0]=x[0];M[1]=x[1];M[2]=x[2];M[3]=0;M[4]=u[0];M[5]=u[1];M[6]=u[2];M[7]=0;M[8]=f[0];M[9]=f[1];M[10]=f[2];M[11]=0;M[12]=p[0]-RO[0];M[13]=p[1]-RO[1];M[14]=p[2]-RO[2];M[15]=1;
-  const U=CUR.u;gl.uniformMatrix4fv(U.uM,false,M);if(U.uPrevM)gl.uniformMatrix4fv(U.uPrevM,false,M);
-  if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
-  const T=[[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]];
-  for(const [loc,t,unit] of T){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);
-  drawMesh(m);return m.tris;}
+  if(!LRW.on||!LRW.cam||LRFD.snap||!window.LR_PROPS||!LR_PROPS.E01||!LR_PROPS.E01.left)return 0;let tris=0;
+  const {eye,fwd}=LRW.cam,r=norm2([-fwd[2],0,fwd[0]]),u0=[r[1]*fwd[2]-r[2]*fwd[1],r[2]*fwd[0]-r[0]*fwd[2],r[0]*fwd[1]-r[1]*fwd[0]];
+  /* (the forearms rise from below to the hands: the sleeves go off the picture's bottom) */
+  const a=-.3,f0=norm2([fwd[0]*Math.cos(a)-u0[0]*Math.sin(a),fwd[1]*Math.cos(a)-u0[1]*Math.sin(a),fwd[2]*Math.cos(a)-u0[2]*Math.sin(a)]);
+  const up0=[r[1]*f0[2]-r[2]*f0[1],r[2]*f0[0]-r[0]*f0[2],r[0]*f0[1]-r[1]*f0[0]],x0=[up0[1]*f0[2]-up0[2]*f0[1],up0[2]*f0[0]-up0[0]*f0[2],up0[0]*f0[1]-up0[1]*f0[0]];
+  const sw=Math.sin(LRW.bob)*.012,M=LRHD.M,rot=(A,B,t)=>[A[0]*Math.cos(t)+B[0]*Math.sin(t),A[1]*Math.cos(t)+B[1]*Math.sin(t),A[2]*Math.cos(t)+B[2]*Math.sin(t)];
+  /* (his model's own frame: +x is the left, +y up, the fingers +z; so its x<0 half, 'left' in the file, is your right hand) */
+  for(const [obj,s] of [['right',-1],['left',1]]){const key='E01/'+obj;
+    if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}continue;}
+    const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||!tx)continue;lrPropTex1();
+    /* this hand: turned in (its fingers toward the middle), then turned 45 degrees on its forearm, its thumb's edge up
+       (half way from palm down to a handshake: the palms face in and down) */
+    const ps=s*.3,f=rot(f0,x0,ps),x1=rot(x0,f0,-ps),ph=s*.785,x=rot(x1,up0,ph),u=rot(up0,x1,-ph);
+    const E=LR_PROPS.E01[obj],c=[(E.min[0]+E.max[0])/2,(E.min[1]+E.max[1])/2,(E.min[2]+E.max[2])/2];
+    const p=[eye[0]+fwd[0]*.5-u0[0]*.2+r[0]*(s*.3+sw),eye[1]+fwd[1]*.5-u0[1]*.2+Math.abs(sw)*.5,eye[2]+fwd[2]*.5-u0[2]*.2+r[2]*(s*.3+sw)];
+    for(let k=0;k<3;k++)p[k]-=x[k]*c[0]+u[k]*c[1]+f[k]*c[2];
+    M[0]=x[0];M[1]=x[1];M[2]=x[2];M[3]=0;M[4]=u[0];M[5]=u[1];M[6]=u[2];M[7]=0;M[8]=f[0];M[9]=f[1];M[10]=f[2];M[11]=0;M[12]=p[0]-RO[0];M[13]=p[1]-RO[1];M[14]=p[2]-RO[2];M[15]=1;
+    const U=CUR.u;gl.uniformMatrix4fv(U.uM,false,M);if(U.uPrevM)gl.uniformMatrix4fv(U.uPrevM,false,M);
+    if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
+    const T=[[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]];
+    for(const [loc,t,unit] of T){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);if(loc)gl.uniform1i(loc,unit);}gl.activeTexture(gl.TEXTURE0);
+    drawMesh(m);tris+=m.tris;}
+  return tris;}
 
 /* ---------- LIFE AT A DISTANCE (Fable's: animals are seen far off, because they run before you're close): herds in
    some of the 2.5 km squares round you, chosen by the land (cattle near the station, antelope on the savanna, oryx
@@ -785,7 +797,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-26';
+const LR_BUILD='last-road-27';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
@@ -878,6 +890,49 @@ function lrTow(){const s=LRWD.safe,t=GAME.car;if(!s||!t)return;const w=lrFit('wi
   if(!w&&LRM.mode==='campaign'){if(lrMoney()>=200){lrMoney(-200);say('DELL SENT THE STATION TRUCK · $200',3,PAL.amber);}else say('DELL: THIS ONE\'S ON ME. GET A WINCH',3,PAL.amber);}
   else say(w?'WINCHED OUT':'TOWED OUT',2,PAL.green);placeCar(s.x,s.z,s.yaw);t.v[0]=t.v[1]=t.v[2]=0;LRWD.bog=0;lrTowUI(false);}
 window.__lr=Object.assign(window.__lr||{},{LRWD,lrWade,lrTow});
+
+/* ---------- THE HERON ON WATER (his ask: it "can land in shallow water as well: a river sandbar right at the surface,
+   or a flat beach"; src/gt-world.js GT_WATERS: Crane Bar and River Mouth Bar in the Delta, South Beach on the Lake).
+   Water now pulls at the Heron's wheels: each wheel in the water is dragged back as water drags (half its density,
+   times the wheel's width times how deep it's in, times the speed squared), at the wheel's bottom, so a film of
+   water on a bar slows you with a spray, and a wheel that runs into water a foot deep at landing speed digs in and
+   puts the Heron on its nose, as it would. Down in water too deep (the cabin in it): ditched; the engine drowns, and
+   a button gets it recovered to the nearest strip ($400 in the campaign; Dell's crew). The truck isn't waiting at
+   the bars or the beach: you can't drive there ---------- */
+const LRHW={o:{},q:{},ditch:false,t:0,ui:null,told:0};
+function lrHWater(t,dt){
+  if(typeof WG==='undefined'||!WG.GTW||LRW.on)return;const p=t.p,o=LRHW.o;
+  /* (high up, no water to touch) */
+  if(p[1]-RANCH.W.heightAt(p[0],p[2])>6){LRHW.ditch=false;return;}
+  const M=t.M,U=[M[1],M[4],M[7]],v=t.v,w=t.w,m=t.m;let wet=0;
+  for(const wh of t.wheels){const hp=wh.hpW,L=(wh.len||.3)+wh.R,bx=hp[0]-U[0]*L,by=hp[1]-U[1]*L,bz=hp[2]-U[2]*L;
+    WG.sample(bx,bz,o);if(o.code!==WG.SF.water)continue;const d=Math.min(2*wh.R,o.wl-by);if(d<=0)continue;wet++;
+    const rx=bx-p[0],ry=by-p[1],rz=bz-p[2],vx=v[0]+w[1]*rz-w[2]*ry,vy=v[1]+w[2]*rx-w[0]*rz,vz=v[2]+w[0]*ry-w[1]*rx,sp=Math.hypot(vx,vz);if(sp<.2)continue;
+    /* (the drag, never more in a step than half the point's speed) */
+    const A=Math.max(.12,(wh.front?t.c.tyreW:t.c.tyreWR)||.18)*d,F=Math.min(.5*1000*1.1*A*sp*sp,.5*sp*m/dt/Math.max(1,t.wheels.length)),fx=-vx/sp*F,fz=-vz/sp*F;
+    v[0]+=fx/m*dt;v[2]+=fz/m*dt;const tq=[ry*fz,rz*fx-rx*fz,-ry*fx],dw=t.invI(F3(),M,tq);w[0]+=dw[0]*dt;w[1]+=dw[1]*dt;w[2]+=dw[2]*dt;}
+  /* down in it: the cabin in the water */
+  /* (or over on its back or its nose in the shallows, stopped: no flipping it back by hand in the water) */
+  WG.sample(p[0],p[2],o);const sunk=o.code===WG.SF.water&&(o.wl-o.h>.9&&p[1]<o.wl+.35||U[1]<.35&&Math.hypot(v[0],v[2])<3);
+  if(sunk){const k=Math.exp(-dt*2.5);v[0]*=k;v[2]*=k;w[0]*=k;w[1]*=k;w[2]*=k;if(!LRHW.ditch){LRHW.ditch=true;LRHW.t=performance.now();LRHW.deep=o.wl-o.h>.9;}}
+  else LRHW.ditch=false;}
+/* once a frame: the word, and the recovery button */
+function lrHTick(t){if(!t||!t.rt||LRW.on){lrHRecUI(false);return;}
+  if(LRHW.ditch){GAME.flipSaid=true;if(t.pt.st==='run')t.pt.st='stopping';if(LRHW.told!==LRHW.t){LRHW.told=LRHW.t;/* (the newest line shows on top) */say('LAND ON THE SAND ITSELF: IT\'S FIRM',4,PAL.amber);say(LRHW.deep?'THE HERON\'S IN THE WATER: TOO DEEP TO LAND':'NOSED OVER IN THE SHALLOWS',4,PAL.amber);}
+    lrHRecUI(performance.now()-LRHW.t>1500);}else lrHRecUI(false);}
+function lrHRecUI(on){let b=LRHW.ui;if(!on){if(b)b.hidden=true;return;}
+  if(!b){b=document.createElement('button');b.type='button';b.id='lrHRec';b.style.cssText='position:fixed;left:50%;top:60%;transform:translateX(-50%);z-index:30;border:0;border-radius:999px;padding:12px 22px;font:700 14px var(--f,system-ui);letter-spacing:.1em;text-transform:uppercase;background:#e2b85c;color:#1d160c;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';
+    b.addEventListener('click',lrHRecover);document.body.appendChild(b);LRHW.ui=b;}
+  b.textContent=LRM.mode==='campaign'?'Recover the Heron · $400':'Recover the Heron';b.hidden=false;}
+function lrHRecover(){const t=GAME.car;if(!t||!t.rt)return;const i=lrNearStrip(t.p[0],t.p[2],1e9),S=WG.GTS[i<0?0:i],u=-(S.len/2-40);
+  if(LRM.mode==='campaign'){if(lrMoney()>=400){lrMoney(-400);say('DELL\'S CREW FLOATED HER OUT · $400',3,PAL.amber);}else say('DELL: PAY ME WHEN YOU CAN',3,PAL.amber);}
+  else say('RECOVERED',2,PAL.green);
+  placeCar(S.x+S.dx*u,S.z+S.dz*u,Math.atan2(-S.dz,S.dx));t.v[0]=t.v[1]=t.v[2]=0;t.w[0]=t.w[1]=t.w[2]=0;LRHW.ditch=false;lrHRecUI(false);say(S.name.toUpperCase()+(S.name.endsWith('Strip')?'':' STRIP'),2.4,PAL.green);}
+/* which water landing (x,z) is on: its sand, with m metres to spare (-1: none) */
+function lrWaterAt(x,z,m){const G=WG.GTW||[];for(let i=0;i<G.length;i++){const S=G[i],u=(x-S.x)*S.dx+(z-S.z)*S.dz,v=-(x-S.x)*S.dz+(z-S.z)*S.dx;
+  if(Math.abs(u)<S.len/2+m&&(S.kind==='beach'?v>-S.hw-m&&v<6+m:Math.abs(v)<S.hw+m))return i;}return -1;}
+addEventListener('keydown',e=>{if((e.key==='t'||e.key==='T')&&LRHW.ui&&!LRHW.ui.hidden)lrHRecover();});
+window.__lr=Object.assign(window.__lr||{},{LRHW,lrHWater,lrHRecover,lrWaterAt});
 addEventListener('keydown',e=>{if((e.key==='t'||e.key==='T')&&LRWD.ui&&!LRWD.ui.hidden)lrTow();});
 
 /* ---------- THE MAPS SHOW THE JOB YOU'RE ON (his call, Nov 7 2026: "routes on map for the current quest"). The
@@ -908,6 +963,9 @@ function lrBigMap(){const t=GAME.car,size=Math.min(H-14,W-14)|0,x0=Math.round((W
   const toM=(x,z)=>[x0+(x+HH)/(2*HH)*size,y0+(z+HH)/(2*HH)*size];
   /* the strips by name; Roadhead in gold */
   for(const S of WG.GTS){const [a,b]=toM(S.x,S.z),home=S.name==='Roadhead';hDisc(a,b,1.3,home?PAL.gold:PAL.white);otxt3(S.name.replace(/ Strip$/,'').toUpperCase(),a+3,b-3,home?PAL.gold:PAL.ink);}
+  /* the water landings (the bars and the beach), in the sand's colour */
+  for(const S of WG.GTW||[]){const [a,b]=toM(S.x,S.z),c=pack(240,214,150),L=S.lab||'l';hLine(a-S.dx*2.2,b-S.dz*2.2,a+S.dx*2.2,b+S.dz*2.2,c);
+    otxt3(S.name.toUpperCase(),L==='r'?a-4:a+4,L==='b'?b+7:b+(L==='r'?3:-3),c,1,L==='b'?'c':L);}
   /* the way the water went, from the hands you've read; the places you've found things */
   lrFdMap(toM);
   /* who has work for you */
