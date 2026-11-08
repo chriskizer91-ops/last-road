@@ -269,7 +269,7 @@ function lrHorzLoad(){if(LRH.tex||LRH.loading||!window.LR_HORZ)return;LRH.loadin
 window.__lr=Object.assign(window.__lr||{},{LRH});
 function lrSkyBind(G,Ps){lrHorzLoad();const on=LRH.tex&&typeof WG!=='undefined'&&WG.gtPlace?1:0;
   if(LRH.locP!==Ps.p){LRH.locP=Ps.p;LRH.loc=[gl.getUniformLocation(Ps.p,'uHorz'),gl.getUniformLocation(Ps.p,'uHz')];}
-  if(LRH.loc[1])gl.uniform4f(LRH.loc[1],-2.5*Math.PI/180,9.5*Math.PI/180,on,0);
+  if(LRH.loc[1])gl.uniform4f(LRH.loc[1],-2.5*Math.PI/180,9.5*Math.PI/180,on,LRDU.k);
   if(on&&LRH.loc[0]){gl.activeTexture(gl.TEXTURE12);gl.bindTexture(gl.TEXTURE_2D,LRH.tex);gl.uniform1i(LRH.loc[0],12);gl.activeTexture(gl.TEXTURE0);}}
 
 /* ---------- ON FOOT: first person. Stop the truck (or the Heron, on the ground) and ON FOOT gets you out beside
@@ -353,7 +353,11 @@ function gtPeople(){
 function gtJobs(){
   const Q=(id,who,title,needs,intro,steps,outro,reward,tip)=>{JOB_NAMES[id]=`${PEOPLE[who].short}'s job, ${title}`;return {id,who,title,needs,intro,steps,outro,reward,tip};};
   const S=WG.GTS,C=WG.GTP.find(p=>p.id==='C04'),W=WG.GTP.find(p=>p.id==='C07'),K=WG.GTP.find(p=>p.id==='D05');
-  const end=[S[0].x+S[0].dx*900,S[0].z+S[0].dz*900];
+  const end=[S[0].x+S[0].dx*900,S[0].z+S[0].dz*900],GP=(id,obj)=>WG.GTP.find(p=>p.id===id&&(!obj||p.obj===obj)),GA=id=>WG.GTP.filter(p=>p.id===id);
+  const G=GP('C14'),MS=GP('C16'),CW=[WG.GX(17.5),WG.GZ(13.6)],AR=GP('D10','arch_wide'),CGs=GA('D12'),CG=[CGs.reduce((a,p)=>a+p.x,0)/CGs.length,CGs.reduce((a,p)=>a+p.z,0)/CGs.length];
+  const TE=GP('C21'),SF=GA('C28').find(p=>Math.hypot(p.x-TE.x,p.z-TE.z)<200),WE=GP('C32'),OB=GP('C35'),VW=GP('D18','wreck'),VT=GP('D18','tent');
+  const D8=S[8],DC=[[D8.x-3200,D8.z-2600],[D8.x+1400,D8.z-4300],[D8.x+4200,D8.z+1600]];
+  const CA=GA('D07'),CN=[CA[3],CA[8],CA[13]],CY=GP('C26'),CT=GA('C28').find(p=>Math.hypot(p.x-CY.x,p.z-CY.z)<200),WM=GA('D04'),BT=GP('D02'),MB=GP('D03');
   return [
     Q('firstlight','dell','First Light',[],
       ['Pilot. You\'re the new contract.','The Heron\'s on the apron. Take her out past the east end of the runway, come round, and put her down again. Gently. Then come and see me.'],
@@ -375,7 +379,65 @@ function gtJobs(){
     Q('panwreck','dell','The Pan Wreck',['mail'],
       ['A driver\'s gone out on the Pan and not come back. His truck\'s an old one.','Land on the salt at Pan Strip, take the truck out to him and see what\'s left.'],
       [{t:'land',strip:2,text:'Land on the salt at Pan Strip'},{t:'deliver',x:K.x,z:K.z,r:18,name:'the wreck',text:'Drive out to the wreck on the Pan'},{t:'talk',who:'dell',text:'Report to Dell'}],
-      {text:'Nobody in it? Then he walked. Nkem\'ll find him. Good work.'},{money:600})];
+      {text:'Nobody in it? Then he walked. Nkem\'ll find him. Good work.'},{money:600}),
+    /* the rest of Fable's chain (his "a bunch of different jobs": the survey arc, deliveries, a rescue, mundane runs),
+       on the places that are built: 'drive' is in the truck, 'fly' is over it in the Heron */
+    Q('theline','haugen','The Line',['threewells'],
+      ['The Old Hands built a road. Raised stone, dead straight, thirty kilometres across the savanna. The station calls it the Causeway.','Drive it from its south-west end to the Gate. There is a stone in the Gate. Read it.'],
+      [{t:'drive',x:CW[0],z:CW[1],r:60,name:'the Causeway\'s south-west end',text:'Drive to the Causeway\'s south-west end'},
+       {t:'drive',x:G.x,z:G.z,r:30,name:'the Gate',text:'Drive the Causeway north-east to the Gate'},
+       {t:'foot',x:MS.x,z:MS.z,r:7,name:'the Map Stone',text:'Get out and read the Map Stone in the Gate'},{t:'talk',who:'haugen',text:'Back to Haugen at the roadhouse'}],
+      {text:'The whole system. In stone. And at the end of it, where the dunes are: a city. Copy. I mean it. A city.'},{money:1200}),
+    Q('congregation','haugen','The Congregation',['theline'],
+      ['East, in the canyon country, there is a field of standing stones the rangers call the Congregation.','The Map Stone has the same figures cut on it. Land at Rim Strip, go and walk among them. And look at the Arches on your way.'],
+      [{t:'land',strip:4,text:'Land at Rim Strip'},{t:'foot',x:CG[0],z:CG[1],r:40,name:'the Congregation',text:'Walk among the stones of the Congregation'},
+       {t:'fly',x:AR.x,z:AR.z,r:350,name:'the Arches',text:'Fly over the Arches on the way home'},{t:'talk',who:'haugen',text:'Back to Haugen'}],
+      {text:'They counted. Every stone is a count of something. Water, I think. Always water.'},{money:1400}),
+    Q('switchback','haugen','The Switchback',['theline'],
+      ['The water starts on the tableland, behind the escarpment. There is one way up for a truck: the Switchback.','Land at the foot of it, drive my camp up to the Terraces, and find the figure that sits there.'],
+      [{t:'land',strip:6,text:'Land at the Switchback strip, at the foot of the escarpment'},{t:'drive',x:TE.x,z:TE.z,r:40,name:'the Terraces',text:'Drive up the Switchback to the Terraces'},
+       {t:'foot',x:SF.x,z:SF.z,r:8,name:'the seated figure',text:'Walk up to the seated figure'},{t:'fly',x:WE.x,z:WE.z,r:300,name:'the Weir',text:'Fly to the Weir at the top of the falls'},
+       {t:'talk',who:'haugen',text:'Back to Haugen'}],
+      {text:'The spring, the weir, the channel. That is where all of it starts. Now we only need where it ends.'},{money:1500}),
+    Q('thecount','nkem','The Count',['mail'],
+      ['Dry-season count. I need the delta flown low and slow, three marked points, before the herds move.','Then land at the Delta Strip. Meridian\'s people are camped there; be polite.'],
+      [{t:'fly',x:DC[0][0],z:DC[0][1],r:300,name:'the first count point',text:'Fly low over the first count point'},{t:'fly',x:DC[1][0],z:DC[1][1],r:300,name:'the second count point',text:'Fly low over the second count point'},
+       {t:'fly',x:DC[2][0],z:DC[2][1],r:300,name:'the third count point',text:'Fly low over the third count point'},{t:'land',strip:8,text:'Land at the Delta Strip'},{t:'talk',who:'harker',text:'Say hello to Harker at Meridian\'s camp'}],
+      {who:'harker',text:'Counting cranes, mate? Lovely. Don\'t mind the trucks. Survey work. Pointed at the dunes, yeah.'},{money:900}),
+    Q('crate','harker','Harker\'s Crate',['thecount','switchback'],
+      ['Got a crate needs to go to the Caldera, mate. Sealed. Pays double.','Don\'t open it. Spiral down, the strip\'s on the crater\'s rim. Then Ruben at Last Well wants a word, apparently.'],
+      [{t:'land',strip:9,text:'Fly the crate to the Caldera strip'},{t:'foot',x:OB.x,z:OB.z,r:12,name:'the stone ring',text:'Walk to the stone ring on the cone'},
+       {t:'land',strip:11,text:'Land at Last Well'},{t:'talk',who:'ruben',text:'See Ruben at Last Well'}],
+      {who:'ruben',text:'Seismic charges. That\'s his crate. They want to shake the dunes and listen. And the old surveyor\'s strip, the one nobody finds: it\'s north of the city, where the sand goes pale.'},{money:2000}),
+    Q('oldstrip','ruben','The Old Strip',['crate'],
+      ['I was a boy when he flew. Venn. Mallory Venn.','Fly the north dunes. His strip is a pale line in the sand, with his plane at the end of it. His notebook will be in the tent.'],
+      [{t:'land',strip:10,text:'Find Venn\'s strip in the dunes and land on it'},{t:'foot',x:VW.x,z:VW.z,r:12,name:'Venn\'s wreck',text:'Walk to Venn\'s wreck'},
+       {t:'foot',x:VT.x,z:VT.z,r:7,name:'Venn\'s tent',text:'Find his notebook in the tent'},{t:'talk',who:'haugen',text:'Take the notebook to Haugen'}],
+      {text:'A line. Cairn by cairn, from Three Wells to the city. He drove it. In 1934. Copy.'},{money:1500}),
+    Q('dust','dell','Dust',['oldstrip'],
+      ['Flight Service has a dust wall coming from the west. Everything\'s grounded after it gets here.','Get to Three Wells before it does. Then it\'s the truck: Venn\'s line, cairn to cairn, to the city. Lights on.'],
+      [{t:'land',strip:3,text:'Land at Three Wells before the dust'},{t:'drive',x:CN[0].x,z:CN[0].z,r:40,name:'Venn\'s first cairns',text:'Drive Venn\'s line west: the first cairns'},
+       {t:'drive',x:CN[1].x,z:CN[1].z,r:40,name:'the cairns halfway',text:'Keep to the cairns'},{t:'drive',x:CN[2].x,z:CN[2].z,r:40,name:'the last cairn',text:'The last cairn'},
+       {t:'drive',x:CY.x,z:CY.z,r:70,name:'the Sunken City',text:'Drive into the Sunken City'}],
+      {text:'You\'re in? In the city? Stay there till it blows through. Copy, pilot.'},{money:1800},'In the dust, the Heron can\'t fly. Follow the gold line on the map: the cairns are Venn\'s.'),
+    Q('city','haugen','The Sunken City',['dust'],
+      ['Dawn. The dust has gone through. You are standing in it.','Walk the hall. Climb the tower. Then fly me over it with the camera running: that is the line that puts it on the map.'],
+      [{t:'foot',x:CY.x,z:CY.z,r:14,name:'the great hall',text:'Walk into the great hall'},{t:'foot',x:CT.x,z:CT.z,r:9,name:'the tower',text:'Walk to the tower'},
+       {t:'land',strip:10,text:'Fly to Venn\'s strip for Haugen'},{t:'fly',x:CY.x,z:CY.z,r:300,name:'the city',text:'Fly Haugen over the city'},{t:'talk',who:'dell',text:'Back to Dell at Roadhead'}],
+      {text:'Copy. Ground truth.'},{money:2500}),
+    /* side work */
+    Q('drum','teo','Fuel to Last Well',['mail'],
+      ['Ruben\'s out of avgas again. One drum. It\'s a long way north; mind your fuel both ways.','Land at Last Well, give it to him.'],
+      [{t:'land',strip:11,text:'Fly the drum to Last Well'},{t:'talk',who:'ruben',text:'Take it to Ruben'}],
+      {who:'ruben',text:'Ah. The good stuff. Sit a while. No? Next time.'},{money:900}),
+    Q('windmills','nkem','The Windmill Line',['mail'],
+      ['Five bores north-east of the station, one every three kilometres. The windmills need checking before the dry.','By truck. Stop at each one.'],
+      WM.map((p,i)=>({t:'drive',x:p.x,z:p.z,r:18,name:'bore '+(i+1),text:'Check bore '+(i+1)+' of 5'})).concat([{t:'talk',who:'nkem',text:'Back to Nkem'}]),
+      {text:'All turning? Then the cattle drink this year. Thanks.'},{money:700}),
+    Q('bottletree','nkem','Over the Bottle Tree',['mail'],
+      ['There\'s a herd that waters at the Bottle Tree, and another at the Marbles. Fly over both and count them for me.'],
+      [{t:'fly',x:BT.x,z:BT.z,r:300,name:'the Bottle Tree',text:'Fly over the Bottle Tree'},{t:'fly',x:MB.x,z:MB.z,r:300,name:'the Marbles',text:'Fly over the Marbles'},{t:'land',strip:1,text:'Land at Kettle Creek'},{t:'talk',who:'nkem',text:'Tell Nkem'}],
+      {text:'Fewer than last year. Not by much. Good.'},{money:500})];
 }
 /* (for the tests: the job system's own pieces, asked for when they exist) */
 window.__lrJ=()=>({PEOPLE,JOB,jActive,jobListen,closeJobDialog,jRec});
@@ -470,7 +532,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-20';
+const LR_BUILD='last-road-21';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
@@ -586,3 +648,12 @@ function lrBigMap(){const t=GAME.car,size=Math.min(H-14,W-14)|0,x0=Math.round((W
   mapArrow(cx,cy,1.3);hFrame(x0-2,y0-2,size+4,size+4,pack(255,255,255,70));
   otxt3(GAME.touch?'TAP TO CLOSE':'M TO CLOSE',x0+3,y0+size-8,PAL.dim);otxt3('40 MILES ACROSS, NORTH UP',x0+size-3,y0+size-8,PAL.dim,1,'r');}
 window.__lr=Object.assign(window.__lr||{},{LRMAP,lrBigMap});
+
+/* ---------- THE DUST (the job Dust): once you're down at Three Wells, a dust wall from the west: the air thickens and
+   browns, the light drops, and Flight Service grounds the Heron until you're through to the city ---------- */
+const LRDU={k:0,t:0,said:0};window.__lr=Object.assign(window.__lr||{},{LRDU});
+function lrDust(E){const A=typeof jActive!=='undefined'&&GAME.state==='drive'?jActive():null,on=!!(A&&A.q.id==='dust'&&A.a.step>=1),now=performance.now();
+  const dt=Math.min(.1,(now-(LRDU.t||now))/1000);LRDU.t=now;LRDU.k+=((on?1:0)-LRDU.k)*Math.min(1,dt*.4);if(LRDU.force!==undefined)LRDU.k=LRDU.force;const k=LRDU.k;
+  if(on&&GAME.car&&GAME.car.rt&&now-LRDU.said>9000){LRDU.said=now;say('FLIGHT SERVICE: DUST. ALL AIRCRAFT GROUNDED',3,PAL.amber);}
+  if(k<.005)return;const D=[.62,.45,.29],m=(a,b,f)=>a.map((v,i)=>v*(1-f)+b[i]*f);E.fogDen*=1+k*120;E.fogCol=m(E.fogCol,D,k);E.fogAmb=m(E.fogAmb,D.map(v=>v*.5),k);
+  E.skyHor=m(E.skyHor,[.56,.42,.29],k);E.skyZen=m(E.skyZen,[.42,.33,.25],k*.9);E.sunCol=E.sunCol.map(v=>v*(1-.75*k));E.ambUp=m(E.ambUp,[.36,.29,.21],k*.7);E.key*=1-k*.5;}

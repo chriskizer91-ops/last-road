@@ -94,7 +94,7 @@ swap("vec3 c=rutSky(d,true);\n  /* the haze toward the horizon: the fog, as far 
      "vec3 c=rutSky(d,true);\n  /* the haze toward the horizon: the fog, as far as the eye sees it */\n  if(uStudio<.5){float fogT=exp(-uFogDen*900.*saturate(1.0-d.y*2.));c=c*mix(1.0,fogT,.85)+hazeCol(d)*(1.0-fogT)*.85;}\n"
      "#ifndef PROBE\n  /* (Ground Truth) the painted mountains round the world's edge */\n  if(uHz.z>.5&&uStudio<.5){float el=asin(clamp(d.y,-1.,1.)),v=(el-uHz.x)/(uHz.y-uHz.x);\n"
      "    if(v>0.&&v<1.){float az=atan(d.x,-d.z);vec4 h=textureLod(uHorz,vec2(az*.15915494,1.-v),0.);\n"
-     "      vec3 L=uAmbUp*.9+uSunCol*.16,hc=mix(h.rgb*L,hazeCol(d),.2);c=mix(c,hc,h.a);}}\n#endif")
+     "      vec3 L=uAmbUp*.9+uSunCol*.16,hc=mix(h.rgb*L,hazeCol(d),.2+.75*uHz.w);c=mix(c,hc,h.a);}}\n#endif")
 swap("const Ps = G.use(this.P.sky);\n      G.set(Ps, U);\n      G.fullscreen();", "const Ps = G.use(this.P.sky);\n      G.set(Ps, U);\n      if (typeof lrSkyBind !== 'undefined') lrSkyBind(G, Ps);\n      G.fullscreen();")
 # THE FAR TILES' CLIFFS: rock where the land is steep (as the near ground has it), so cliffs and canyon walls show
 # as rock from far off too (not the ground's colour)
@@ -107,8 +107,8 @@ swap("  let v=0;const I=[];\n  const put=(i,j,dy)=>{const b=(j+1)*nb+i+1,k=j*n+i
 swap("const JOB_NAMES={};", "if(typeof WG!=='undefined'&&WG.gtPlace){for(const k of Object.keys(PEOPLE))delete PEOPLE[k];Object.assign(PEOPLE,gtPeople());}\nconst JOB_NAMES={};")
 swap("const JOBS=buildJobs();", "const JOBS=(typeof WG!=='undefined'&&WG.gtPlace)?gtJobs():buildJobs();")
 swap("function jobStep(dt,car){\n  const x=car.p[0],z=car.p[2],slow=car.speed<3.5,A=jActive();", "function jobStep(dt,car){\n  const x=LRW.on?LRW.p[0]:car.p[0],z=LRW.on?LRW.p[2]:car.p[2],slow=LRW.on||car.speed<3.5,A=jActive();")
-swap("  if(s.t==='goto'||s.t==='deliver')return {x:s.x,z:s.z,name:s.name,r:s.r||10};", "  if(s.t==='goto'||s.t==='deliver'||s.t==='foot')return {x:s.x,z:s.z,name:s.name,r:s.r||10};\n  if(s.t==='land'){const S=WG.GTS[s.strip];return {x:S.x,z:S.z,name:S.name+' strip',r:Math.min(60,S.len/2)};}")
-swap("    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;", "    else if(s.t==='land')ok=!!car.rt&&!LRW.on&&car.speed<2&&lrStripAt(car.p[0],car.p[2],30)===s.strip;\n    else if(s.t==='foot')ok=LRW.on&&Math.hypot(LRW.p[0]-s.x,LRW.p[2]-s.z)<(s.r||12);\n    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;")
+swap("  if(s.t==='goto'||s.t==='deliver')return {x:s.x,z:s.z,name:s.name,r:s.r||10};", "  if(s.t==='goto'||s.t==='deliver'||s.t==='foot'||s.t==='drive'||s.t==='fly')return {x:s.x,z:s.z,name:s.name,r:s.r||10};\n  if(s.t==='land'){const S=WG.GTS[s.strip];return {x:S.x,z:S.z,name:S.name+' strip',r:Math.min(60,S.len/2)};}")
+swap("    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;", "    else if(s.t==='land')ok=!!car.rt&&!LRW.on&&car.speed<2&&lrStripAt(car.p[0],car.p[2],30)===s.strip;\n    else if(s.t==='foot')ok=LRW.on&&Math.hypot(LRW.p[0]-s.x,LRW.p[2]-s.z)<(s.r||12);\n    else if(s.t==='drive')ok=!car.rt&&!LRW.on&&car.speed<3.5&&Math.hypot(car.p[0]-s.x,car.p[2]-s.z)<(s.r||20);\n    else if(s.t==='fly')ok=!!car.rt&&!LRW.on&&Math.hypot(car.p[0]-s.x,car.p[2]-s.z)<(s.r||200)&&car.p[1]-WG.sample(car.p[0],car.p[2],{}).h>15;\n    else if(s.t==='medals')ok=chMedalCount().reduce((p,q)=>p+q,0)>=s.n;")
 swap("  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;", "  {let f=$('jdFace');if(!f){f=document.createElement('img');f.id='jdFace';f.alt='';f.style.cssText='width:76px;height:76px;border-radius:12px;float:left;margin:2px 14px 8px 0;object-fit:cover;box-shadow:0 2px 10px rgba(0,0,0,.4)';$('jdEyebrow').parentNode.insertBefore(f,$('jdEyebrow'));}f.hidden=!(p&&p.img);if(p&&p.img)f.src=p.img;}\n  $('jdEyebrow').textContent=(p?p.name+' · ':'')+o.eyebrow;")
 # (Salt & Sand leaves the town's jobs out each frame; Ground Truth's run: the job you're on, anyone with work beside you)
 swap("else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}}", "else if(!DYB.dunes){lapStep(dt,t);runStep(dt,t);parkStep(dt,t);chalStep(dt,t,ev);}else if(WG.gtPlace){jobStep(dt,t);syncObj();lrWade(dt,t);}}")
@@ -142,6 +142,8 @@ swap("const SHOW={full:false,stage:'dark',", "const SHOW={full:false,stage:'ligh
 swap("  mapArrow(x0+size/2,y0+size/2);\n  hFrame(x0-1,y0-1,size+2,size+2,pack(255,255,255,60));", "  lrMapRoute(x0,y0,size,MINI_SPAN);mapArrow(x0+size/2,y0+size/2);\n  hFrame(x0-1,y0-1,size+2,size+2,pack(255,255,255,60));")
 swap("function drawBigMap(){\n", "function drawBigMap(){if(WG.gtPlace){lrBigMap();return;}\n")
 swap("  /* top left: the car and its build, the place, the driving level, the money */\n", "  if(APP.bigMap&&WG.gtPlace){lrBigMap();return;}\n  /* top left: the car and its build, the place, the driving level, the money */\n")
+# the dust storm of the job Dust (lr-game.js: lrDust)
+swap("if(DYB.dunes){const A=DYB.air;E.fogDen*=A.fog;E.fogAmb=E.fogAmb.map(v=>v*A.fog);E.ambUp=E.ambUp.map(v=>v*A.amb);E.key*=A.key;}", "if(DYB.dunes){const A=DYB.air;E.fogDen*=A.fog;E.fogAmb=E.fogAmb.map(v=>v*A.fog);E.ambUp=E.ambUp.map(v=>v*A.amb);E.key*=A.key;}if(typeof lrDust!=='undefined')lrDust(E);")
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'

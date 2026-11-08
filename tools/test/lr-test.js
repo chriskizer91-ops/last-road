@@ -52,6 +52,13 @@ window.LRT_T = (() => {
     where() { const t = car(), o = {}; L.WG.sample(t.p[0], t.p[2], o); return { p: [Math.round(t.p[0]), Math.round(t.p[2])], mph: +(t.speed * 2.23694).toFixed(1), code: o.code, depth: o.code === L.WG.SF.water ? +(o.wl - o.h).toFixed(2) : 0, rock: +o.rock.toFixed(2), deep: L.LRWD.deep }; },
     rtp() { const R = __rt2.RT; return { paint: R.paint, texN: R.texN, texP: !!R.texP, isOrig: R.tex ? R.tex.a === R.tex.a0 : null, mesh: !!R.mesh }; },
     bigmap(on) { D.APP.bigMap = !!on; return { bigMap: D.APP.bigMap, map: !!(L.LRMAP && L.LRMAP.px) }; },
+    offer(who) { const J = __lrJ(); J.jobListen(who); const t = document.getElementById('jdTitle'); return { who, title: t ? t.textContent : null }; },
+    stepAt() { const { jActive } = __lrJ(); const A = jActive(); if (!A) return null; const s = A.s; return { id: A.q.id, step: A.a.step, t: s.t, x: Math.round(s.x || 0), z: Math.round(s.z || 0), strip: s.strip, text: s.text }; },
+    goStep(d) { const st = this.stepAt(); if (!st || st.t === 'land' || st.t === 'talk') return st; this.park(st.x + (d || 0), st.z, 0); return st; },
+    jobsAll() { const J = __lrJ(); return D.JOBS ? D.JOBS.map(q => q.id) : null; },
+    fogNow() { return { dust: L.LRDU ? +L.LRDU.k.toFixed(2) : null }; },
+    setStep(n) { const d = __lrJ().jRec(); if (!d.active) return null; d.active.step = n; return this.stepAt(); },
+    dustK(v) { L.LRDU.force = v; return { force: v }; },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();
