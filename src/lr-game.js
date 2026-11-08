@@ -532,7 +532,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-21';
+const LR_BUILD='last-road-22';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
@@ -657,3 +657,67 @@ function lrDust(E){const A=typeof jActive!=='undefined'&&GAME.state==='drive'?jA
   if(on&&GAME.car&&GAME.car.rt&&now-LRDU.said>9000){LRDU.said=now;say('FLIGHT SERVICE: DUST. ALL AIRCRAFT GROUNDED',3,PAL.amber);}
   if(k<.005)return;const D=[.62,.45,.29],m=(a,b,f)=>a.map((v,i)=>v*(1-f)+b[i]*f);E.fogDen*=1+k*120;E.fogCol=m(E.fogCol,D,k);E.fogAmb=m(E.fogAmb,D.map(v=>v*.5),k);
   E.skyHor=m(E.skyHor,[.56,.42,.29],k);E.skyZen=m(E.skyZen,[.42,.33,.25],k*.9);E.sunCol=E.sunCol.map(v=>v*(1-.75*k));E.ambUp=m(E.ambUp,[.36,.29,.21],k*.7);E.key*=1-k*.5;}
+
+/* ---------- THE SOUNDS OF LIFE (Fable's list; his "birdsong, and rustling as something runs off"): made here, not
+   recorded, on the engine's own audio (so its volume and the menu's mute hold). By day, birds in the savanna and the
+   delta, now and then, off to one side or the other; a herd that bolts is a rush of grass and hooves from where it
+   was; cattle low, cranes and flamingos call over the water, a lioness on a kopje roars far off now and again; at
+   night, the insects. All quieter the faster you go (the engine's louder), loudest on foot ---------- */
+const LRS={out:null,nb:null,t:0,next:{bird:2,call:8,roar:40},o:{},R:null,rt:0,cic:null};
+function lrsOut(){const A=ENG.audio;if(!A||!A.ctx)return null;if(LRS.out&&LRS.out.context===A.ctx)return LRS.out;
+  const g=A.ctx.createGain();g.gain.value=.9;g.connect(A.master);LRS.out=g;
+  const n=A.ctx.sampleRate*2,b=A.ctx.createBuffer(1,n,A.ctx.sampleRate),d=b.getChannelData(0);for(let i=0;i<n;i++)d[i]=Math.random()*2-1;LRS.nb=b;return g;}
+/* where a sound at x, z sits: its pan (left, right) from the way you face, its gain from how far */
+function lrsAt(x,z,P,yaw,far){const dx=x-P[0],dz=z-P[2],d=Math.hypot(dx,dz)||1,f=[Math.cos(yaw),-Math.sin(yaw)],r=[Math.sin(yaw),Math.cos(yaw)];
+  return {pan:clamp((dx*r[0]+dz*r[1])/d,-1,1)*.85,g:clamp(1-d/far,0,1)**1.5,d};}
+function lrsChain(ctx,pan,g){const o=LRS.out,p=ctx.createStereoPanner?ctx.createStereoPanner():null,v=ctx.createGain();v.gain.value=g;if(p){p.pan.value=pan;v.connect(p);p.connect(o);}else v.connect(o);return v;}
+function lrsNoise(ctx,t0,dur){const s=ctx.createBufferSource();s.buffer=LRS.nb;s.loop=true;s.start(t0,Math.random()*1.5);s.stop(t0+dur+.05);return s;}
+/* a bird: a few chirps, each a quick sweep up or down */
+function lrsBird(ctx,t0,pan,g){const v=lrsChain(ctx,pan,g),base=2300+Math.random()*2600,n=2+(Math.random()*6|0),kind=Math.random();let t=t0;
+  for(let i=0;i<n;i++){const o=ctx.createOscillator(),e=ctx.createGain(),d=.05+Math.random()*.09,f1=base*(.85+Math.random()*.3),f2=kind<.5?f1*1.35:f1*.7;
+    o.type='sine';o.frequency.setValueAtTime(f1,t);o.frequency.exponentialRampToValueAtTime(f2,t+d);e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.16,t+.008);e.gain.exponentialRampToValueAtTime(.001,t+d);
+    o.connect(e);e.connect(v);o.start(t);o.stop(t+d+.02);t+=d+.03+Math.random()*.12;}}
+/* a herd bolting: grass brushed aside, and hooves */
+function lrsBolt(ctx,t0,pan,g,heavy){const v=lrsChain(ctx,pan,g);
+  /* (the grass: many short crackles, thickest at first, through a narrow band) */
+  {const bp=ctx.createBiquadFilter(),hp=ctx.createBiquadFilter();bp.type='bandpass';bp.frequency.value=2900;bp.Q.value=1.3;hp.type='highpass';hp.frequency.value=900;bp.connect(hp);hp.connect(v);
+    for(let i=0;i<46;i++){const u=Math.random(),t=t0+u*u*2.2,d=.02+Math.random()*.06,s=ctx.createBufferSource(),e=ctx.createGain();s.buffer=LRS.nb;
+      e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime((.15+Math.random()*.35)*(1-u*.6),t+.004);e.gain.exponentialRampToValueAtTime(.001,t+d);s.connect(e);e.connect(bp);s.start(t,Math.random()*1.8);s.stop(t+d+.02);}}
+  for(let i=0;i<14;i++){const t=t0+.1+i*(.13+Math.random()*.06),o=ctx.createOscillator(),e=ctx.createGain();o.type='sine';o.frequency.setValueAtTime(heavy?75:110,t);o.frequency.exponentialRampToValueAtTime(heavy?38:55,t+.09);
+    const a=(heavy?.5:.32)*(1-i/16);e.gain.setValueAtTime(a,t);e.gain.exponentialRampToValueAtTime(.001,t+.11);o.connect(e);e.connect(v);o.start(t);o.stop(t+.13);}}
+/* a cow's low; a crane's or a flamingo's call; a lioness, far off */
+function lrsCall(ctx,t0,pan,g,kind){const v=lrsChain(ctx,pan,g);
+  if(kind==='cattle'){const o=ctx.createOscillator(),bp=ctx.createBiquadFilter(),lp=ctx.createBiquadFilter(),e=ctx.createGain(),d=1.1+Math.random()*.6;o.type='sawtooth';o.frequency.setValueAtTime(118,t0);o.frequency.linearRampToValueAtTime(96,t0+d);
+    bp.type='bandpass';bp.frequency.value=520;bp.Q.value=1.4;lp.type='lowpass';lp.frequency.value=1100;e.gain.setValueAtTime(0,t0);e.gain.linearRampToValueAtTime(.5,t0+.25);e.gain.linearRampToValueAtTime(.35,t0+d-.2);e.gain.linearRampToValueAtTime(0,t0+d);
+    o.connect(bp);bp.connect(lp);lp.connect(e);e.connect(v);o.start(t0);o.stop(t0+d+.05);return;}
+  if(kind==='crane'||kind==='flamingo'){const n=kind==='crane'?3:4,f=kind==='crane'?820:560;for(let i=0;i<n;i++){const t=t0+i*(kind==='crane'?.42:.3),o=ctx.createOscillator(),m=ctx.createOscillator(),mg=ctx.createGain(),bp=ctx.createBiquadFilter(),e=ctx.createGain();
+      o.type='square';o.frequency.value=f*(1+(i%2)*.18);m.frequency.value=32;mg.gain.value=f*.04;m.connect(mg);mg.connect(o.frequency);bp.type='bandpass';bp.frequency.value=f*2;bp.Q.value=2;
+      e.gain.setValueAtTime(0,t);e.gain.linearRampToValueAtTime(.22,t+.03);e.gain.exponentialRampToValueAtTime(.001,t+.28);o.connect(bp);bp.connect(e);e.connect(v);o.start(t);m.start(t);o.stop(t+.3);m.stop(t+.3);}return;}
+  if(kind==='cat'){const d=2.6,s=lrsNoise(ctx,t0,d),o=ctx.createOscillator(),lp=ctx.createBiquadFilter(),e=ctx.createGain();o.type='sawtooth';o.frequency.setValueAtTime(70,t0);o.frequency.linearRampToValueAtTime(48,t0+d);
+    lp.type='lowpass';lp.frequency.value=320;e.gain.setValueAtTime(0,t0);e.gain.linearRampToValueAtTime(.7,t0+.6);e.gain.exponentialRampToValueAtTime(.001,t0+d);s.connect(lp);o.connect(lp);lp.connect(e);e.connect(v);o.start(t0);o.stop(t0+d+.05);}}
+/* each frame of play */
+function lrLife(dt,t){const o=lrsOut();if(!o||!t)return;const ctx=o.context,now=ctx.currentTime,P=LRW.on?LRW.p:t.p,foot=LRW.on;
+  const yaw=foot?LRW.yaw:(()=>{const F=mcol(t.M,0);return Math.atan2(-F[2],F[0]);})(),air=!!t.rt&&!foot&&P[1]-WG.sample(P[0],P[2],LRS.o).h>30;
+  if((LRS.rt-=dt)<=0){LRS.rt=1;LRS.R=WG.gtRegions(P[0],P[2],{});}const R=LRS.R||{},night=(TOD[APP.tod]||{}).night||0;
+  /* the engine covers the quiet sounds: louder on foot, quieter the faster you go, nothing from the air */
+  const hush=air?0:foot?1:clamp(1-(t.speed||0)/22,.15,1);
+  /* the insects, at night, wherever there's grass */
+  {const want=night>.5&&!air?.05*hush*clamp((R.sav||0)+(R.delta||0),0,1):0;
+    if(!LRS.cic&&want>0){const s=lrsNoise(ctx,now,1e5),bp=ctx.createBiquadFilter(),am=ctx.createGain(),lf=ctx.createOscillator(),lg=ctx.createGain(),g=ctx.createGain();
+      bp.type='bandpass';bp.frequency.value=4600;bp.Q.value=9;lf.frequency.value=38;lg.gain.value=.5;am.gain.value=.5;lf.connect(lg);lg.connect(am.gain);g.gain.value=0;s.connect(bp);bp.connect(am);am.connect(g);g.connect(o);lf.start();LRS.cic={g,s,lf};}
+    if(LRS.cic)LRS.cic.g.gain.setTargetAtTime(want,now,.8);}
+  if(air)return;
+  /* the birds, by day, in the grass and by the water */
+  const lush=clamp((R.sav||0)+(R.delta||0)*1.2+(R.high||0)*.5,0,1);
+  if((LRS.next.bird-=dt)<=0){LRS.next.bird=(2+Math.random()*7)/Math.max(.2,lush);
+    if(night<.5&&lush>.2&&hush>.2)lrsBird(ctx,now+.05,(Math.random()*2-1)*.8,(.35+Math.random()*.4)*hush*(.6+.4*lush));}
+  /* the herds: a bolt when one breaks into a run; a call now and then from one near */
+  for(const H of LRA.herds.values()){if(!H||H.gone)continue;const S=lrsAt(H.x,H.z,P,yaw,H.kind==='cat'?2200:900);
+    if(H.run>.25&&!H.heard&&S.g>0){H.heard=true;if(H.K.run)lrsBolt(ctx,now+.05,S.pan,S.g*hush*1.1,H.kind==='cattle'||H.kind==='camel');}
+    if(H.run<.05)H.heard=false;}
+  if((LRS.next.call-=dt)<=0){LRS.next.call=6+Math.random()*14;let best=null,bg=0;
+    for(const H of LRA.herds.values()){if(!H||H.gone||H.run>.2)continue;if(!['cattle','crane','flamingo'].includes(H.kind))continue;const S=lrsAt(H.x,H.z,P,yaw,900);if(S.g>bg){bg=S.g;best=[H,S];}}
+    if(best&&hush>.2)lrsCall(ctx,now+.05,best[1].pan,best[1].g*hush,best[0].kind);}
+  if((LRS.next.roar-=dt)<=0){LRS.next.roar=35+Math.random()*50;for(const H of LRA.herds.values()){if(!H||H.kind!=='cat'||H.gone)continue;const S=lrsAt(H.x,H.z,P,yaw,2200);
+    if(S.g>.02&&hush>.15){lrsCall(ctx,now+.05,S.pan,S.g*hush*.9,'cat');break;}}}}
+window.__lr=Object.assign(window.__lr||{},{LRS,lrLife,lrsBird,lrsBolt,lrsCall});

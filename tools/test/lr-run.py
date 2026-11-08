@@ -51,6 +51,10 @@ async def main():
                     r = await pg.evaluate('async()=>await RTF_T.clip("' + t[5:] + '")'); import base64 as B
                     open(SH + f'{TAG}_clip_{t[5:]}.webm', 'wb').write(B.b64decode(r.pop('b64')))
                 elif t.startswith('F:'): r = await pg.evaluate('()=>RTF_T.' + t[2:].replace('_', ','))
+                elif t == 'wav':
+                    import base64 as B, wave
+                    r = await pg.evaluate('async()=>await LRT_T.soundsWav()'); w = await pg.evaluate('()=>window.__wav')
+                    with wave.open(SH + f'{TAG}_sounds.wav', 'wb') as f: f.setnchannels(2); f.setsampwidth(2); f.setframerate(w['sr']); f.writeframes(B.b64decode(w['b64']))
                 elif t.startswith('L:'): r = await pg.evaluate('()=>LRT_T.' + t[2:].replace('_', ','))
                 elif t.startswith('click:#'): await pg.click(t[6:]); await asyncio.sleep(1.5); r = await pg.evaluate('()=>LRT_T.truck()')
                 elif t == 'ready':

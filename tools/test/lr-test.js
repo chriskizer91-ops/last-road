@@ -59,6 +59,16 @@ window.LRT_T = (() => {
     fogNow() { return { dust: L.LRDU ? +L.LRDU.k.toFixed(2) : null }; },
     setStep(n) { const d = __lrJ().jRec(); if (!d.active) return null; d.active.step = n; return this.stepAt(); },
     dustK(v) { L.LRDU.force = v; return { force: v }; },
+    async soundsWav() { const sr = 32000, N = sr * 13, ctx = new OfflineAudioContext(2, N, sr), S = L.LRS, keep = [S.out, S.nb];
+      const g = ctx.createGain(); g.connect(ctx.destination); S.out = g; const n = sr * 2, b = ctx.createBuffer(1, n, sr), d = b.getChannelData(0); for (let i = 0; i < n; i++) d[i] = Math.random() * 2 - 1; S.nb = b;
+      L.lrsBird(ctx, .3, -.6, .7); L.lrsBird(ctx, 1.4, .5, .6); L.lrsBird(ctx, 2.3, 0, .5); L.lrsBolt(ctx, 3.4, .3, .9, false); L.lrsBolt(ctx, 6.2, -.3, .9, true);
+      L.lrsCall(ctx, 8.8, -.4, .8, 'cattle'); L.lrsCall(ctx, 10.2, .4, .8, 'crane'); L.lrsCall(ctx, 11.4, 0, .8, 'flamingo');
+      const r = await ctx.startRendering(); S.out = keep[0]; S.nb = keep[1]; const L0 = r.getChannelData(0), R0 = r.getChannelData(1), out = new Int16Array(N * 2); let pk = 0;
+      for (let i = 0; i < N; i++) pk = Math.max(pk, Math.abs(L0[i]), Math.abs(R0[i])); const k = pk > 0 ? .9 / pk : 1;
+      for (let i = 0; i < N; i++) { out[i * 2] = L0[i] * k * 32767; out[i * 2 + 1] = R0[i] * k * 32767; }
+      const u8 = new Uint8Array(out.buffer); let s = ''; for (let i = 0; i < u8.length; i += 32768) s += String.fromCharCode.apply(null, u8.subarray(i, i + 32768));
+      window.__wav = { sr, b64: btoa(s), peak: pk }; return { sr, peak: +pk.toFixed(3), bytes: u8.length }; },
+    lifeSound() { try { for (let i = 0; i < 30; i++) L.lrLife(.5, car()); return { ok: true, out: !!L.LRS.out, R: L.LRS.R ? +(+L.LRS.R.sav).toFixed(2) : null, audio: !!D.ENG && !!D.ENG.audio }; } catch (e) { return { err: String(e && e.stack || e).slice(0, 300) }; } },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();
