@@ -138,12 +138,16 @@ swap("sz=showShed()?1:clamp(T.D.L/4.9,.55,1.8),hz=showShed()?1:clamp(T.D.Hr/1.8,
 swap("id=>{const was=APP.level==='sim';APP.level=id;saveGame();", "id=>{const was=APP.level==='sim';APP.level=id;if(LRM.mode==='free')store.set('gt-free-level',id);saveGame();")
 # the Outfitter in its light cyclorama at first (the dark bay's red lights turn the Heron's olive to rust)
 swap("const SHOW={full:false,stage:'dark',", "const SHOW={full:false,stage:'light',")
+# the maps show the job you're on; the big map is the whole world (lr-game.js: lrMapRoute, lrBigMap)
+swap("  mapArrow(x0+size/2,y0+size/2);\n  hFrame(x0-1,y0-1,size+2,size+2,pack(255,255,255,60));", "  lrMapRoute(x0,y0,size,MINI_SPAN);mapArrow(x0+size/2,y0+size/2);\n  hFrame(x0-1,y0-1,size+2,size+2,pack(255,255,255,60));")
+swap("function drawBigMap(){\n", "function drawBigMap(){if(WG.gtPlace){lrBigMap();return;}\n")
+swap("  /* top left: the car and its build, the place, the driving level, the money */\n", "  if(APP.bigMap&&WG.gtPlace){lrBigMap();return;}\n  /* top left: the car and its build, the place, the driving level, the money */\n")
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'
 import base64, os, json
 HERON = os.path.join(sys.path[0], '..', 'models/heron/paint/redtail-2-heron.webp')
-heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_FACES=' + json.dumps({k: base64.b64encode(open(os.path.join(sys.path[0], '..', f'models/portraits/{k}.webp'), 'rb').read()).decode() for k in ['J01','J02','J03','J04','J05','J06','J07']}) + ';\n' + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n'
+heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_FACES=' + json.dumps({k: base64.b64encode(open(os.path.join(sys.path[0], '..', f'models/portraits/{k}.webp'), 'rb').read()).decode() for k in ['J01','J02','J03','J04','J05','J06','J07']}) + ';\n' + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-wmap.js'), encoding='utf-8').read()
 s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '\n' + heron + '</script>\n' + s[i:]
 open(dst, 'w', encoding='utf-8').write(s)
 print('written', dst, len(s))

@@ -470,7 +470,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-19';
+const LR_BUILD='last-road-20';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
@@ -546,3 +546,43 @@ function lrWade(dt,t){if(!t||t.rt||LRW.on)return;const o=LRWD.o;WG.sample(t.p[0]
   if(deep){const k=Math.exp(-dt*2.6);t.v[0]*=k;t.v[2]*=k;if(!LRWD.deep&&performance.now()-LRWD.t>6000){LRWD.t=performance.now();say(lava?'A LAVA FIELD: NO TRUCK CROSSES THIS':'TOO DEEP FOR THE TRUCK',2.6,PAL.amber);say('BACK OUT, OR FLY IT',2.6,PAL.amber);}}
   LRWD.deep=deep;}
 window.__lr=Object.assign(window.__lr||{},{LRWD,lrWade});
+
+/* ---------- THE MAPS SHOW THE JOB YOU'RE ON (his call, Nov 7 2026: "routes on map for the current quest"). The
+   corner map: a dotted gold line from you toward the job's next stop, to the map's edge when the stop is off it, and
+   the stop ringed when it's on it. The big map (M, or tap the corner map) is the whole world from above
+   (src/lr-wmap.js, 64 km square, north up): the strips by name, Roadhead, a dot for each person with work for you,
+   the job's stop ringed with the line to it, and at the top the job, what's next and how far, as the crow (or the
+   Heron) flies ---------- */
+const LRMAP={px:null,n:0};
+if(window.LR_WMAP){const b=Uint8Array.from(atob(LR_WMAP),c=>c.charCodeAt(0));
+  createImageBitmap(new Blob([b],{type:'image/webp'})).then(im=>{const c=document.createElement('canvas');c.width=im.width;c.height=im.height;const g=c.getContext('2d');
+    g.drawImage(im,0,0);LRMAP.px=g.getImageData(0,0,im.width,im.height).data;LRMAP.n=im.width;}).catch(e=>console.warn('the big map: '+(e&&e.message||e)));}
+/* a dotted line, in HUD units */
+function lrDash(x0,y0,x1,y1,col,on,off){on=on||2;off=off||1.6;const L=Math.hypot(x1-x0,y1-y0);if(L<.5)return;const ux=(x1-x0)/L,uy=(y1-y0)/L,ph=(APP.t*4)%(on+off);
+  for(let s=-ph;s<L;s+=on+off){const a=Math.max(0,s),b=Math.min(L,s+on);if(b>a)hLine(x0+ux*a,y0+uy*a,x0+ux*b,y0+uy*b,col);}}
+const lrKm=m=>m<1000?Math.round(m/10)*10+' M':(m/1000).toFixed(m<10000?1:0)+' KM';
+/* the corner map's part (its middle is the truck or the Heron, span metres across) */
+function lrMapRoute(x0,y0,size,span){const t=GAME.car,tg=GAME.state==='drive'&&jTarget();if(!t||!tg)return;
+  const cx=x0+size/2,cy=y0+size/2,dx=(tg.x-t.p[0])/span*size,dy=(tg.z-t.p[2])/span*size,h=size/2-2.5,k=Math.max(Math.abs(dx),Math.abs(dy))/h;
+  if(k<=1){lrDash(cx,cy,cx+dx,cy+dy,PAL.gold);hRing(cx+dx,cy+dy,2.4,PAL.gold);}
+  else{const ex=cx+dx/k,ey=cy+dy/k;lrDash(cx,cy,ex,ey,PAL.gold);hDisc(ex,ey,1.5,(APP.t*3|0)%2?PAL.gold:PAL.white);}}
+/* the big map */
+function lrBigMap(){const t=GAME.car,size=Math.min(H-14,W-14)|0,x0=Math.round((W-size)/2),y0=Math.round((H-size)/2),n=size*HS,HH=WG.HALF;
+  hRect(0,0,W,H,pack(0,0,0,215));hRect(x0-2,y0-2,size+4,size+4,pack(0,0,0,225));
+  if(LRMAP.px){const P=LRMAP.px,N=LRMAP.n,X0=x0*HS,Y0=y0*HS;{const a=Math.max(0,Y0),b=Math.min(BH,Y0+n);if(b>a)hMark(a,b);}
+    for(let j=0;j<n;j++){const Y=Y0+j;if(Y<0||Y>=BH)continue;const v=Math.min(N-1,(j/n*N)|0),o=Y*BW+X0;
+      for(let i=0;i<n;i++){const X=X0+i;if(X<0||X>=BW)continue;const q=(v*N+Math.min(N-1,(i/n*N)|0))*4;HB[o+i]=pack(P[q]*.86,P[q+1]*.86,P[q+2]*.86,255);}}}
+  const toM=(x,z)=>[x0+(x+HH)/(2*HH)*size,y0+(z+HH)/(2*HH)*size];
+  /* the strips by name; Roadhead in gold */
+  for(const S of WG.GTS){const [a,b]=toM(S.x,S.z),home=S.name==='Roadhead';hDisc(a,b,1.3,home?PAL.gold:PAL.white);otxt3(S.name.replace(/ Strip$/,'').toUpperCase(),a+3,b-3,home?PAL.gold:PAL.ink);}
+  /* who has work for you */
+  for(const k of Object.keys(PEOPLE)){const p=PEOPLE[k];if(!jOffer(k))continue;const [a,b]=toM(p.x,p.z);hDisc(a,b,1.6,hx(p.col));}
+  /* the job: its stop, the line to it, and what it is */
+  const [cx,cy]=toM(t.p[0],t.p[2]),A=jActive(),tg=A&&jTarget();
+  if(tg){const [a,b]=toM(tg.x,tg.z);lrDash(cx,cy,a,b,PAL.gold,2.5,1.5);hRing(a,b,3,PAL.gold);
+    otxt3((A.q.title+': '+A.s.text).toUpperCase().slice(0,Math.floor(size/4.2)),x0+3,y0+3,PAL.gold);
+    otxt3(((tg.name||'')+'  '+lrKm(Math.hypot(tg.x-t.p[0],tg.z-t.p[2]))).toUpperCase(),x0+3,y0+10,PAL.ink);}
+  else otxt3(Object.keys(PEOPLE).some(jOffer)?'NO JOB ON: A DOT IS SOMEONE WITH WORK FOR YOU':'NO JOB ON',x0+3,y0+3,PAL.ink);
+  mapArrow(cx,cy,1.3);hFrame(x0-2,y0-2,size+4,size+4,pack(255,255,255,70));
+  otxt3(GAME.touch?'TAP TO CLOSE':'M TO CLOSE',x0+3,y0+size-8,PAL.dim);otxt3('40 MILES ACROSS, NORTH UP',x0+size-3,y0+size-8,PAL.dim,1,'r');}
+window.__lr=Object.assign(window.__lr||{},{LRMAP,lrBigMap});

@@ -51,6 +51,7 @@ window.LRT_T = (() => {
     gas(th) { D.setTestInput({ steer: 0, thr: th === undefined ? 1 : th, brk: 0, hb: 0, nos: false }); return { gas: th === undefined ? 1 : th }; },
     where() { const t = car(), o = {}; L.WG.sample(t.p[0], t.p[2], o); return { p: [Math.round(t.p[0]), Math.round(t.p[2])], mph: +(t.speed * 2.23694).toFixed(1), code: o.code, depth: o.code === L.WG.SF.water ? +(o.wl - o.h).toFixed(2) : 0, rock: +o.rock.toFixed(2), deep: L.LRWD.deep }; },
     rtp() { const R = __rt2.RT; return { paint: R.paint, texN: R.texN, texP: !!R.texP, isOrig: R.tex ? R.tex.a === R.tex.a0 : null, mesh: !!R.mesh }; },
+    bigmap(on) { D.APP.bigMap = !!on; return { bigMap: D.APP.bigMap, map: !!(L.LRMAP && L.LRMAP.px) }; },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();
