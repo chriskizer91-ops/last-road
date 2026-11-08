@@ -150,12 +150,20 @@ swap("const cash=()=>CAREER.on?CAREER.d.money:Feats.S.money;", "const cash=()=>C
 swap("function earn(n){n=Math.round(n);if(!n)return 0;if(CAREER.on){", "function earn(n){n=Math.round(n);if(!n)return 0;if(LRM.mode==='campaign'&&!CAREER.on){lrMoney(n);return n;}if(CAREER.on){")
 swap("Feats.fmtMoney(r.money)+(CAREER.on?'':' score'):'')", "Feats.fmtMoney(r.money)+(CAREER.on||LRM.mode==='campaign'?'':' score'):'')")
 swap("const carLabel=()=>GAME.car&&GAME.car.rt?'Heron':carName({car:APP.car})+' '+rigName(APP.car,rigOf(APP.car))+plusTag(APP.car);", "const carLabel=()=>GAME.car&&GAME.car.rt?'The Heron':WG.gtPlace?'Rock & Mud':carName({car:APP.car})+' '+rigName(APP.car,rigOf(APP.car))+plusTag(APP.car);")
+# a step that needs gear waits for it (lr-game.js: lrHas); the light bar's reach (lrHL)
+swap("    if(ok)jAdvance();}\n  JOB.near=null;", "    if(ok&&s.need&&!lrHas(s.need)){ok=false;lrNeedSay(s.need);}\n    if(ok)jAdvance();}\n  JOB.near=null;")
+swap("const hk=1.5*LOOK.hl;L.headlights={on:1,high:0,posL:at(xf,y,-zs),posR:at(xf,y,zs),dir,right:Rt,up:U,col:[1050*hk,1090*hk,1140*hk],range:85};",
+     "const hk=1.5*LOOK.hl*(typeof lrHL!=='undefined'?Math.sqrt(lrHL()):1);L.headlights={on:1,high:0,posL:at(xf,y,-zs),posR:at(xf,y,zs),dir,right:Rt,up:U,col:[1050*hk,1090*hk,1140*hk],range:85*(typeof lrHL!=='undefined'?lrHL():1)};")
+# the truck's add-ons, fitted, drawn on it (lr-game.js: lrPartsDraw): on the road and in the Outfitter
+swap("  setM('body',Mb);\n  drawMesh(T.body);if(T.hood)drawMesh(T.hood);", "  setM('body',Mb);\n  drawMesh(T.body);if(LRP)lrPartsDraw(Mb,depth);if(T.hood)drawMesh(T.hood);")
+swap("tris+=LRO.heron?lrBayHeron(this.Mcar,depth):drawShowCar(APP.bi,this.Mcar,SHOW.hoodA,true,false,depth?0:GAME.dirt||0,du);}",
+     "tris+=LRO.heron?lrBayHeron(this.Mcar,depth):drawShowCar(APP.bi,this.Mcar,SHOW.hoodA,true,false,depth?0:GAME.dirt||0,du)+lrPartsDraw(this.Mcar,depth);}")
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'
 import base64, os, json
 HERON = os.path.join(sys.path[0], '..', 'models/heron/paint/redtail-2-heron.webp')
-heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_FACES=' + json.dumps({k: base64.b64encode(open(os.path.join(sys.path[0], '..', f'models/portraits/{k}.webp'), 'rb').read()).decode() for k in ['J01','J02','J03','J04','J05','J06','J07']}) + ';\n' + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-wmap.js'), encoding='utf-8').read()
+heron = 'window.LR_HERON_PAINT=' + repr(base64.b64encode(open(HERON, 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-props.js'), encoding='utf-8').read() + 'window.LR_FACES=' + json.dumps({k: base64.b64encode(open(os.path.join(sys.path[0], '..', f'models/portraits/{k}.webp'), 'rb').read()).decode() for k in ['J01','J02','J03','J04','J05','J06','J07']}) + ';\n' + 'window.LR_HORZ=' + repr(base64.b64encode(open(os.path.join(sys.path[0], '..', 'models/horizon/strip.webp'), 'rb').read()).decode()) + ';\n' + open(os.path.join(sys.path[0], 'lr-wmap.js'), encoding='utf-8').read() + open(os.path.join(sys.path[0], 'lr-shop.js'), encoding='utf-8').read()
 s = s[:i] + '<script>' + open(data, encoding='utf-8').read() + '\n' + heron + '</script>\n' + s[i:]
 open(dst, 'w', encoding='utf-8').write(s)
 print('written', dst, len(s))

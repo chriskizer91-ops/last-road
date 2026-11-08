@@ -69,6 +69,27 @@ window.LRT_T = (() => {
       const u8 = new Uint8Array(out.buffer); let s = ''; for (let i = 0; i < u8.length; i += 32768) s += String.fromCharCode.apply(null, u8.subarray(i, i + 32768));
       window.__wav = { sr, b64: btoa(s), peak: pk }; return { sr, peak: +pk.toFixed(3), bytes: u8.length }; },
     lifeSound() { try { for (let i = 0; i < 30; i++) L.lrLife(.5, car()); return { ok: true, out: !!L.LRS.out, R: L.LRS.R ? +(+L.LRS.R.sav).toFixed(2) : null, audio: !!D.ENG && !!D.ENG.audio }; } catch (e) { return { err: String(e && e.stack || e).slice(0, 300) }; } },
+    /* the Heron's take-off (on Roadhead's runway), climb and top speed, with the engine as fitted (setup: 'stock' | 'eng1' | 'eng2' | 'eng2+climb') */
+    heronPerf(setup) { const G = L.LRG; G.own = {}; G.off = {}; L.LRM.mode = /^free/.test(setup || '') ? 'free' : 'campaign'; if (L.LRM.mode === 'free') { G.freeHp = +setup.slice(4); G.off = { tundra: 1, climbprop: 1 }; } else for (const k of (setup || '').split('+')) if (k && k !== 'stock') G.own[k === 'climb' ? 'climbprop' : k] = 1; if (G.own.eng2) G.own.eng1 = 1; L.lrOutfitApply();
+      const R2 = __rt2, F = R2.RTF, MPH = 2.23694, th = R2.RT.th0, c0 = Math.cos(th), s0 = Math.sin(th), IN = { steer: 0, thr: 0, brk: 0, hb: 0, nos: false, elev: 0, flap: 0 };
+      if (!car().rt) R2.rtFly(true);
+      const run = (secs, each, dt = 1 / 120) => { D.setTestInput(IN); const n = Math.round(secs / dt); for (let i = 0; i < n; i++) { D.step(dt); if (each && each(i * dt + dt) === false) return; } };
+      const pitchA = () => { const M = car().M; return Math.asin(M[3] * c0 + M[4] * s0); }, bank = () => Math.atan2(-car().M[5], car().M[4]);
+      const pr = () => { const t = car(), w = t.w, M = t.M; return w[0] * M[2] + w[1] * M[5] + w[2] * M[8]; }, level = () => { const t = car(), w = t.w, M = t.M; IN.steer = Math.max(-1, Math.min(1, -bank() * 2.2 - (w[0] * M[0] + w[1] * M[3] + w[2] * M[6]) * .5)); };
+      const holdV = vt => { IN.elev = Math.max(-1, Math.min(1, (F.V - vt) * .09 - pr() * .9)); };
+      const S = L.WG.GTS[0], x = S.x - S.dx * 430, z = S.z - S.dz * 430, yaw = Math.atan2(-S.dz, S.dx); D.placeCar(x, z, yaw); IN.brk = 1; run(2); IN.brk = 0; IN.flap = 1; IN.thr = 1;
+      const t = car(), x0 = t.p[0], z0 = t.p[2], d = () => Math.round(Math.hypot(t.p[0] - x0, t.p[2] - z0)); let tail = 0, lift = null, clear = null;
+      run(45, () => { if (F.V * MPH < 22) IN.elev = 0; else if (!tail) IN.elev = -.7; if (!tail && pitchA() < th - 4 / 57.3) { tail = 1; IN.elev = 0; } if (tail && !lift && F.V * MPH > 44) IN.elev = .45;
+        if (!lift && t.air && F.alt > .4) lift = d(); if (lift) { holdV(60 / MPH); level(); } if (lift && !clear && F.alt > 15.24) { clear = d(); return false; } });
+      IN.flap = 0; const a0 = F.alt; run(20, () => { holdV(65 / MPH); level(); }); const climb = Math.round((F.alt - a0) / 20 * 196.85);
+      /* top speed, full throttle, held level */
+      const a1 = F.alt; run(60, () => { IN.elev = Math.max(-1, Math.min(1, -F.vs * .1 - (F.alt - a1) * .02 - pr() * .9)); level(); });
+      return { setup: setup || 'stock', hp: G.hp, liftoff_m: lift, clear50ft_m: clear, climb_fpm_at65: climb, top_mph: +(F.V * MPH).toFixed(0) }; },
+    setSafe(x, z, yaw) { L.LRWD.safe = { x, z, yaw }; L.LRWD.bog = 3; return L.LRWD.safe; },
+    modeNext(m) { L.lrModeSet(m); return { mode: L.LRM.mode }; },
+    money(n) { return { money: L.lrMoney(n || 0) }; },
+    towBtn() { const b = document.getElementById('lrTow'); return { shown: !!(b && !b.hidden), text: b ? b.textContent : null, bog: +L.LRWD.bog.toFixed(1), deep: L.LRWD.deep, safe: !!L.LRWD.safe }; },
+    jobCardTip(who) { const J = __lrJ(); J.jobListen(who); const d = document.getElementById('jdTip') || document.querySelector('#jobDlg .tip, #jd .hint'); return { tip: d ? d.textContent : null }; },
     cam() { return { chaseOn: L.LRC.on, eye: L.LRC.e && L.LRC.e.map(v => +v.toFixed(1)), car: Array.from(car().p).map(v => +v.toFixed(1)) }; },
   };
 })();

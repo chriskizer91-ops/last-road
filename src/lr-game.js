@@ -351,7 +351,10 @@ function gtPeople(){
     harker:P('Lyle Harker','Harker','Meridian Resources, at the delta camp',[D.x-70,D.z+40],'#ff6b5a','J04'),
     ruben:P('Ruben Vos','Ruben','keeps Last Well',at(11,-60,44),'#e0c070','J05')};}
 function gtJobs(){
-  const Q=(id,who,title,needs,intro,steps,outro,reward,tip)=>{JOB_NAMES[id]=`${PEOPLE[who].short}'s job, ${title}`;return {id,who,title,needs,intro,steps,outro,reward,tip};};
+  const Q=(id,who,title,needs,intro,steps,outro,reward,tip)=>{JOB_NAMES[id]=`${PEOPLE[who].short}'s job, ${title}`;
+    /* (what to bring, from the steps that need something: on the card) */
+    const bring=[...new Set(steps.filter(s=>s.need).map(s=>s.need))].map(lrNeedName);
+    if(bring.length)tip=(tip?tip+' ':'')+'Bring: the '+bring.join(', the ')+' (Teo\'s wall in the Outfitter).';return {id,who,title,needs,intro,steps,outro,reward,tip};};
   const S=WG.GTS,C=WG.GTP.find(p=>p.id==='C04'),W=WG.GTP.find(p=>p.id==='C07'),K=WG.GTP.find(p=>p.id==='D05');
   const end=[S[0].x+S[0].dx*900,S[0].z+S[0].dz*900],GP=(id,obj)=>WG.GTP.find(p=>p.id===id&&(!obj||p.obj===obj)),GA=id=>WG.GTP.filter(p=>p.id===id);
   const G=GP('C14'),MS=GP('C16'),CW=[WG.GX(17.5),WG.GZ(13.6)],AR=GP('D10','arch_wide'),CGs=GA('D12'),CG=[CGs.reduce((a,p)=>a+p.x,0)/CGs.length,CGs.reduce((a,p)=>a+p.z,0)/CGs.length];
@@ -366,15 +369,15 @@ function gtJobs(){
     Q('mail','dell','The Mail',['firstlight'],
       ['Mail for Kettle Creek Station. Nkem\'s been waiting a week.','The strip\'s about twenty kilometres west, past the creek lines. Watch for cattle on it. The truck will be waiting.'],
       [{t:'land',strip:1,text:'Fly the mail to Kettle Creek Station'},{t:'talk',who:'nkem',text:'Take it to Nkem at the homestead'}],
-      {who:'nkem',text:'About time. Tell Dell the dust is coming early this year.'},{money:300}),
+      {who:'nkem',text:'About time. Tell Dell the dust is coming early this year.'},{money:300},'Paid jobs buy gear: OUTFIT in the bay is Teo\'s wall.'),
     Q('groundtruth','haugen','Ground Truth',['mail'],
       ['Dr Ilse Haugen. I have a contract, a camera and no plane.','There is a stone tank in the savanna south-east of the station. The families call it the Cistern. I need someone to find it from the air, and then to stand in it.'],
       [{t:'goto',x:C.x,z:C.z,r:600,name:'the Cistern',text:'Find the Cistern from the air'},{t:'land',strip:1,text:'Land at Kettle Creek'},
-       {t:'foot',x:C.x,z:C.z,r:14,name:'the Cistern',text:'Drive to the Cistern, get out and walk into it'},{t:'talk',who:'haugen',text:'Back to Haugen at the roadhouse'}],
+       {t:'foot',x:C.x,z:C.z,r:14,name:'the Cistern',text:'Drive to the Cistern, get out and walk into it',need:'prybar'},{t:'talk',who:'haugen',text:'Back to Haugen at the roadhouse'}],
       {text:'Copy. I mean: what? The carving\'s hand points west? Into the dunes? Copy.'},{money:800}),
     Q('threewells','haugen','Three Wells',['groundtruth'],
       ['West of the station, where the grass gives out, there are three wells that have never been dry.','The station says there\'s a temple there, half under the sand. Land at the dune\'s edge and walk it.'],
-      [{t:'land',strip:3,text:'Land at Three Wells, at the dune\'s edge'},{t:'foot',x:W.x,z:W.z,r:16,name:'Three Wells',text:'Walk to the temple of the Three Wells'},{t:'talk',who:'haugen',text:'Back to Haugen'}],
+      [{t:'land',strip:3,text:'Land at Three Wells, at the dune\'s edge'},{t:'foot',x:W.x,z:W.z,r:16,name:'Three Wells',text:'Walk to the temple of the Three Wells',need:'machete'},{t:'talk',who:'haugen',text:'Back to Haugen'}],
       {text:'Into the dunes. The channel runs into the dunes. Nobody builds a channel into a desert.'},{money:1000}),
     Q('panwreck','dell','The Pan Wreck',['mail'],
       ['A driver\'s gone out on the Pan and not come back. His truck\'s an old one.','Land on the salt at Pan Strip, take the truck out to him and see what\'s left.'],
@@ -401,8 +404,8 @@ function gtJobs(){
       {text:'The spring, the weir, the channel. That is where all of it starts. Now we only need where it ends.'},{money:1500}),
     Q('thecount','nkem','The Count',['mail'],
       ['Dry-season count. I need the delta flown low and slow, three marked points, before the herds move.','Then land at the Delta Strip. Meridian\'s people are camped there; be polite.'],
-      [{t:'fly',x:DC[0][0],z:DC[0][1],r:300,name:'the first count point',text:'Fly low over the first count point'},{t:'fly',x:DC[1][0],z:DC[1][1],r:300,name:'the second count point',text:'Fly low over the second count point'},
-       {t:'fly',x:DC[2][0],z:DC[2][1],r:300,name:'the third count point',text:'Fly low over the third count point'},{t:'land',strip:8,text:'Land at the Delta Strip'},{t:'talk',who:'harker',text:'Say hello to Harker at Meridian\'s camp'}],
+      [{t:'fly',x:DC[0][0],z:DC[0][1],r:300,name:'the first count point',text:'Fly low over the first count point',need:'camera'},{t:'fly',x:DC[1][0],z:DC[1][1],r:300,name:'the second count point',text:'Fly low over the second count point',need:'camera'},
+       {t:'fly',x:DC[2][0],z:DC[2][1],r:300,name:'the third count point',text:'Fly low over the third count point',need:'camera'},{t:'land',strip:8,text:'Land at the Delta Strip'},{t:'talk',who:'harker',text:'Say hello to Harker at Meridian\'s camp'}],
       {who:'harker',text:'Counting cranes, mate? Lovely. Don\'t mind the trucks. Survey work. Pointed at the dunes, yeah.'},{money:900}),
     Q('crate','harker','Harker\'s Crate',['thecount','switchback'],
       ['Got a crate needs to go to the Caldera, mate. Sealed. Pays double.','Don\'t open it. Spiral down, the strip\'s on the crater\'s rim. Then Ruben at Last Well wants a word, apparently.'],
@@ -411,19 +414,19 @@ function gtJobs(){
       {who:'ruben',text:'Seismic charges. That\'s his crate. They want to shake the dunes and listen. And the old surveyor\'s strip, the one nobody finds: it\'s north of the city, where the sand goes pale.'},{money:2000}),
     Q('oldstrip','ruben','The Old Strip',['crate'],
       ['I was a boy when he flew. Venn. Mallory Venn.','Fly the north dunes. His strip is a pale line in the sand, with his plane at the end of it. His notebook will be in the tent.'],
-      [{t:'land',strip:10,text:'Find Venn\'s strip in the dunes and land on it'},{t:'foot',x:VW.x,z:VW.z,r:12,name:'Venn\'s wreck',text:'Walk to Venn\'s wreck'},
+      [{t:'land',strip:10,text:'Find Venn\'s strip in the dunes and land on it',need:'tundra'},{t:'foot',x:VW.x,z:VW.z,r:12,name:'Venn\'s wreck',text:'Walk to Venn\'s wreck'},
        {t:'foot',x:VT.x,z:VT.z,r:7,name:'Venn\'s tent',text:'Find his notebook in the tent'},{t:'talk',who:'haugen',text:'Take the notebook to Haugen'}],
       {text:'A line. Cairn by cairn, from Three Wells to the city. He drove it. In 1934. Copy.'},{money:1500}),
     Q('dust','dell','Dust',['oldstrip'],
       ['Flight Service has a dust wall coming from the west. Everything\'s grounded after it gets here.','Get to Three Wells before it does. Then it\'s the truck: Venn\'s line, cairn to cairn, to the city. Lights on.'],
-      [{t:'land',strip:3,text:'Land at Three Wells before the dust'},{t:'drive',x:CN[0].x,z:CN[0].z,r:40,name:'Venn\'s first cairns',text:'Drive Venn\'s line west: the first cairns'},
+      [{t:'land',strip:3,text:'Land at Three Wells before the dust'},{t:'drive',x:CN[0].x,z:CN[0].z,r:40,name:'Venn\'s first cairns',text:'Drive Venn\'s line west: the first cairns',need:'ladders'},
        {t:'drive',x:CN[1].x,z:CN[1].z,r:40,name:'the cairns halfway',text:'Keep to the cairns'},{t:'drive',x:CN[2].x,z:CN[2].z,r:40,name:'the last cairn',text:'The last cairn'},
        {t:'drive',x:CY.x,z:CY.z,r:70,name:'the Sunken City',text:'Drive into the Sunken City'}],
       {text:'You\'re in? In the city? Stay there till it blows through. Copy, pilot.'},{money:1800},'In the dust, the Heron can\'t fly. Follow the gold line on the map: the cairns are Venn\'s.'),
     Q('city','haugen','The Sunken City',['dust'],
       ['Dawn. The dust has gone through. You are standing in it.','Walk the hall. Climb the tower. Then fly me over it with the camera running: that is the line that puts it on the map.'],
-      [{t:'foot',x:CY.x,z:CY.z,r:14,name:'the great hall',text:'Walk into the great hall'},{t:'foot',x:CT.x,z:CT.z,r:9,name:'the tower',text:'Walk to the tower'},
-       {t:'land',strip:10,text:'Fly to Venn\'s strip for Haugen'},{t:'fly',x:CY.x,z:CY.z,r:300,name:'the city',text:'Fly Haugen over the city'},{t:'talk',who:'dell',text:'Back to Dell at Roadhead'}],
+      [{t:'foot',x:CY.x,z:CY.z,r:14,name:'the great hall',text:'Walk into the great hall',need:'lantern'},{t:'foot',x:CT.x,z:CT.z,r:9,name:'the tower',text:'Climb the tower',need:'rope'},
+       {t:'land',strip:10,text:'Fly to Venn\'s strip for Haugen'},{t:'fly',x:CY.x,z:CY.z,r:300,name:'the city',text:'Fly Haugen over the city',need:'camera'},{t:'talk',who:'dell',text:'Back to Dell at Roadhead'}],
       {text:'Copy. Ground truth.'},{money:2500}),
     /* side work */
     Q('drum','teo','Fuel to Last Well',['mail'],
@@ -436,7 +439,7 @@ function gtJobs(){
       {text:'All turning? Then the cattle drink this year. Thanks.'},{money:700}),
     Q('bottletree','nkem','Over the Bottle Tree',['mail'],
       ['There\'s a herd that waters at the Bottle Tree, and another at the Marbles. Fly over both and count them for me.'],
-      [{t:'fly',x:BT.x,z:BT.z,r:300,name:'the Bottle Tree',text:'Fly over the Bottle Tree'},{t:'fly',x:MB.x,z:MB.z,r:300,name:'the Marbles',text:'Fly over the Marbles'},{t:'land',strip:1,text:'Land at Kettle Creek'},{t:'talk',who:'nkem',text:'Tell Nkem'}],
+      [{t:'fly',x:BT.x,z:BT.z,r:300,name:'the Bottle Tree',text:'Fly over the Bottle Tree',need:'camera'},{t:'fly',x:MB.x,z:MB.z,r:300,name:'the Marbles',text:'Fly over the Marbles',need:'camera'},{t:'land',strip:1,text:'Land at Kettle Creek'},{t:'talk',who:'nkem',text:'Tell Nkem'}],
       {text:'Fewer than last year. Not by much. Good.'},{money:500})];
 }
 /* (for the tests: the job system's own pieces, asked for when they exist) */
@@ -532,14 +535,14 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-23';
+const LR_BUILD='last-road-24';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
 function lrModeSet(m){LRM.mode=m;store.set('gt-mode',m);let r={};try{r=JSON.parse(store.get(lrModeKey(m),'{}'))||{};}catch(e){}
   for(const k of Object.keys(CHAL.free))delete CHAL.free[k];Object.assign(CHAL.free,{medals:{},best:{},runs:{}},r);MARKS_V++;JOB.tmemo=null;
   const was=APP.level;APP.level=m==='campaign'?'sim':(store.get('gt-free-level','sim')==='real'?'real':'sim');if(was!==APP.level)saveGame();
-  document.body.classList.toggle('gtCampaign',m==='campaign');spawnRig(false);}
+  document.body.classList.toggle('gtCampaign',m==='campaign');lrOutfitApply();spawnRig(false);}
 /* the campaign's money: what its jobs have paid (and, later, what the Outfitter's gear costs) */
 function lrMoney(add){let m=+store.get('gt-money','0')||0;if(add){m+=add;store.set('gt-money',String(m));}return m;}
 const lrHasRun=m=>{try{const r=JSON.parse(store.get(lrModeKey(m),'{}'))||{};return !!(r.active||Object.keys(r.quests||{}).length);}catch(e){return false;}};
@@ -551,7 +554,7 @@ function lrTitle(){
 #tNos,#tOD,#tRear,#touch [data-k=horn],#shBack,#rtFly,#mTabs [data-t=races],#mTabs [data-t=garage],#mTabs [data-t=cool],
 #menu section:has(#mCars),#menu section:has(#mModes),#menu section:has(#mPresets),#menu section:has(#mTraffic),#menu section:has(#mSim),
 #menu section:has(#chCount),#menu section:has(#clList),#menu section:has(#chList),#mLevel [data-v=middle],#mLevel [data-v=kids],
-body.gtCampaign #menu section:has(#mLevel),body.gtHeron #shEng,body.gtHeron #shPad,body.gtHeron #shTab{display:none!important}
+body.gtCampaign #menu section:has(#mLevel),#mSim .simrows>div:has(#mSimWx),#mSim .simrows>div:has(#mSimCargo),body:not(.gtAir) #mSim,body.gtHeron #shEng,body.gtHeron #shPad,body.gtHeron #shTab{display:none!important}
 #lrTitle{position:fixed;inset:0;z-index:9000;display:grid;place-items:center;color:#f4ead8;font-family:Georgia,'Times New Roman',serif;
   background:linear-gradient(180deg,rgba(18,22,30,.25),rgba(18,14,10,.15) 55%,rgba(14,10,8,.82)),var(--lrh) center 62%/auto 46% repeat-x,linear-gradient(180deg,#9fb3c4,#e3c79c 70%,#b98a5a)}
 #lrTitle .lrT{text-align:center;padding:16px 24px;max-width:680px}
@@ -570,7 +573,7 @@ body.gtCampaign #menu section:has(#mLevel),body.gtHeron #shEng,body.gtHeron #shP
   const jt=document.querySelector('#mTabs [data-t=chals]');if(jt)jt.textContent='Jobs';
   {const L=$('jbList');const sec=L&&L.closest('section');if(sec){const h2=sec.querySelector('h2');if(h2)h2.textContent='The people';
     const ps=sec.querySelectorAll('p.hint');if(ps[1])ps[1].textContent='A column of light in someone\'s colour means they have work for you: stop beside them and listen. One job at a time.';}}
-  document.title='Ground Truth';lrBayUI();
+  document.title='Ground Truth';lrBayUI();lrShopBtn();lrOutfitApply();
   const d=document.createElement('div');d.id='lrTitle';const c=lrHasRun('campaign');
   d.innerHTML='<div class="lrT"><small>A survey of the interior</small><h1>Ground Truth</h1><p>Roadhead, at the end of Last Road. The truck is fuelled; the Heron waits on the apron.</p>'+
     '<button id="lrCamp" type="button">'+(c?'Continue campaign':'Campaign')+'</button><button id="lrFree" type="button">Free play</button>'+
@@ -605,11 +608,24 @@ window.__lr=Object.assign(window.__lr||{},{lrTitle,LR_BUILD,LRM,lrModeSet,lrStar
    deeper than the truck can ford (about 1.1 m, its snorkel's reach): it bogs down to a crawl and says so; back out.
    The lava flows of the Black Range (gt-world.js) are broken ground no truck crosses. The escarpment's 600 m wall
    (but for the Switchback) and the canyons' cliffs were already so ---------- */
-const LRWD={o:{},deep:false,t:0};
-function lrWade(dt,t){if(!t||t.rt||LRW.on)return;const o=LRWD.o;WG.sample(t.p[0],t.p[2],o);const d=o.code===WG.SF.water?o.wl-o.h:0,lava=o.gm===38&&o.rock>.93,deep=d>1.1||lava;
-  if(deep){const k=Math.exp(-dt*2.6);t.v[0]*=k;t.v[2]*=k;if(!LRWD.deep&&performance.now()-LRWD.t>6000){LRWD.t=performance.now();say(lava?'A LAVA FIELD: NO TRUCK CROSSES THIS':'TOO DEEP FOR THE TRUCK',2.6,PAL.amber);say('BACK OUT, OR FLY IT',2.6,PAL.amber);}}
-  LRWD.deep=deep;}
-window.__lr=Object.assign(window.__lr||{},{LRWD,lrWade});
+const LRWD={o:{},deep:false,t:0,safe:null,st:0,bog:0,ui:null};
+function lrWade(dt,t){if(!t||t.rt||LRW.on){lrTowUI(false);return;}const o=LRWD.o;WG.sample(t.p[0],t.p[2],o);const d=o.code===WG.SF.water?o.wl-o.h:0,lava=o.gm===38&&o.rock>.93,
+    ford=lrFit('snorkel')?1.4:.8,deep=d>ford||lava;
+  if(deep){LRWD.bog+=dt;const k=Math.exp(-dt*2.6);t.v[0]*=k;t.v[2]*=k;if(!LRWD.deep&&performance.now()-LRWD.t>6000){LRWD.t=performance.now();
+      say(lava?'A LAVA FIELD: NO TRUCK CROSSES THIS':d<1.4&&!lrFit('snorkel')?'TOO DEEP WITHOUT A SNORKEL':'TOO DEEP FOR THE TRUCK',2.6,PAL.amber);say('BACK OUT, OR FLY IT',2.6,PAL.amber);}}
+  else{LRWD.bog=0;if((LRWD.st-=dt)<=0&&t.speed>.4){LRWD.st=.7;const F=mcol(t.M,0);LRWD.safe={x:t.p[0]-F[0]*4,z:t.p[2]-F[2]*4,yaw:Math.atan2(-F[2],F[0])};}}
+  LRWD.deep=deep;lrTowUI(LRWD.bog>2&&!!LRWD.safe);}
+/* bogged for a couple of seconds: the winch hauls you back to firm ground; without one, a tow does ($200 in the
+   campaign, and Dell lets it go if you can't pay) */
+function lrTowUI(on){let b=LRWD.ui;if(!on){if(b)b.hidden=true;return;}
+  if(!b){b=document.createElement('button');b.type='button';b.id='lrTow';b.style.cssText='position:fixed;left:50%;top:38%;transform:translateX(-50%);z-index:30;border:0;border-radius:999px;padding:12px 22px;font:700 14px var(--f,system-ui);letter-spacing:.1em;text-transform:uppercase;background:#e2b85c;color:#1d160c;box-shadow:0 6px 24px rgba(0,0,0,.4);cursor:pointer';
+    b.addEventListener('click',lrTow);document.body.appendChild(b);LRWD.ui=b;}
+  const w=lrFit('winch');b.textContent=w?'Winch out':LRM.mode==='campaign'?'Call a tow · $200':'Tow out';b.hidden=false;}
+function lrTow(){const s=LRWD.safe,t=GAME.car;if(!s||!t)return;const w=lrFit('winch');
+  if(!w&&LRM.mode==='campaign'){if(lrMoney()>=200){lrMoney(-200);say('DELL SENT THE STATION TRUCK · $200',3,PAL.amber);}else say('DELL: THIS ONE\'S ON ME. GET A WINCH',3,PAL.amber);}
+  else say(w?'WINCHED OUT':'TOWED OUT',2,PAL.green);placeCar(s.x,s.z,s.yaw);t.v[0]=t.v[1]=t.v[2]=0;LRWD.bog=0;lrTowUI(false);}
+window.__lr=Object.assign(window.__lr||{},{LRWD,lrWade,lrTow});
+addEventListener('keydown',e=>{if((e.key==='t'||e.key==='T')&&LRWD.ui&&!LRWD.ui.hidden)lrTow();});
 
 /* ---------- THE MAPS SHOW THE JOB YOU'RE ON (his call, Nov 7 2026: "routes on map for the current quest"). The
    corner map: a dotted gold line from you toward the job's next stop, to the map's edge when the stop is off it, and
@@ -723,3 +739,103 @@ function lrLife(dt,t){const o=lrsOut();if(!o||!t)return;const ctx=o.context,now=
   if((LRS.next.roar-=dt)<=0){LRS.next.roar=35+Math.random()*50;for(const H of LRA.herds.values()){if(!H||H.kind!=='cat'||H.gone)continue;const S=lrsAt(H.x,H.z,P,yaw,2200);
     if(S.g>.02&&hush>.15){lrsCall(ctx,now+.05,S.pan,S.g*hush*.9,'cat');break;}}}}
 window.__lr=Object.assign(window.__lr||{},{LRS,lrLife,lrsBird,lrsBolt,lrsCall});
+
+/* ---------- THE OUTFITTER'S GEAR AND UPGRADES (Fable's Outfitter; his call, Nov 7 2026: paid for with the campaign's
+   money). Teo's wall, by what it goes on: the truck's add-ons (fitted on the truck, his E17 models where there are
+   any), the Heron's (tundra tyres and the climb propeller, each with a cost as well as a gain, so they can be taken
+   off again), and the gear you carry. Each does something you feel, and some jobs need one (the job's card says what
+   to bring; the step waits till you have it). In free play all of it is yours, free ---------- */
+function lrShopList(){return [
+  {id:'snorkel',kind:'truck',name:'Snorkel',price:1200,pic:'E17/snorkel',says:'Fords water 1.4 m deep (0.8 m without one)'},
+  {id:'winch',kind:'truck',name:'Winch',price:2000,pic:'E17/winch',says:'Pulls the truck out when it bogs down: no tow to pay for'},
+  {id:'lightbar',kind:'truck',name:'Light bar',price:700,pic:'E17/light_bar',says:'Lights the track nearly twice as far at night'},
+  {id:'compressor',kind:'truck',name:'Tyre compressor',price:250,pic:'E10/compressor_case',says:'Air the tyres down for sand or up for the road, anywhere (the menu\'s Tyres row)'},
+  {id:'ladders',kind:'truck',name:'Sand ladders',price:180,pic:'E11/sand_ladder',says:'For soft sand. Teo won\'t send you into the dunes without them'},
+  {id:'eng1',kind:'heron',name:'Engine overhaul: 300 hp',price:2500,pic:'E18/propeller_cruise',says:'Teo rebuilds the engine with high-compression pistons: 260 hp becomes 300'},
+  {id:'eng2',kind:'heron',name:'Big-bore engine: 340 hp',price:6000,pic:'E18/propeller_cruise',says:'A bigger engine on the same mounts: 340 hp. Needs the overhaul first',after:'eng1'},
+  {id:'tundra',kind:'heron',name:'Tundra tyres',price:3000,pic:'E18/tundra_wheel',says:'Fat tyres for soft, rough strips (Venn\'s needs them). About 5 mph slower',toggle:true},
+  {id:'climbprop',kind:'heron',name:'Climb propeller',price:1800,pic:'E18/propeller_climb',says:'Off the ground sooner and climbs harder, but cruises slower',toggle:true},
+  {id:'prybar',kind:'gear',name:'Pry bar',price:60,pic:'E06/wrecking_bar',says:'Lifts stone covers: the Cistern'},
+  {id:'machete',kind:'gear',name:'Machete',price:40,pic:'E06/machete',says:'Cuts through vines: Three Wells'},
+  {id:'camera',kind:'gear',name:'Camera',price:150,pic:'E05/camera',says:'Photographs counts and finds from the air'},
+  {id:'lantern',kind:'gear',name:'Lantern',price:80,pic:'E04/lantern',says:'Light in dark halls: the Sunken City'},
+  {id:'rope',kind:'gear',name:'Rope and harness',price:250,pic:'E13/rope_coil',says:'For climbs: the city\'s tower'}];}
+const LRG={list:lrShopList(),own:{},off:{},base:null,tab:'truck',ui:null,sayT:0,freeHp:+store.get('gt-free-hp','260')||260,HPS:[260,300,340,400,480]};
+const lrShopItem=id=>LRG.list.find(q=>q.id===id);
+try{LRG.own=JSON.parse(store.get('gt-own','{}'))||{};LRG.off=JSON.parse(store.get('gt-off','{}'))||{};}catch(e){}
+/* bought (in free play, all of it); fitted (bought, and not taken off) */
+function lrHas(id){return LRM.mode==='free'||!!LRG.own[id];}
+function lrFit(id){return lrHas(id)&&!LRG.off[id];}
+function lrShopSave(){store.set('gt-own',JSON.stringify(LRG.own));store.set('gt-off',JSON.stringify(LRG.off));lrOutfitApply();}
+/* the Heron's: the climb prop pushes 20% harder standing still and is 7% less efficient at speed; the tundra
+   tyres add drag (about 5 mph off the cruise) */
+function lrOutfitApply(){if(typeof RTF==='undefined')return;if(!LRG.base)LRG.base={T0:RTF.T0,eta:RTF.eta,CD0:RTF.CD0};const B=LRG.base;
+  const hp=LRM.mode==='free'?LRG.freeHp:lrFit('eng2')?340:lrFit('eng1')?300:260,pk=hp/260;if(!B.P)B.P=RTF.P;RTF.P=B.P*pk;LRG.hp=hp;
+  RTF.T0=B.T0*Math.pow(pk,.67)*(lrFit('climbprop')?1.2:1);RTF.eta=B.eta*(lrFit('climbprop')?.93:1);RTF.CD0=B.CD0+(lrFit('tundra')?.0045:0);
+  document.body.classList.toggle('gtAir',lrFit('compressor'));}
+function lrBuy(id){const q=lrShopItem(id);if(!q||lrHas(id))return false;if(q.after&&!lrHas(q.after)){say('THE '+lrShopItem(q.after).name.split(':')[0].toUpperCase()+' FIRST',2.4,PAL.amber);return false;}if(lrMoney()<q.price){say('NOT ENOUGH MONEY: '+Feats.fmtMoney(q.price),2.4,PAL.amber);return false;}
+  lrMoney(-q.price);LRG.own[id]=1;delete LRG.off[id];lrShopSave();say(q.name.toUpperCase()+(q.kind==='gear'?' PACKED':' FITTED'),2.2,PAL.green);buzz(20);return true;}
+function lrToggle(id){if(!lrHas(id))return;if(LRG.off[id])delete LRG.off[id];else LRG.off[id]=1;lrShopSave();}
+/* a job's step that needs something you haven't got */
+function lrNeedName(id){const q=lrShopList().find(q=>q.id===id);return q?q.name.toLowerCase():id;}
+function lrNeedSay(id){const now=performance.now();if(now-LRG.sayT<5000)return;LRG.sayT=now;const q=lrShopList().find(q=>q.id===id);
+  say((q&&q.kind!=='gear'&&id!=='ladders'?'THIS NEEDS ':'YOU NEED ')+(q?q.name:id).toUpperCase(),3,PAL.amber);say('TEO HAS IT IN THE OUTFITTER',3,PAL.amber);}
+/* the light bar: the headlights reach about 1.8 times as far */
+function lrHL(){const t=GAME.car;return t&&!t.rt&&lrFit('lightbar')?1.8:1;}
+/* the shop: a sheet beside the turntable (Truck, Heron, Gear), each thing with its picture, what it does, its price */
+function lrShopUI(){if(LRG.ui)return LRG.ui;const st=document.createElement('style');st.textContent=`
+#lrShopBtn{margin-left:6px}
+#lrShop{position:fixed;top:0;right:0;bottom:0;width:min(400px,46vw);z-index:60;background:rgba(14,13,18,.94);border-left:1px solid var(--edge-2);display:flex;flex-direction:column;font:13px/1.35 var(--f,system-ui);color:var(--ink,#eee)}
+#lrShop[hidden]{display:none}
+#lrShop header{display:flex;align-items:center;gap:8px;padding:10px 12px 6px}
+#lrShop header b{font-size:15px;letter-spacing:.08em;text-transform:uppercase;flex:1}
+#lrShop header .m{color:#8dff5a;font-weight:700;font-size:15px}
+#lrShop header button{background:none;border:0;color:inherit;font-size:22px;cursor:pointer;padding:0 4px}
+#lrShop .seg{margin:0 12px 6px}
+#lrShop .note{margin:0 12px 6px;color:var(--ink-2,#aaa);font-size:12px}
+#lrShop ul{list-style:none;margin:0;padding:0 8px 12px;overflow:auto;flex:1}
+#lrShop li{display:flex;gap:10px;align-items:center;padding:7px 6px;border-bottom:1px solid rgba(255,255,255,.07)}
+#lrShop li img{width:54px;height:54px;object-fit:contain;border-radius:8px;background:#dfe0e3;flex:none}
+#lrShop li div{flex:1;min-width:0}#lrShop li div b{display:block;font-size:14px}#lrShop li div small{color:var(--ink-2,#aaa)}
+#lrShop li button{flex:none;border:0;border-radius:999px;padding:8px 12px;font:700 12px var(--f,system-ui);letter-spacing:.06em;text-transform:uppercase;cursor:pointer}
+#lrShop li button.buy{background:#e2b85c;color:#1d160c}#lrShop li button.buy[disabled]{background:#3a3640;color:#8d8a94;cursor:default}
+#lrShop li button.got{background:rgba(141,255,90,.14);color:#8dff5a}#lrShop li button.offb{background:rgba(255,255,255,.1);color:#ddd}`;
+  document.head.appendChild(st);const d=document.createElement('div');d.id='lrShop';d.hidden=true;
+  d.innerHTML='<header><b>Teo\'s wall</b><span class="m"></span><button type="button" aria-label="Close">×</button></header><div class="seg" role="group"><button type="button" data-v="truck">Truck</button><button type="button" data-v="heron">Heron</button><button type="button" data-v="gear">Gear</button></div><p class="note"></p><ul></ul>';
+  document.body.appendChild(d);d.querySelector('header button').addEventListener('click',()=>lrShopOpen(false));
+  d.querySelector('.seg').addEventListener('click',e=>{const b=e.target.closest('button');if(b){LRG.tab=b.dataset.v;lrShopSync();if(b.dataset.v==='heron'!==LRO.heron&&b.dataset.v!=='gear')lrBaySet(b.dataset.v==='heron');}});
+  d.querySelector('ul').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+    if(b.dataset.hp){LRG.freeHp=+b.dataset.hp;store.set('gt-free-hp',String(LRG.freeHp));lrOutfitApply();say('THE HERON: '+LRG.freeHp+' HP',1.8,PAL.green);lrShopSync();return;}const id=b.dataset.id;if(b.classList.contains('buy'))lrBuy(id);else if(b.dataset.t)lrToggle(id);lrShopSync();});
+  LRG.ui=d;return d;}
+function lrShopOpen(on){const d=lrShopUI();d.hidden=!on;if(on){LRG.tab=LRO.heron?'heron':LRG.tab==='heron'?'truck':LRG.tab;lrShopSync();}}
+function lrShopSync(){const d=LRG.ui;if(!d||d.hidden)return;const free=LRM.mode==='free',m=lrMoney();
+  d.querySelector('.m').textContent=free?'Free play':Feats.fmtMoney(m);
+  for(const b of d.querySelectorAll('.seg button'))b.setAttribute('aria-pressed',String(b.dataset.v===LRG.tab));
+  d.querySelector('.note').textContent=free?'Free play: all of it is yours. Take the Heron\'s off, or put them back.':LRG.tab==='gear'?'Carried with you, in the truck and the Heron.':LRG.tab==='truck'?'Fitted on the truck.':'Fitted on the Heron. The tyres and the propeller can come off again.';
+  const P=window.LR_SHOPPICS||{},eng=free&&LRG.tab==='heron'?`<li><img alt="" src="${P['E18/propeller_cruise']?'data:image/webp;base64,'+P['E18/propeller_cruise']:''}"><div><b>Engine: ${LRG.freeHp} hp</b><small>Free play: pick its power. 260 is the Heron as built; 400 and 480 are free play's own</small><div class="seg lrHp" role="group" style="margin-top:6px">${LRG.HPS.map(h=>`<button type="button" data-hp="${h}" aria-pressed="${h===LRG.freeHp}">${h}</button>`).join('')}</div></div></li>`:'';
+  d.querySelector('ul').innerHTML=eng+LRG.list.filter(q=>q.kind===LRG.tab&&!(free&&/^eng/.test(q.id))).map(q=>{const has=lrHas(q.id),fit=lrFit(q.id);
+    const btn=!has?`<button type="button" class="buy" data-id="${q.id}"${m<q.price||(q.after&&!lrHas(q.after))?' disabled':''}>${Feats.fmtMoney(q.price)}</button>`:q.toggle?`<button type="button" class="${fit?'got':'offb'}" data-id="${q.id}" data-t="1">${fit?'Fitted':'Off'}</button>`:`<button type="button" class="got" disabled>${q.kind==='gear'?'Packed':'Fitted'}</button>`;
+    return `<li><img alt="" src="${P[q.pic]?'data:image/webp;base64,'+P[q.pic]:''}"><div><b>${q.name}</b><small>${q.says}</small></div>${btn}</li>`;}).join('');}
+/* the bay's OUTFIT button, beside DRIVE */
+function lrShopBtn(){const go=$('sasDrive');if(!go||$('lrShopBtn'))return;const b=document.createElement('button');b.type='button';b.id='lrShopBtn';b.className=go.className.replace(/\bprimary\b/,'');
+  b.textContent='Outfit';go.parentNode.insertBefore(b,go.nextSibling);b.addEventListener('click',()=>lrShopOpen(LRG.ui?LRG.ui.hidden:true));
+  go.addEventListener('click',()=>lrShopOpen(false));}
+window.__lr=Object.assign(window.__lr||{},{LRG,lrBuy,lrToggle,lrHas,lrFit,lrShopOpen,lrMoney,lrOutfitApply});
+
+/* ---------- THE TRUCK'S ADD-ONS ON THE TRUCK (his E17 models): the snorkel up the right front wing to the roof, the
+   winch in the front bumper, the light bar across the roof's front edge; drawn on the play truck on the road and on
+   the Studio 2 in the Outfitter, once fitted. Where each sits, in the truck's own frame (x forward, y up from the
+   ground, z right) ---------- */
+const LRPART=[['snorkel','E17/snorkel',1.05,.86,1.14,Math.PI/2],['winch','E17/winch',2.76,.5,0,Math.PI/2],['lightbar','E17/light_bar',.14,2.1,0,Math.PI/2]];
+const LRPT={M:new Float32Array(16),L:new Map()};
+function lrPartsDraw(Mb,depth){if(!window.LR_PROPS||!LR_PROPS.E17)return 0;let n=0,any=false;const U=CUR.u;
+  for(const [id,key,x,y,z,a] of LRPART){if(!lrFit(id))continue;
+    if(!LRP.mesh.has(key)){if(!LRP.busy.has(key)){LRP.busy.add(key);lrPropMake(key);}continue;}const m=LRP.mesh.get(key),tx=LRP.tex.get(key);if(!m||(!depth&&!tx))continue;
+    let L=LRPT.L.get(id);if(!L){L=M4.mul(M4T(x,y,z),M4RY(a));LRPT.L.set(id,L);}const M=M4.mul(Mb,L);
+    gl.uniformMatrix4fv(U.uM,false,M);if(U.uPrevM)gl.uniformMatrix4fv(U.uPrevM,false,M);
+    if(!depth){lrPropTex1();if(LRP.locP!==CUR.p){LRP.locP=CUR.p;LRP.loc=['uRTa','uRTn','uRTo'].map(q=>gl.getUniformLocation(CUR.p,q));}
+      for(const [loc,t,unit] of [[LRP.loc[0],tx,13],[LRP.loc[1],LRP.one.n,14],[LRP.loc[2],LRP.one.o,15]]){gl.activeTexture(gl.TEXTURE0+unit);gl.bindTexture(gl.TEXTURE_2D,t);if(loc)gl.uniform1i(loc,unit);}
+      gl.activeTexture(gl.TEXTURE0);}
+    drawMesh(m);n+=m.tris;any=true;}
+  /* (the truck's own pictures back on, for its wheels) */
+  if(any&&!depth)lrBind();return n;}
