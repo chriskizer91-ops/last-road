@@ -119,6 +119,31 @@ window.LRT_T = (() => {
     noteAll(site) { const F = L.lrFdInit().filter(f => f.site.id === site); for (const f of F) L.lrFdNote(f); return F.length; },
     standDbg(id) { const f = L.lrFdInit().find(q => q.id === id); const out = []; for (let a = 0; a < 8; a++) for (const d of [2.2, 3.5]) { const x = f.P[0] + Math.cos(a / 8 * 6.283) * d, z = f.P[2] + Math.sin(a / 8 * 6.283) * d, fl = L.lrWalkFloor(x, z, f.P[1]);
       out.push([a, d, fl === fl ? +(fl - f.P[1]).toFixed(2) : 'X', fl === fl ? L.lrWalkSees([x, fl + 1.62, z], f.P, 1.4) : '-', +(L.WG.sample(x, z, {}).h - f.P[1]).toFixed(2)]); } return { P: f.P.map(v => +v.toFixed(1)), out }; },
+    /* the truck's roll, on flat ground: kicked into a roll (kick: degrees a second about its length) or sliding
+       sideways (slide: m/s); sim switches (off: 'trip+body'); every 0.05 s: its roll (unwrapped), roll rate, height */
+    tipTest(kick, slide, secs, off) { const t = car(); if (t.rt) return 'in the Heron'; const SD = t.sim ? t.sim.f : {}, keep = Object.assign({}, SD);
+      for (const k of (off || '').split('+')) if (k) SD[k] = 0; if (t.applySim) t.applySim();
+      const S2 = L.WG.GTS[2], x = S2 ? S2.x + 300 : t.p[0], z = S2 ? S2.z + 300 : t.p[2]; D.placeCar(x, z, 0);   /* (out on the salt pan, nothing near) */ const IN = { steer: 0, thr: 0, brk: 1, hb: 1, nos: false }; D.setTestInput(IN);
+      for (let i = 0; i < 240; i++) D.step(1 / 120);
+      const roll = () => Math.atan2(-t.M[5], t.M[4]), rr = () => t.w[0] * t.M[0] + t.w[1] * t.M[3] + t.w[2] * t.M[6];
+      const R = t.M; t.w[0] += R[0] * kick / 57.3; t.w[1] += R[3] * kick / 57.3; t.w[2] += R[6] * kick / 57.3;
+      t.v[0] += R[2] * slide; t.v[1] += R[5] * slide; t.v[2] += R[8] * slide; IN.brk = 0; IN.hb = 0; D.setTestInput(IN);
+      let prev = roll(), tot = 0, mx = 0, out = [], y0 = t.p[1], ymax = 0, eg = 0, ew = 0; const n = Math.round(secs * 120);
+      const jumps = []; let pv = t.v[1], pw = Math.hypot(...t.w);
+      for (let i = 1; i <= n; i++) { D.step(1 / 120); const r = roll();
+        { const dv = t.v[1] - pv, dw = Math.hypot(...t.w) - pw; pv = t.v[1]; pw = Math.hypot(...t.w);
+          if ((dv > .35 || Math.abs(dw) > 1.2) && jumps.length < 8) jumps.push({ t: +(i / 120).toFixed(3), dv: +dv.toFixed(2), dw: +dw.toFixed(2), roll: Math.round(tot * 57.3), up: +t.M[4].toFixed(2),
+            W: t.wheels.map(w => w.contact ? [Math.round(w.Fz), Math.round(w.Fy), +(w.lp || 0).toFixed(2), +(w.off || 0).toFixed(2), +(w.comp || 0).toFixed(2), Math.round(w.dig * 100) / 100 || 0] : 0) }); } let d = r - prev; if (d > Math.PI) d -= 2 * Math.PI; if (d < -Math.PI) d += 2 * Math.PI; tot += d; prev = r;
+        mx = Math.max(mx, Math.abs(rr()) * 57.3); ymax = Math.max(ymax, t.p[1] - y0); const ev = t.ev || {}; eg = Math.max(eg, ev.ground || 0); ew = Math.max(ew, ev.wall || 0);
+        if (i % 6 === 0) { const W = t.wheels; out.push([+(i / 120).toFixed(2), Math.round(tot * 57.3), Math.round(rr() * 57.3), +(t.p[1] - y0).toFixed(2), W.filter(w => w.contact).length, Math.round(Math.max(...W.map(w => w.Fz || 0))), Math.round(Math.max(...W.map(w => Math.abs(w.Fy || 0)))), +eg.toFixed(1), +ew.toFixed(1), +t.v[1].toFixed(1)]); eg = ew = 0; } }
+      Object.assign(SD, keep); if (t.applySim) t.applySim();
+      return { sim: !!t.sim, level: D.APP ? D.APP.level : '?', kick, slide, off: off || '', endRoll: Math.round(tot * 57.3), maxRate: Math.round(mx), maxRise: +ymax.toFixed(2), m: t.m, I: Array.from(t.I).map(Math.round), hcg: t.c.hcg, track: t.c.track || null, trace: out.filter((_, k) => k % 2 === 0), jumps }; },
+    /* the truck dropped from h metres onto the salt pan, then driven flat out for secs: how it lands and how fast it goes */
+    dropDrive(h, secs) { const t = car(); const S2 = L.WG.GTS[2]; D.placeCar(S2.x + 300, S2.z + 300, 0); const IN = { steer: 0, thr: 0, brk: 1, hb: 1, nos: false }; D.setTestInput(IN);
+      for (let i = 0; i < 240; i++) D.step(1 / 120); const y0 = t.p[1]; t.p[1] += h; t.v.fill(0); t.w.fill(0); let lo = 1e9, hi = -1e9, fz = 0, bounce = 0, landed = false;
+      for (let i = 0; i < 360; i++) { D.step(1 / 120); lo = Math.min(lo, t.p[1] - y0); fz = Math.max(fz, ...t.wheels.map(w => w.Fz || 0)); if (t.v[1] < -1) landed = true; if (landed) bounce = Math.max(bounce, t.p[1] - y0); }
+      IN.brk = 0; IN.hb = 0; IN.thr = 1; D.setTestInput(IN); const x0 = t.p[0], z0 = t.p[2]; for (let i = 0; i < secs * 120; i++) D.step(1 / 120);
+      return { drop: h, lowest: +lo.toFixed(3), bounceAbove: +bounce.toFixed(3), maxFz: Math.round(fz), mph: +(Math.hypot(t.v[0], t.v[2]) * 2.23694).toFixed(1), metres: Math.round(Math.hypot(t.p[0] - x0, t.p[2] - z0)) }; },
     fd() { const D = L.LRFD, R = L.lrFdRec(); return { cur: D.cur ? D.cur.id : null, dwell: +D.dwell.toFixed(2), near: D.near.length, noted: Object.keys(R.n).length, photos: Object.keys(R.p).length, paid: R.paid, shot: L.LRW.ui && L.LRW.ui.shot ? !L.LRW.ui.shot.hidden : null }; },
     book(page) { L.LRFD.page = page || 'places'; L.lrBookOpen(true); return { open: !L.LRFD.ui.hidden }; },
     bookShut() { L.lrBookOpen(false); return 1; },

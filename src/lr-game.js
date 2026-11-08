@@ -235,9 +235,21 @@ function lrParkTick(){
   if(t.rt){const h=t.p[1]-RANCH.W.heightAt(t.p[0],t.p[2]);if(sp<3&&h<3&&lrStripAt(t.p[0],t.p[2],40)>=0)can='TRUCK';}
   else{const P=LRV.parked;if(P&&P.rt&&sp<3&&Math.hypot(P.p[0]-t.p[0],P.p[2]-t.p[2])<45)can='HERON';}
   LRV.can=can;if(LRV.btn){LRV.btn.hidden=!can;if(can&&LRV.btn.textContent!==can)LRV.btn.textContent=can;}
-  if(LRV.foot)LRV.foot.hidden=!lrWalkCan();}
+  if(LRV.foot)LRV.foot.hidden=!lrWalkCan();
+  /* (on a laptop the phone's buttons aren't there: the same two, with their keys, low in the middle) */
+  if(LRV.kb||lrKeyUI()){const K=LRV.kb,tc=document.getElementById('touch'),kb=!!tc&&tc.hidden&&LRV.fine.matches,a=kb&&!LRW.on&&lrWalkCan(),b=kb&&!LRW.on&&!!can;if(K.foot.hidden===a)K.foot.hidden=!a;if(K.swap.hidden===b)K.swap.hidden=!b;
+    if(b&&K.swap.dataset.v!==can){K.swap.dataset.v=can;K.swap.textContent=can+' \u00b7 E';}K.el.hidden=!(a||b);}}
+function lrKeyUI(){if(!document.body)return false;LRV.fine=matchMedia('(pointer: fine)');
+  const st=document.createElement('style');st.textContent=`#lrKeys{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(env(safe-area-inset-bottom) + 130px);z-index:6;display:flex;gap:10px}
+#lrKeys[hidden],#lrKeys button[hidden]{display:none}
+#lrKeys button{font:800 13px system-ui,sans-serif;letter-spacing:.1em;color:#fff;background:rgba(16,20,26,.62);border:2px solid rgba(255,255,255,.45);border-radius:999px;padding:11px 18px;cursor:pointer}`;
+  document.head.appendChild(st);const el=document.createElement('div');el.id='lrKeys';el.hidden=true;
+  el.innerHTML='<button type="button" id="lrKFoot" hidden>ON FOOT \u00b7 F</button><button type="button" id="lrKSwap" hidden>HERON \u00b7 E</button>';document.body.appendChild(el);
+  const foot=el.querySelector('#lrKFoot'),swap=el.querySelector('#lrKSwap');
+  foot.addEventListener('click',e=>{e.preventDefault();foot.blur();lrWalkStart();});swap.addEventListener('click',e=>{e.preventDefault();swap.blur();lrSwap();});
+  LRV.kb={el,foot,swap};return true;}
 function lrSwap(){
-  const t=GAME.car;if(!t||GAME.state!=='drive')return false;lrParkTick();
+  const t=GAME.car;if(!t||GAME.state!=='drive'||LRW.on)return false;lrParkTick();
   if(LRV.can==='TRUCK'){const i=lrStripAt(t.p[0],t.p[2],40),P=lrTruckSpot(WG.GTS[i]),keep=t;LRV.planePose={x:t.p[0],z:t.p[2],yaw:lrYaw(t)};
     rtFly(false);placeCar(P.x,P.z,P.yaw);LRV.parked=keep;LRV.stripI=-1;say('THE TRUCK',1.6);return true;}
   if(LRV.can==='HERON'){const P=LRV.parked,keep=t,pose={x:P.p[0],z:P.p[2],yaw:lrYaw(P)};
@@ -252,7 +264,7 @@ function lrSwapUI(){if(LRV.btn)return;const col=document.querySelector('#touch .
   b.addEventListener('click',e=>{e.preventDefault();b.blur();lrSwap();});col.insertBefore(b,col.firstChild);LRV.btn=b;
   const f=document.createElement('button');f.className='tb';f.id='lrFoot';f.type='button';f.hidden=true;f.textContent='ON FOOT';
   f.addEventListener('click',e=>{e.preventDefault();f.blur();lrWalkStart();});col.insertBefore(f,b.nextSibling);LRV.foot=f;}
-addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&GAME.state==='drive'&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))lrSwap();});
+addEventListener('keydown',e=>{if(e.code==='KeyE'&&!e.repeat&&GAME.state==='drive'&&!LRW.on&&!/INPUT|TEXTAREA/.test((document.activeElement||{}).tagName||''))lrSwap();});
 window.__lr=Object.assign(window.__lr||{},{LRV,lrSwap,lrParkTick});
 
 /* ---------- THE PAINTED EDGE: his mountain layers round the world, in the sky behind the land (one picture,
@@ -773,7 +785,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-25';
+const LR_BUILD='last-road-26';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';

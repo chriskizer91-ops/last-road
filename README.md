@@ -28,7 +28,20 @@ This file is the plan. It's written so that a fresh Claude session (or this one)
   - a chase camera that follows the Heron's climbs, dives and banks.
 
   Tested in the test browser at phone size (`tools/test/lr-run.py`). Still the car in the bay: the Outfitter is next.
-- **The newest build: `builds/last-road-25.html`** (Nov 8 2026, 35 MB). Each step has its own file (never overwritten):
+- **The newest build: `builds/last-road-26.html`** (Nov 8 2026, 35 MB). Each step has its own file (never overwritten):
+  - **last-road-26: rollovers that roll like a truck** (he found that in Sim a slow tip-over "flips really hard really fast", Nov 8 2026). The cause was in the engine's wheels: a truck rolled onto its side still had its wheels "touching" the ground, so the springs and the tyres' side grip pushed along the axles (pointing straight up by then) and threw it back into the air, spinning the other way. Now a wheel lets go of the ground past 70 degrees between the truck and the ground, takes the weight gradually from 70 back to 50, and a wheel that comes back down already deep in the ground doesn't spring out (`src/lr_patch.py`). Driving and landings are unchanged (a 0.5 m and a 2 m drop and 8 s flat out gave the same numbers as build 25). Tested on the salt pan, the truck sliding sideways:
+
+    | Sliding sideways at | Build 25 | Build 26 |
+    | --- | --- | --- |
+    | 11 mph | stays on its wheels | stays on its wheels |
+    | 13 mph | 213 degrees over, 506 degrees a second, 3.1 m into the air | onto its side and stays there, 95 degrees a second, 0.3 m |
+    | 18 mph | 409 degrees over, 2.8 m up | onto its side, 125 degrees a second, 0.4 m |
+    | 22 mph | onto its side | onto its side |
+    | 27 mph | onto its roof | onto its roof |
+    | 31 mph | three rolls, 2.6 m up | one roll, back on its wheels, 0.6 m |
+    | 40 mph | four rolls, 3 m up | three and a half rolls, 0.8 m |
+
+    And **getting out on a laptop:** stopped, an **ON FOOT · F** button shows low in the middle (and **HERON · E** / **TRUCK · E** by the other one); on the phone ON FOOT is in the right-hand column. E on foot takes a photo and no longer swaps vehicles.
   - **last-road-25: things to find on foot** (Fable's walk sites; `docs/world/finds-build25.jpg`).
     - **The sites are walkable** (`tools/world/walkgrid.py` -> `src/lr-walk.js`, 55 KB): each big model has a grid of where a person fits, so you walk down the Cistern's steps into the tank, up the Terraces, into the Observatory ring and under the Arches. Walls still stop you; other buildings still stop you at their boxes.
     - **The Old Hands' forty glyphs** (his C02 tiles, 40 cm) are cut on walls you can walk up to (`tools/world/finds.py` -> `src/lr-finds.js`), three to five a place, in the order the water runs: the Cistern, Three Wells, the Causeway Gate, the Terraces, the Weir, the Arches, the Congregation, the Marbles, the Observatory Ring, the Sunken City. Every glyph in the alphabet is somewhere.
