@@ -532,7 +532,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-22';
+const LR_BUILD='last-road-23';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
@@ -540,6 +540,8 @@ function lrModeSet(m){LRM.mode=m;store.set('gt-mode',m);let r={};try{r=JSON.pars
   for(const k of Object.keys(CHAL.free))delete CHAL.free[k];Object.assign(CHAL.free,{medals:{},best:{},runs:{}},r);MARKS_V++;JOB.tmemo=null;
   const was=APP.level;APP.level=m==='campaign'?'sim':(store.get('gt-free-level','sim')==='real'?'real':'sim');if(was!==APP.level)saveGame();
   document.body.classList.toggle('gtCampaign',m==='campaign');spawnRig(false);}
+/* the campaign's money: what its jobs have paid (and, later, what the Outfitter's gear costs) */
+function lrMoney(add){let m=+store.get('gt-money','0')||0;if(add){m+=add;store.set('gt-money',String(m));}return m;}
 const lrHasRun=m=>{try{const r=JSON.parse(store.get(lrModeKey(m),'{}'))||{};return !!(r.active||Object.keys(r.quests||{}).length);}catch(e){return false;}};
 function lrStart(m){lrModeSet(m);const d=$('lrTitle');if(d)d.remove();if(LRO.heron)lrBaySet(false);const b=$('sasDrive');if(b)b.click();
   /* (a new campaign: Dell calls you over the radio with the first job) */

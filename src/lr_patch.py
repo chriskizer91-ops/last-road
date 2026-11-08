@@ -56,7 +56,7 @@ swap("Wt[k*4+2]=o.salt>.02?-o.salt:o.mud*.5;Wt[k*4+3]=1-wd*.5;}}", "Wt[k*4+2]=o.
 swap("C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];return v++;};\n  for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);\n  for(let j=0;j<n-1;j++)",
      "C[v*4]=Wt[k*4];C[v*4+1]=Wt[k*4+1];C[v*4+2]=Wt[k*4+2];C[v*4+3]=Wt[k*4+3];M[v]=GMf[k];return v++;};\n  for(let j=0;j<n;j++)for(let i=0;i<n;i++)put(i,j,0);\n  for(let j=0;j<n-1;j++)")
 swap("  else if(m>=40){\n    vec2 wp=Pw.xz;ground=true;\n    if(m==40){", "  else if(m>=38){\n    vec2 wp=Pw.xz;ground=true;\n    if(m<=40){")
-swap("if(rw>.004){alb=mix(alb,photoTri(rockCol(Pw),T_ROCK,Pw,N),rw);", "if(rw>.004){alb=mix(alb,photoTri(rockCol(Pw),m==38?T_BASALT:m==39?T_GRANITE:T_ROCK,Pw,N),rw);")
+swap("if(rw>.004){alb=mix(alb,photoTri(rockCol(Pw),T_ROCK,Pw,N),rw);", "if(rw>.004){alb=mix(alb,(m==38?.6:1.)*photoTri(rockCol(Pw),m==38?T_BASALT:m==39?T_GRANITE:T_ROCK,Pw,N),rw);")
 swap("float por=m==40||", "float por=m==40||m==38||m==39||")
 sm = TP['SAND']['m']
 swap("if(dw>.004){vec3 sd=vec3(.80,.77,.70)*(.9+.12*vn(wp*.012)+.05*vn(wp*.37));", "if(dw>.004){vec3 sd=vec3(%.3f,%.3f,%.3f)*(.9+.12*vn(wp*.012)+.05*vn(wp*.37));" % tuple(sm))
@@ -144,6 +144,12 @@ swap("function drawBigMap(){\n", "function drawBigMap(){if(WG.gtPlace){lrBigMap(
 swap("  /* top left: the car and its build, the place, the driving level, the money */\n", "  if(APP.bigMap&&WG.gtPlace){lrBigMap();return;}\n  /* top left: the car and its build, the place, the driving level, the money */\n")
 # the dust storm of the job Dust (lr-game.js: lrDust)
 swap("if(DYB.dunes){const A=DYB.air;E.fogDen*=A.fog;E.fogAmb=E.fogAmb.map(v=>v*A.fog);E.ambUp=E.ambUp.map(v=>v*A.amb);E.key*=A.key;}", "if(DYB.dunes){const A=DYB.air;E.fogDen*=A.fog;E.fogAmb=E.fogAmb.map(v=>v*A.fog);E.ambUp=E.ambUp.map(v=>v*A.amb);E.key*=A.key;}if(typeof lrDust!=='undefined')lrDust(E);")
+# the campaign's own money (lr-game.js: LRM.money): what the jobs pay, kept apart from free play's score; the HUD
+# names the truck and the plane as this game does
+swap("const cash=()=>CAREER.on?CAREER.d.money:Feats.S.money;", "const cash=()=>CAREER.on?CAREER.d.money:LRM.mode==='campaign'?lrMoney():Feats.S.money;")
+swap("function earn(n){n=Math.round(n);if(!n)return 0;if(CAREER.on){", "function earn(n){n=Math.round(n);if(!n)return 0;if(LRM.mode==='campaign'&&!CAREER.on){lrMoney(n);return n;}if(CAREER.on){")
+swap("Feats.fmtMoney(r.money)+(CAREER.on?'':' score'):'')", "Feats.fmtMoney(r.money)+(CAREER.on||LRM.mode==='campaign'?'':' score'):'')")
+swap("const carLabel=()=>GAME.car&&GAME.car.rt?'Heron':carName({car:APP.car})+' '+rigName(APP.car,rigOf(APP.car))+plusTag(APP.car);", "const carLabel=()=>GAME.car&&GAME.car.rt?'The Heron':WG.gtPlace?'Rock & Mud':carName({car:APP.car})+' '+rigName(APP.car,rigOf(APP.car))+plusTag(APP.car);")
 swap(B, open(sys.path[0] + '/lr-game.js', encoding='utf-8').read() + '\n' + B)
 i = s.index('<script>window.RT2_DATA') if '<script>window.RT2_DATA' in s else None
 assert i is not None, 'the plane data script'
