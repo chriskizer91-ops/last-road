@@ -341,7 +341,7 @@ function lrWalkStep(dt){
   const K=LRW.keys,run=K.ShiftLeft||K.ShiftRight;let fw=-LRW.stick.y,sd=LRW.stick.x;
   if(K.KeyW||K.ArrowUp)fw+=1;if(K.KeyS||K.ArrowDown)fw-=1;if(K.KeyD||K.ArrowRight)sd+=1;if(K.KeyA||K.ArrowLeft)sd-=1;
   const l=Math.hypot(fw,sd);if(l>1){fw/=l;sd/=l;}
-  const sp=(run||l>.98&&Math.hypot(LRW.stick.x,LRW.stick.y)>.95?LRW_RUN:LRW_WALK),f=[Math.cos(LRW.yaw),-Math.sin(LRW.yaw)],r=[Math.sin(LRW.yaw),Math.cos(LRW.yaw)];
+  const sp=(run||l>.98&&Math.hypot(LRW.stick.x,LRW.stick.y)>.95?LRW_RUN:LRW_WALK)*lrJWalkK(),f=[Math.cos(LRW.yaw),-Math.sin(LRW.yaw)],r=[Math.sin(LRW.yaw),Math.cos(LRW.yaw)];
   const mv=[(f[0]*fw+r[0]*sd)*sp*dt,(f[1]*fw+r[1]*sd)*sp*dt],p=LRW.p;
   /* each way on its own, so you slide along a wall */
   /* (your feet: where you stand, or where you are stepping up to; if you are somewhere you can't be, you can walk out) */
@@ -603,7 +603,7 @@ function gtPeople(){
 function gtJobs(){
   const Q=(id,who,title,needs,intro,steps,outro,reward,tip)=>{JOB_NAMES[id]=`${PEOPLE[who].short}'s job, ${title}`;
     /* (what to bring, from the steps that need something: on the card) */
-    const bring=[...new Set(steps.filter(s=>s.need).map(s=>s.need))].map(lrNeedName);
+    const bring=[...new Set(steps.filter(s=>s.need).flatMap(s=>[].concat(s.need)))].map(lrNeedName);
     if(bring.length)tip=(tip?tip+' ':'')+'Bring: the '+bring.join(', the ')+' (Teo\'s wall in the Outfitter).';return {id,who,title,needs,intro,steps,outro,reward,tip};};
   const S=WG.GTS,C=WG.GTP.find(p=>p.id==='C04'),W=WG.GTP.find(p=>p.id==='C07'),K=WG.GTP.find(p=>p.id==='D05');
   const end=[S[0].x+S[0].dx*900,S[0].z+S[0].dz*900],GP=(id,obj)=>WG.GTP.find(p=>p.id===id&&(!obj||p.obj===obj)),GA=id=>WG.GTP.filter(p=>p.id===id);
@@ -611,6 +611,7 @@ function gtJobs(){
   const TE=GP('C21'),SF=GA('C28').find(p=>Math.hypot(p.x-TE.x,p.z-TE.z)<200),WE=GP('C32'),OB=GP('C35'),VW=GP('D18','wreck'),VT=GP('D18','tent');
   const D8=S[8],DC=[[D8.x-3200,D8.z-2600],[D8.x+1400,D8.z-4300],[D8.x+4200,D8.z+1600]];
   const CA=GA('D07'),CN=[CA[3],CA[8],CA[13]],CY=GP('C26'),CT=GA('C28').find(p=>Math.hypot(p.x-CY.x,p.z-CY.z)<200),WM=GA('D04'),BT=GP('D02'),MB=GP('D03');
+  const RS=lrRescuePlaces(),X=(q,o)=>Object.assign(q,o),SB=i=>({x:S[i].x,z:S[i].z,r:S[i].len/2+60});
   return [
     Q('firstlight','dell','First Light',[],
       ['Pilot. You\'re the new contract.','The Heron\'s on the apron. Take her out past the east end of the runway, come round, and put her down again. Gently. Then come and see me.'],
@@ -633,6 +634,30 @@ function gtJobs(){
       ['A driver\'s gone out on the Pan and not come back. His truck\'s an old one.','Land on the salt at Pan Strip, take the truck out to him and see what\'s left.'],
       [{t:'land',strip:2,text:'Land on the salt at Pan Strip'},{t:'deliver',x:K.x,z:K.z,r:18,name:'the wreck',text:'Drive out to the wreck on the Pan'},{t:'talk',who:'dell',text:'Report to Dell'}],
       {text:'Nobody in it? Then he walked. Nkem\'ll find him. Good work.'},{money:600}),
+    /* THE RESCUES (Fable's four, his call Nov 8 2026; design/rescues-2026-11-08.md): each has a clock, and running out of
+       it never ends the job, it only ends it worse (the late ending: less pay, a sadder line). Someone picked up comes
+       with you, and their weight is on the Heron */
+    X(Q('borethree','nkem','Bore Three',['mail'],
+      ['Bowen\'s rolled the quad at Bore Three. His leg\'s broken, he says, and he says it calmly, which is how I know it\'s bad.','The truck\'s here. Bore Three is up the Windmill Line, nine kilometres north-east. He\'s tied his red shirt to the windmill so you\'ll know which one. Bring him back to the Heron and fly him to Roadhead: the nurse will meet you. And the sun\'s going down.'],
+      [{t:'pickup',x:RS.bowen[0],z:RS.bowen[1],r:14,kg:90,pax:'Bowen',name:'Bowen',text:'Drive up the Windmill Line to Bore Three and get Bowen in the truck',need:'firstaid',stop:1,
+         line:['Bowen, as you lift him: \u201cDon\'t tell Nkem I came off at a walking pace.\u201d']},
+       {t:'drive',...SB(1),name:'the Heron at Kettle Creek',text:'Drive him back to the Heron. Gently'},
+       {t:'land',strip:0,text:'Fly Bowen to Roadhead and stop'},{t:'talk',who:'dell',text:'The nurse is with Dell on the apron'}],
+      {who:'dell',text:'Nurse has him. He said to tell you, and I quote: \u201cPilot. That was a soft landing. I noticed.\u201d'},{money:1100},
+      'The clock is the daylight: get to him before dark. Late is never a fail, only worse.'),
+      {clock:20,hour:a=>a.late?'night':'golden',lateSay:'DARK AT BORE THREE',
+       late:{who:'dell',text:'Nurse has him. His leg set badly; the dark does that. Nkem says thanks all the same.',money:500}}),
+    X(Q('walker','dell','The Walker',['panwreck'],
+      ['Nkem called. Nobody in the wreck means he walked, and he walked east, at the station\'s lights. That was a day ago, with one bottle of water.','Fly the Pan\'s east edge low and slow and find him. Then land at Pan Strip and take the truck out. Noon on the Pan is forty-five degrees. He\'s got till about then.'],
+      [{t:'spot',x:RS.walker[0],z:RS.walker[1],r:450,cx:RS.wsearch[0],cz:RS.wsearch[1],search:2200,name:'the search area',text:'Search the Pan\'s east edge from the air: under 500 feet, under 90 mph',found:'THERE HE IS: PAST THE STONES, AT THE PAN\'S EDGE',late:{r:800}},
+       {t:'land',strip:2,text:'Land on the salt at Pan Strip'},
+       {t:'pickup',x:RS.walker[0],z:RS.walker[1],r:12,kg:80,pax:'the walker',name:'the walker',text:'Drive out to him and get him in the truck',need:['water','firstaid'],stop:1,
+         line:['When you reach him: \u201cI kept walking at the lights. They never got closer.\u201d','You give him the water can first. All of it.']},
+       {t:'drive',...SB(2),name:'the Heron at Pan Strip',text:'Drive him back to the Heron'},
+       {t:'land',strip:0,text:'Fly him to Roadhead'},{t:'talk',who:'dell',text:'See Dell on the apron'}],
+      {text:'Nkem says he\'ll keep his hands. Over the station he asked: \u201cThose lights? That\'s where I was going? That\'s it?\u201d'},{money:1300},
+      'Look for anything that isn\'t salt: stones, a flash. The clock is the heat.'),
+      {clock:30,lateSay:'NOON ON THE PAN',late:{text:'Nkem says he\'ll keep his hands. Just.',money:600}}),
     /* the rest of Fable's chain (his "a bunch of different jobs": the survey arc, deliveries, a rescue, mundane runs),
        on the places that are built: 'drive' is in the truck, 'fly' is over it in the Heron */
     Q('theline','haugen','The Line',['threewells'],
@@ -646,6 +671,16 @@ function gtJobs(){
       [{t:'land',strip:4,text:'Land at Rim Strip'},{t:'foot',x:CG[0],z:CG[1],r:40,name:'the Congregation',text:'Walk among the stones of the Congregation'},
        {t:'fly',x:AR.x,z:AR.z,r:350,name:'the Arches',text:'Fly over the Arches on the way home'},{t:'talk',who:'haugen',text:'Back to Haugen'}],
       {text:'They counted. Every stone is a count of something. Water, I think. Always water.'},{money:1400}),
+    X(Q('goingunder','dell','Going Under',['congregation'],
+      ['Harker\'s on the radio, from the delta. Two of his survey crew took their truck out onto River Mouth Bar at low water and bogged it to the axles.','Flight Service says it\'s rained on the tableland since dawn: the river\'s coming up, and the bar goes under in about twenty minutes. Fly low up the river, land on the bar\'s far end, walk to them, fly them out. Harker\'s at the Delta Strip camp.'],
+      [{t:'fly',x:RS.bar.x,z:RS.bar.z,r:700,below:120,name:'River Mouth Bar',text:'Fly low up the river to River Mouth Bar (under 400 feet)'},
+       {t:'landw',w:1,text:'Land on River Mouth Bar, short of their truck'},
+       {t:'pickup',x:RS.crew[0],z:RS.crew[1],r:10,kg:170,pax:'the survey crew',name:'the survey crew',text:'Walk to their truck and bring them back to the Heron',need:'firstaid',stop:1,
+         line:['One of them, with a cut head: \u201cYou landed on that? On purpose?\u201d','Two men and their gear: 170 kg. The Heron will need more of the bar to get off it.']},
+       {t:'land',strip:8,text:'Take off along the bar with both aboard, and land at the Delta Strip'},{t:'talk',who:'harker',text:'Harker, at Meridian\'s camp'}],
+      {who:'harker',text:'Truck\'s insured, mate. Men aren\'t. Thanks. And one of them says he\'s surveyed that river three years and never seen it from up there.'},{money:1800},
+      'The clock is the river. The Heron needs about 250 m of sand with both men aboard.'),
+      {clock:20,lateSay:'THE RIVER\'S OVER THE BAR\'S EDGES',late:{who:'harker',text:'They were up to their knees by the time you got there, and the truck\'s gone to the river. Truck\'s insured, mate. Men aren\'t. Thanks.',money:900}}),
     Q('switchback','haugen','The Switchback',['theline'],
       ['The water starts on the tableland, behind the escarpment. There is one way up for a truck: the Switchback.','Land at the foot of it, drive my camp up to the Terraces, and find the figure that sits there.'],
       [{t:'land',strip:6,text:'Land at the Switchback strip, at the foot of the escarpment'},{t:'drive',x:TE.x,z:TE.z,r:40,name:'the Terraces',text:'Drive up the Switchback to the Terraces'},
@@ -683,6 +718,17 @@ function gtJobs(){
       ['Ruben\'s out of avgas again. One drum. It\'s a long way north; mind your fuel both ways.','Land at Last Well, give it to him.'],
       [{t:'land',strip:11,text:'Fly the drum to Last Well'},{t:'talk',who:'ruben',text:'Take it to Ruben'}],
       {who:'ruben',text:'Ah. The good stuff. Sit a while. No? Next time.'},{money:900}),
+    X(Q('coldbox','dell','The Cold Box',['drum'],
+      ['Snakebite at Last Well. Ruben. A brown, he says, about so long. The antivenom\'s in the roadhouse fridge: here, in the cold box. Go.','It\'s the longest run there is, and it\'ll be dark when you get there. Ruben can\'t put the truck\'s lights on the strip tonight. Look for his window.'],
+      [{t:'land',strip:11,text:'Fly the cold box to Last Well, into the dark'},
+       {t:'foot',x:RS.ruben[0],z:RS.ruben[1],r:5,name:'Ruben',text:'Walk the cold box to Ruben at his shack',need:'firstaid',drop:'box',stop:1,
+         line:['Ruben, when you put the box in his hands: \u201cTook your time. Joking. Sit a while. No? All right. Fly.\u201d']},
+       {t:'pickup',x:RS.ruben[0],z:RS.ruben[1],r:9,kg:90,pax:'Ruben',name:'Ruben',text:'Ruben insists on walking to the Heron'},
+       {t:'land',strip:0,text:'Fly him to Roadhead, the one lit runway'},{t:'talk',who:'dell',text:'The nurse is with Dell'}],
+      {text:'Nurse says he\'ll be fine. Over the dunes he said Venn flew at night once, and said the dunes were silver. He says Venn was right.'},{money:1500},
+      'The clock: the box in his hands. The strip at Last Well is dark: his window\'s the only light.'),
+      {clock:25,give:[{n:'the cold box',kg:15,k:'box'}],hour:a=>a.late||(a.jt||0)>420||a.stopped?'night':'golden',lateSay:'RUBEN\'S GETTING WORSE',
+       late:{text:'He\'s sicker than he lets on. A week in Roadhead, the nurse says. He\'ll hate every day of it.',money:700}}),
     Q('windmills','nkem','The Windmill Line',['mail'],
       ['Five bores north-east of the station, one every three kilometres. The windmills need checking before the dry.','By truck. Stop at each one.'],
       WM.map((p,i)=>({t:'drive',x:p.x,z:p.z,r:18,name:'bore '+(i+1),text:'Check bore '+(i+1)+' of 5'})).concat([{t:'talk',who:'nkem',text:'Back to Nkem'}]),
@@ -692,8 +738,103 @@ function gtJobs(){
       [{t:'fly',x:BT.x,z:BT.z,r:300,name:'the Bottle Tree',text:'Fly over the Bottle Tree',need:'camera'},{t:'fly',x:MB.x,z:MB.z,r:300,name:'the Marbles',text:'Fly over the Marbles',need:'camera'},{t:'land',strip:1,text:'Land at Kettle Creek'},{t:'talk',who:'nkem',text:'Tell Nkem'}],
       {text:'Fewer than last year. Not by much. Good.'},{money:500})];
 }
+/* ---------- THE RESCUES' MACHINERY (Fable's "what's new", the parts the four need):
+   - the job clock: minutes on the job (q.clock) until the step marked stop is done (the person reached); the HUD
+     counts it down under the job; at zero nothing stops, the job goes on to its late ending (q.late: less pay,
+     another line) and any step with a late version (s.late) changes to it. Never a fail
+   - pickup: stop within r of someone, on foot or in a vehicle, and they come with you: their weight goes on the
+     Heron (the flight model's own mass: a longer take-off roll, a lazier climb), on foot you walk at 60%, and a
+     rollover in the truck with them aboard hurts them (the pay down a step)
+   - spot: a search circle on the maps, not the place; done in the Heron under 150 m and 90 mph within r of them
+   - things handed to you (q.give: the cold box) and handed over (s.drop)
+   - the job sets the hour (q.hour: golden hour, night), and gives yours back after
+   - signals: points of light you see from the air (a mirror's flash, hazard lights, a lit window), and the
+     things the job puts in the world while it's on (a shirt on a windmill, an SOS of stones, a bogged truck) ---------- */
+const LRJ={tod0:null,propsFor:undefined,mesh:false,los:new Map(),dlgT:0};
+function lrRescuePlaces(){const G=WG.GX,Z=WG.GZ,WM=WG.GTP.filter(p=>p.id==='D04'),B=WM[2],W=WG.GTW[1],u=148,R=PEOPLE.ruben;
+  const at=(S,u,v)=>[S.x+S.dx*u-S.dz*v,S.z+S.dz*u+S.dx*v];
+  return {b3:B,bowen:[B.x+Math.sin(B.yaw+1.9)*9,B.z+Math.cos(B.yaw+1.9)*9],walker:[G(18.3),Z(8.8)],wsearch:[G(17.0),Z(9.6)],sos:[G(16.7),Z(8.4)],
+    bar:W,truck:at(W,u+8,9),crew:at(W,u,3),ruben:[R.x,R.z]};}
+/* a step as it is now (its late version once the clock's gone) */
+function lrJStep(q,a){const st=q.steps[a.step];return st&&a.late&&st.late?Object.assign({},st,st.late):st;}
+function lrJClock(A,dt){const q=A.q,a=A.a;if(!q.clock||a.late||a.stopped)return;a.jt=(a.jt||0)+dt;
+  if(a.jt>q.clock*60){a.late=1;JOB.memo=null;JOB.hud=null;chSave();say('DELL: CLOCK\'S GONE, PILOT. DOESN\'T CHANGE WHAT YOU DO NEXT',5,PAL.amber);say(q.lateSay||'THE CLOCK\'S GONE',5,PAL.amber);}}
+/* the HUD's clock: seconds left; -1 late; null when there's none (or it's stopped: you've reached them) */
+function lrJLeft(A){const q=A.q,a=A.a;if(!q.clock||a.stopped)return null;return a.late?-1:Math.max(0,q.clock*60-(a.jt||0));}
+/* a step done: someone comes with you, something's handed over, the clock stops; and what they say */
+function lrJDone(A){const s=A.s,a=A.a;a.load=a.load||[];
+  if(s.t==='pickup'){a.load.push({n:s.pax,kg:s.kg,p:1});say((s.pax+' '+(/crew|two/i.test(s.pax)?'are':'is')+' with you · '+s.kg+' kg').toUpperCase(),3.5,PAL.green);}
+  if(s.drop){const d=a.load.find(l=>l.k===s.drop);a.load=a.load.filter(l=>l.k!==s.drop);if(d)say(('Handed over: '+d.n).toUpperCase(),3,PAL.green);}
+  if(s.stop)a.stopped=1;
+  if(s.found)say(s.found,3.5,PAL.green);
+  if(s.line)setTimeout(()=>{if(GAME.state!=='drive')return;{const R=s.name==='Ruben',N=s.name[0].toUpperCase()+s.name.slice(1);jobDialog({who:R?PEOPLE.ruben:null,eyebrow:A.q.title,title:N,lines:s.line,no:'Go'});}},250);}
+/* the job's end: the pay and the closing line, the late one if the clock went, less again if someone got hurt */
+function lrJPay(q,a){let m=a.late&&q.late?q.late.money:(q.reward||{}).money||0;if(a.hurt)m=Math.round(m*.7/50)*50;return Object.assign({},q.reward,{money:m});}
+const lrJHow=a=>({late:!!a.late,hurt:!!a.hurt});
+function lrJOutro(q,how){const L=how&&how.late&&q.late?q.late:q.outro,out=[L.text];if(how&&how.hurt)out.push('And the rollover didn\'t help: the nurse took a while with that. Less pay for the extra damage.');return out;}
+function lrJStart(q,a){if(q.give){a.load=q.give.map(g=>Object.assign({},g));say(('You have '+q.give.map(g=>g.n).join(', ')).toUpperCase(),3,PAL.green);}}
+function lrJEnd(){}
+function lrJTod(id){if(!TOD[id])return;APP.tod=id;applyTod(id);APP.lights=!!(TOD[id].beams??TOD[id].lightsOn);}
+/* on foot with someone: 60% */
+function lrJWalkK(){const A=typeof jActive!=='undefined'?jActive():null;return A&&A.a.load&&A.a.load.some(l=>l.p)?.6:1;}
+function lrJKg(A){return A&&A.a.load?A.a.load.reduce((s,l)=>s+l.kg,0):0;}
+/* each frame: the hour, the weight aboard, a rollover with someone aboard, the job's things in the world */
+function lrJTick(dt,t){const A=jActive(),q=A&&A.q,a=A&&A.a;
+  const want=q&&q.hour?q.hour(a):null;
+  if(want){if(LRJ.tod0===null)LRJ.tod0=APP.tod;if(APP.tod!==want)lrJTod(want);}
+  else if(LRJ.tod0!==null){const b=LRJ.tod0;LRJ.tod0=null;if(APP.tod!==b)lrJTod(b);}
+  const kg=lrJKg(A);
+  if(t){if(t.__m0===undefined)t.__m0=t.m;const m=t.__m0+(t.rt?kg:0);if(t.m!==m)t.m=m;}
+  if(a&&t&&!t.rt&&!LRW.on&&a.load&&a.load.some(l=>l.p)&&!a.hurt&&t.M[4]<.3){a.hurt=1;chSave();say('THAT HURT HIM. THE PAY WILL BE LESS',3.5,PAL.amber);say((a.load.find(l=>l.p).n+': EASY!').toUpperCase(),3.5,PAL.amber);}
+  lrJProps(A);}
+/* the job's things in the world, while it's on (pushed into the placed models, taken out after) */
+function lrJProps(A){const id=A?A.q.id:null;if(id===LRJ.propsFor)return;LRJ.propsFor=id;
+  for(let i=WG.GTP.length-1;i>=0;i--)if(WG.GTP[i].lrj)WG.GTP.splice(i,1);
+  if(!id)return;const R=lrRescuePlaces(),put=(o)=>WG.GTP.push(Object.assign({solid:false,far:2500,lrj:1},o));lrJMeshes();
+  if(id==='borethree')put({id:'R0',obj:'shirt',x:R.b3.x,z:R.b3.z,yaw:R.b3.yaw,far:3000});
+  if(id==='walker'){/* SOS in boulders on the salt, 30 m letters, reading from the south */
+    const L=lrSosPts(),F=['boulder_xs','boulder_s','boulder_xs','boulder_m'];let k=0;
+    for(const [lx,ly] of L){k++;put({id:'F06',obj:F[k%4],x:R.sos[0]+lx,z:R.sos[1]-ly,yaw:k*2.39,s:k%4===3?.75:1,far:4000});}}
+  if(id==='goingunder'){const W=R.bar,o={};put({id:'D05',obj:'model',x:R.truck[0],z:R.truck[1],yaw:Math.atan2(W.dx,W.dz)+.25,dy:-.55,far:4000});}}
+/* the stones of S, O, S: points along each letter's strokes, a stone a metre */
+function lrSosPts(){const out=[],seg=(a,b)=>{const n=Math.max(1,Math.round(Math.hypot(b[0]-a[0],b[1]-a[1])/2.2));for(let i=0;i<n;i++)out.push([a[0]+(b[0]-a[0])*i/n,a[1]+(b[1]-a[1])*i/n]);};
+  const S=x=>{const P=[[x+18,30],[x,30],[x,15],[x+18,15],[x+18,0],[x,0]];for(let i=0;i<P.length-1;i++)seg(P[i],P[i+1]);out.push(P[P.length-1]);};
+  S(-35);for(let i=0;i<36;i++){const a=i/36*Math.PI*2;out.push([Math.sin(a)*9,15+Math.cos(a)*15]);}S(17);return out;}
+/* the shirt on Bore Three's windmill: a cloth hanging from the tail vane (made here: a red cloth, both sides) */
+function lrJMeshes(){if(LRJ.mesh||typeof makeMesh==='undefined')return;LRJ.mesh=true;
+  const x=-2.06,y0=6.35,y1=7.45,z0=.85,z1=1.8,pos=[],nrm=[],uv=[],idx=[];
+  for(const [sx,nx] of [[.03,1],[-.03,-1]]){const b=pos.length/3,X=x+sx;pos.push(X,y1,z0,X,y1,z1,X,y0+.12,z1,X,y0,z0+.1);for(let i=0;i<4;i++)nrm.push(nx,0,0);uv.push(0,0,1,0,1,1,0,1);idx.push(...(nx>0?[b,b+1,b+2,b,b+2,b+3]:[b,b+2,b+1,b,b+3,b+2]));}
+  const nv=pos.length/3,col=new Float32Array(nv*4).fill(1);for(let k=0;k<nv;k++)col[k*4+3]=0;
+  const m=makeMesh({pos:new Float32Array(pos),nrm:new Float32Array(nrm),col,mat:new Float32Array(nv).fill(120),idx:new Uint16Array(idx),uv:new Float32Array(uv)});m.tris=idx.length/3;
+  LR_PROPS.R0={shirt:{min:[x-.05,y0,z0],max:[x+.05,y1,z1]}};
+  const tx=gl.createTexture(),N=8,px=new Uint8Array(N*N*4);for(let j=0;j<N;j++)for(let i=0;i<N;i++){const f=.8+.2*Math.sin(i*1.7+j*.4),o=(j*N+i)*4;px[o]=200*f;px[o+1]=38*f;px[o+2]=34*f;px[o+3]=255;}
+  gl.activeTexture(gl.TEXTURE15);gl.bindTexture(gl.TEXTURE_2D,tx);gl.texImage2D(gl.TEXTURE_2D,0,gl.RGBA8,N,N,0,gl.RGBA,gl.UNSIGNED_BYTE,px);gl.generateMipmap(gl.TEXTURE_2D);
+  gl.texParameteri(gl.TEXTURE_2D,gl.TEXTURE_MIN_FILTER,gl.LINEAR_MIPMAP_LINEAR);gl.activeTexture(gl.TEXTURE0);
+  LRP.mesh.set('R0/shirt',m);LRP.tex.set('R0/shirt',tx);}
+/* the points of light: where, what colour, how far they show, and when they blink */
+function lrJSigs(A){const R=lrRescuePlaces(),q=A.q,a=A.a,n=(TOD[APP.tod]||{}).night||0,out=[],y=(x,z,h)=>WG.sample(x,z,{}).h+h;
+  if(q.id==='walker'&&!a.late&&!a.stopped){const [x,z]=R.walker,t=APP.t%2.6;out.push({P:[x,y(x,z,1.5),z],c:[255,255,235],far:3500,on:t<.2||t>.4&&t<.6,big:1});}
+  if(q.id==='goingunder'&&!a.stopped){const W=R.bar,[x,z]=R.truck,yw=Math.atan2(W.dx,W.dz)+.25,c=Math.cos(yw),sn=Math.sin(yw),on=APP.t%1.1<.55,h=y(x,z,.5);
+    for(const [lx,lz] of [[-1,3.6],[1,3.6],[-1,-3.6],[1,-3.6]])out.push({P:[x+lx*c+lz*sn,h,z-lx*sn+lz*c],c:[255,165,40],far:4000,on});}
+  if(q.id==='coldbox'&&n>.2){const p=WG.GTP.find(p=>p.id==='D16');if(p){const fx=Math.sin(p.yaw),fz=Math.cos(p.yaw);
+    out.push({P:[p.x+fx*2.8+fz*1.4,y(p.x,p.z,1.5),p.z+fz*2.8-fx*1.4],c:[255,196,110],far:9000,on:Math.sin(APP.t*9)>-.9,warm:1});}}
+  return out;}
+/* drawn on the HUD where they are, if the ground isn't in the way (checked a few times a second) */
+function lrSigHud(){if(LRFD.snap)return;const A=typeof jActive!=='undefined'?jActive():null;if(!A||!A.q.clock)return;const L=lrJSigs(A);if(!L.length)return;
+  const t=GAME.car,e=LRW.on&&LRW.cam?LRW.cam.eye:[t.p[0],t.p[1]+2,t.p[2]],now=APP.t;
+  for(const g of L){if(!g.on&&!LRJ.force)continue;const d=Math.hypot(g.P[0]-e[0],g.P[1]-e[1],g.P[2]-e[2]);if(d>g.far)continue;
+    const k=g.P.join(','),c0=LRJ.los.get(k);let vis;if(c0&&now-c0.t<.3)vis=c0.v;else{vis=true;
+      for(let i=1;i<20;i++){const f=i/20,x=e[0]+(g.P[0]-e[0])*f,yy=e[1]+(g.P[1]-e[1])*f,z=e[2]+(g.P[2]-e[2])*f;if(RANCH.W.heightAt(x,z)>yy+.4){vis=false;break;}}LRJ.los.set(k,{t:now,v:vis});}
+    LRJ.dbg={vis,d:Math.round(d)};if(!vis)continue;const q=lrFdProj(g.P);if(!q)continue;const x=q[0]*W,y=(1-q[1])*H;LRJ.dbg.xy=[Math.round(x),Math.round(y),W,H];if(x<-5||y<-5||x>W+5||y>H+5)continue;
+    const r=g.big?Math.min(3.2,2+300/Math.max(30,d)):Math.min(2,1+150/Math.max(30,d)),col=pack(...g.c,255),soft=pack(...g.c,g.big?170:110);
+    hDisc(x,y,r*(g.big?2:1.6),soft);hDisc(x,y,r,col);if(g.big||g.warm){const k=g.big?5:3;hLine(x-r*k,y,x+r*k,y,soft);hLine(x,y-r*k,x,y+r*k,soft);if(g.big){hLine(x-r*2.5,y-r*2.5,x+r*2.5,y+r*2.5,soft);hLine(x-r*2.5,y+r*2.5,x+r*2.5,y-r*2.5,soft);}}}}
+/* under the job's lines: who and what is with you */
+function lrJHudMore(lx,y){const A=jActive();if(!A||!A.a.load||!A.a.load.length)return;
+  otxt3(('With you: '+A.a.load.map(l=>l.n+' '+l.kg+' kg').join(', ')).toUpperCase(),lx,y,PAL.gold);}
+window.__lr=Object.assign(window.__lr||{},{LRJ,lrJSigs,lrRescuePlaces,lrJKg,lrJTick,lrJProps,lrSigHud});
+
 /* (for the tests: the job system's own pieces, asked for when they exist) */
-window.__lrJ=()=>({PEOPLE,JOB,jActive,jobListen,closeJobDialog,jRec});
+window.__lrJ=()=>({PEOPLE,JOB,jActive,jobListen,closeJobDialog,jRec,jAccept,JOBS});
 
 /* ---------- YOUR HANDS on foot: his gloved hands (E01, each hand its own shape), held out in front as a person's are
    (his picture, Nov 8 2026): a torso's width apart, each turned 45 degrees on its forearm (the thumbs' edges up, the
@@ -797,7 +938,7 @@ window.__lr=Object.assign(window.__lr||{},{LRA,lraHerdFor});
    garage of other cars, its races, challenges and traffic stay out of this game's menus. On the phone's driving
    screen, no N2O, O/D OFF, REAR or HORN buttons. The build's name in the corner, so you can tell which one you
    opened ---------- */
-const LR_BUILD='last-road-27';
+const LR_BUILD='last-road-28';
 var LRM={mode:null};
 /* each way in keeps its own jobs (CHAL.free is the job record when there's no Salt & Sand career) */
 const lrModeKey=m=>m==='campaign'?'gt-campaign':'rt-fchal';
@@ -952,7 +1093,7 @@ const lrKm=m=>m<1000?Math.round(m/10)*10+' M':(m/1000).toFixed(m<10000?1:0)+' KM
 /* the corner map's part (its middle is the truck or the Heron, span metres across) */
 function lrMapRoute(x0,y0,size,span){const t=GAME.car,tg=GAME.state==='drive'&&jTarget();if(!t||!tg)return;
   const cx=x0+size/2,cy=y0+size/2,dx=(tg.x-t.p[0])/span*size,dy=(tg.z-t.p[2])/span*size,h=size/2-2.5,k=Math.max(Math.abs(dx),Math.abs(dy))/h;
-  if(k<=1){lrDash(cx,cy,cx+dx,cy+dy,PAL.gold);hRing(cx+dx,cy+dy,2.4,PAL.gold);}
+  if(k<=1){lrDash(cx,cy,cx+dx,cy+dy,PAL.gold);hRing(cx+dx,cy+dy,tg.search?Math.max(2.4,tg.search/span*size):2.4,PAL.gold);}
   else{const ex=cx+dx/k,ey=cy+dy/k;lrDash(cx,cy,ex,ey,PAL.gold);hDisc(ex,ey,1.5,(APP.t*3|0)%2?PAL.gold:PAL.white);}}
 /* the big map */
 function lrBigMap(){const t=GAME.car,size=Math.min(H-14,W-14)|0,x0=Math.round((W-size)/2),y0=Math.round((H-size)/2),n=size*HS,HH=WG.HALF;
@@ -972,7 +1113,7 @@ function lrBigMap(){const t=GAME.car,size=Math.min(H-14,W-14)|0,x0=Math.round((W
   for(const k of Object.keys(PEOPLE)){const p=PEOPLE[k];if(!jOffer(k))continue;const [a,b]=toM(p.x,p.z);hDisc(a,b,1.6,hx(p.col));}
   /* the job: its stop, the line to it, and what it is */
   const [cx,cy]=toM(t.p[0],t.p[2]),A=jActive(),tg=A&&jTarget();
-  if(tg){const [a,b]=toM(tg.x,tg.z);lrDash(cx,cy,a,b,PAL.gold,2.5,1.5);hRing(a,b,3,PAL.gold);
+  if(tg){const [a,b]=toM(tg.x,tg.z);lrDash(cx,cy,a,b,PAL.gold,2.5,1.5);hRing(a,b,tg.search?Math.max(3,tg.search/(2*HH)*size):3,PAL.gold);
     otxt3((A.q.title+': '+A.s.text).toUpperCase().slice(0,Math.floor(size/4.2)),x0+3,y0+3,PAL.gold);
     otxt3(((tg.name||'')+'  '+lrKm(Math.hypot(tg.x-t.p[0],tg.z-t.p[2]))).toUpperCase(),x0+3,y0+10,PAL.ink);}
   else otxt3(Object.keys(PEOPLE).some(jOffer)?'NO JOB ON: A DOT IS SOMEONE WITH WORK FOR YOU':'NO JOB ON',x0+3,y0+3,PAL.ink);
@@ -1072,12 +1213,14 @@ function lrShopList(){return [
   {id:'machete',kind:'gear',name:'Machete',price:40,pic:'E06/machete',says:'Cuts through vines: Three Wells'},
   {id:'camera',kind:'gear',name:'Camera',price:150,pic:'E05/camera',says:'Photographs counts and finds from the air'},
   {id:'lantern',kind:'gear',name:'Lantern',price:80,pic:'E04/lantern',says:'Light in dark halls: the Sunken City'},
-  {id:'rope',kind:'gear',name:'Rope and harness',price:250,pic:'E13/rope_coil',says:'For climbs: the city\'s tower'}];}
+  {id:'rope',kind:'gear',name:'Rope and harness',price:250,pic:'E13/rope_coil',says:'For climbs: the city\'s tower'},
+  {id:'firstaid',kind:'gear',name:'First-aid kit',price:120,pic:'E08/first_aid_kit',says:'For anyone hurt: most rescues need it'},
+  {id:'water',kind:'gear',name:'Water can, 20 litres',price:35,pic:'D18/jerry_cans',says:'Teo\'s rule for the Pan and the dunes: water for someone who\'s run out'}];}
 const LRG={list:lrShopList(),own:{},off:{},base:null,tab:'truck',ui:null,sayT:0,freeHp:+store.get('gt-free-hp','260')||260,HPS:[260,300,340,400,480]};
 const lrShopItem=id=>LRG.list.find(q=>q.id===id);
 try{LRG.own=JSON.parse(store.get('gt-own','{}'))||{};LRG.off=JSON.parse(store.get('gt-off','{}'))||{};}catch(e){}
 /* bought (in free play, all of it); fitted (bought, and not taken off) */
-function lrHas(id){return LRM.mode==='free'||!!LRG.own[id];}
+function lrHas(id){if(Array.isArray(id))return id.every(lrHas);return LRM.mode==='free'||!!LRG.own[id];}
 function lrFit(id){return lrHas(id)&&!LRG.off[id];}
 function lrShopSave(){store.set('gt-own',JSON.stringify(LRG.own));store.set('gt-off',JSON.stringify(LRG.off));lrOutfitApply();}
 /* the Heron's: the climb prop pushes 20% harder standing still and is 7% less efficient at speed; the tundra
@@ -1091,7 +1234,7 @@ function lrBuy(id){const q=lrShopItem(id);if(!q||lrHas(id))return false;if(q.aft
 function lrToggle(id){if(!lrHas(id))return;if(LRG.off[id])delete LRG.off[id];else LRG.off[id]=1;lrShopSave();}
 /* a job's step that needs something you haven't got */
 function lrNeedName(id){const q=lrShopList().find(q=>q.id===id);return q?q.name.toLowerCase():id;}
-function lrNeedSay(id){const now=performance.now();if(now-LRG.sayT<5000)return;LRG.sayT=now;const q=lrShopList().find(q=>q.id===id);
+function lrNeedSay(id){if(Array.isArray(id))id=id.find(q=>!lrHas(q))||id[0];const now=performance.now();if(now-LRG.sayT<5000)return;LRG.sayT=now;const q=lrShopList().find(q=>q.id===id);
   say((q&&q.kind!=='gear'&&id!=='ladders'?'THIS NEEDS ':'YOU NEED ')+(q?q.name:id).toUpperCase(),3,PAL.amber);say('TEO HAS IT IN THE OUTFITTER',3,PAL.amber);}
 /* the light bar: the headlights reach about 1.8 times as far */
 function lrHL(){const t=GAME.car;return t&&!t.rt&&lrFit('lightbar')?1.8:1;}

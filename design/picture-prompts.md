@@ -1038,6 +1038,28 @@ Mallory Venn's card: the 1930s surveyor, known only from this old photograph.
 A made-up person, the one exception to the no-people rule. A black-and-white photograph from about 1934, as an old print: silver-grey tones, soft focus, faint scratches, small age spots and a faded edge. Mallory Venn, an aerial surveyor of about 35: a lean man with a narrow, sun-darkened face and a neat moustache, squinting into the light. A leather flying helmet pushed back, goggles on his forehead, a sheepskin-collared leather jacket over a shirt and tie. Behind him, blurred, the fabric wing of his plane. Layout: PORTRAIT. Put the label J07 small in the bottom-left corner.
 ```
 
+## Batch 3 · the rescues (Nov 8 2026)
+
+Build 28 has Fable's first four rescues. Until these pictures exist, the game uses stand-ins: Bowen and the survey crew are a column of light, and the crew's truck is the Pan Wreck's old Bedford.
+
+**D20 · The station's quad bike, on its side** · SHEET
+Bore Three: the quad Bowen rolled checking the bores.
+```
+A working farm quad bike (an ATV) lying on its right side in dry grass: dull red plastic mudguards scuffed pale, a steel rack front and back with a coil of fencing wire and a jerrycan strapped on the back rack, fat knobbly tyres, a small whip aerial with a faded orange flag. Dust over everything, one mirror snapped off, the front left wheel turned. No badges or writing. Show it lying on its side as found, plus one view of it upright on its wheels. Layout: SHEET. Put the label D20 small in the bottom-left corner.
+```
+
+**D21 · Meridian's survey truck, bogged** · SHEET
+Going Under: the survey crew's truck, stuck to the axles on a sandbar.
+```
+A modern white four-door 4x4 pickup used for mineral survey work: steel bull bar with two tall whip aerials, a roof rack with a long aluminium tool box, a canopy over the tray with side hatches, orange hazard beacon on the cab roof, mud-brown dirt sprayed up the sides. It sits sunk in wet sand to the tops of its tyres, tilted a little, front higher than back. Plain white doors with a blank rectangular panel where a logo would go; no writing. Layout: SHEET. Put the label D21 small in the bottom-left corner.
+```
+
+**J08 · Bowen** · PORTRAIT
+Bowen's card: the station hand with the broken leg at Bore Three.
+```
+A made-up person, the one exception to the no-people rule. Bowen, a station hand of about 55, a lean, sun-cracked man with a grey stubble beard, deep squint lines and a dry, patient half-smile; a sweat-stained wide-brimmed felt hat older than the person looking at it, a faded blue work shirt with the sleeves rolled. Same look for every portrait in this set: late-afternoon sun from the left, an 85 mm lens look, shallow focus, muted warm colour, fine grain, softly blurred dry bush behind. Layout: PORTRAIT. Put the label J08 small in the bottom-left corner.
+```
+
 ## How many, and what to make first
 
 | Batch | Sections | Pictures |
