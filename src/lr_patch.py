@@ -10,7 +10,7 @@ def swap(old, new, n=1):
     c = s.count(old); assert c == n, f'expected {n} of: {old[:100]!r}, found {c}'; s = s.replace(old, new)
 # its own name, and its own saves (Salt & Sand's are left alone)
 swap('<title>Redline County: Salt &amp; Sand (Studio 2)</title>', '<title>Beyond the Last Road (working title)</title>')
-swap("localStorage.getItem('sas:'+k)", "localStorage.getItem('lr:'+k)"); swap("localStorage.setItem('sas:'+k,", "localStorage.setItem('lr:'+k,"); swap("localStorage.removeItem('sas:'+k)", "localStorage.removeItem('lr:'+k)")
+swap("localStorage.getItem('sas:'+k)", "localStorage.getItem('gtc:'+k)"); swap("localStorage.setItem('sas:'+k,", "localStorage.setItem('gtc:'+k,"); swap("localStorage.removeItem('sas:'+k)", "localStorage.removeItem('gtc:'+k)")
 # the truck is the Rock & Mud
 swap("const CAR_STOCK={suv:'stock',", "const CAR_STOCK={suv:'crawler',")
 # your Rock & Mud drawn as its play model (the Studio 2 path skipped for it), its pictures bound with the car's uniforms
