@@ -5,7 +5,7 @@ usage: python3 tools/models/run_asset.py <ID> [budget] [picture size]   (from la
 import sys, os, re, json, subprocess, csv, time
 ID = sys.argv[1]; BUDGET = int(sys.argv[2]) if len(sys.argv) > 2 else 30000; RES = int(sys.argv[3]) if len(sys.argv) > 3 else 1024
 ROUNDS = int(os.environ.get('ROUNDS', 1)); EFF = os.environ.get('EFFORT', 'xhigh'); MODEL = os.environ.get('MODEL', 'claude-opus-5-5')
-H = os.path.dirname(os.path.abspath(__file__)); BL = '/home/claude/bl/bin/python'; ASK = '/home/claude/scripts/ask.py'
+H = os.path.dirname(os.path.abspath(__file__)); BL = os.environ.get('BL', '/home/claude/bl/bin/python'); ASK = os.path.join(H, '..', 'ask.py')
 P = {x['id']: x for b in json.load(open('design/picture-prompts.json')).values() for x in b}[ID]
 REF = f'pictures/ref/{next(f for f in os.listdir("pictures/ref") if f.startswith(ID + "-"))}'
 from PIL import Image

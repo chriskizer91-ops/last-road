@@ -2,7 +2,7 @@
 
 *A story and exploration game by Christopher (earlier working title: Beyond the Last Road). You explore a huge wild country, mostly in an off-road truck, partly from a bush plane, and on foot wherever there's something to see up close: temples, ruins, canyons. The plane can fly over everything but can land only on a few dirt strips. The truck reaches what the plane can't, and your own feet reach what the truck can't.*
 
-This file is the plan. It's written so that a fresh Claude session (or this one) can pick the game up and build it with Christopher, step by step. The game's code, builds, pictures and models go in this repo. Before changing anything, read **How to work with Christopher** at the bottom. Keep this file up to date as he decides things.
+This file is the plan. It's written so that a fresh Claude session (or this one) can pick the game up and build it with Christopher, step by step. **A new session starts with `HANDOFF.md`** (Nov 11 2026, after build 28): setting up a new machine, what lived outside the repo, traps already found, and what's left to do. The game's code, builds, pictures and models go in this repo. Before changing anything, read **How to work with Christopher** at the bottom. Keep this file up to date as he decides things.
 
 ## What he asked for (Nov 7 2026, in his words)
 
