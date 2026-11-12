@@ -12,7 +12,7 @@ three pages fit and collide). Then this file. `README.md` and `HANDOFF.md` at th
 
 ## The order it is being built in (one numbered build a step)
 
-1. **Ground Truth on Salt & Sand Showroom 3.** Done: build 1, below.
+1. **Ground Truth on Salt & Sand Showroom 3.** Done: build 1, and build 2 (the graphics card), below.
 2. Mud Lab's pieces that don't need the soil: the Stock SUV as a second vehicle, both SUVs in the world, the sound
    fix, REAR while towing, the keys put right, the Heron's far copy, the map's MENU and guide arrow.
 3. Mud Lab's soil in Ground Truth's world: the soil's square travelling with the truck, each region's soil and
@@ -111,6 +111,57 @@ stops the page and names what it waits for), X-15, X-16.
 - The fly-past sound by ear; the Film camera over a long drive; the phone.
 - The driving models were baked before the Rock & Mud fixes, so the snorkel and flaps on the road are the old ones
   until step 6.
+
+## Build 2 (11 Nov 2026, evening): the graphics card
+
+`builds/ground-truth-continued-2.html`, 35,235,702 bytes.
+
+**What he reported on build 1** (laptop, Edge): the first load took under two minutes on Low. He switched Gfx to
+High (the page starts again on the new level, as it always has), pressed OUTFITTER, and saw "a melted or exploded
+version of the SUV", then "everything froze".
+
+**What it was** (seen on his laptop itself, see "Testing on his laptop" below): the page was running on the laptop's
+**built-in Intel graphics**, not its RTX 5060. On Low the Outfitter draws correctly there at over 60 frames a second.
+On High the 913,491-triangle truck at full sharpness, its shade being baked and the glass shader being built were more
+than the Intel card could do inside Windows' two-second limit, so Windows reset the card. The console showed the
+proof: hundreds of "object does not belong to this context" and "Studio 2 bake: left out … (0 of 501,264 corners
+seen)", then the engine's own handler started the page again (on Low). The test machine draws the same Outfitter on
+High correctly, slowly: it has no card to reset. **Not yet known: which card Edge itself uses on his laptop.** Build
+2's title says. If it says Intel: Windows Settings, System, Display, Graphics, Microsoft Edge, Options, High
+performance (his to change).
+
+**What build 2 does** (`combined/src/gtc-game.js`, `gtc_patch.py`; nothing in the physics):
+- The title's bottom left corner names the graphics card. On a built-in Intel card it adds how to give Edge the
+  NVIDIA one.
+- The Studio 2 car's bake paces itself by how long frames are taking (Salt & Sand's own hook `S2B.per`: 4 directions
+  a frame down to 1 every fourth frame).
+- A level above Low that can't hold about three frames a second for a while goes back to Low by itself and says why
+  (not in a test browser, where every frame is that slow).
+- When the card is reset anyway, the line says "The graphics card stopped answering and Windows reset it. Starting
+  again on the Low graphics level", and the next title says what happened last time.
+- The page's name while it loads is Ground Truth Continued (working title).
+
+**Checked:** on the test machine, same-drive against Ground Truth 28: 5 of 5 identical; no page errors; the card's
+line on the title. On his laptop (the app's pane, Intel): build 2 opened in 16 s (its shaders were already built
+there), on Low, and the title read "Graphics card: Intel(R) Graphics" with the hint under it.
+**Not checked:** the paced bake, the step-down and the new reset line on a real card (his window stopped painting
+before the High run could be repeated). High on the RTX 5060.
+
+## Testing on his laptop (a real graphics card)
+
+The Claude desktop app's browser pane on his laptop can run a build, and this session can read its console, run
+script in it and take pictures (the `mcp__remote-devices__Claude_Browser__` tools). It cannot open `file://`, so push
+the build and open `https://raw.githack.com/chriskizer91-ops/last-road/ground-truth-continued/builds/<name>.html`
+(he allowed that site; the first time it shows an "Open the page" button). Things to know:
+- **It runs on the Intel card** (`ANGLE (Intel, Intel(R) Graphics (0x0000A7AB) Direct3D11 …)`, 16 pictures a shader).
+- **The pane has to be showing** (Ctrl+Shift+B in the app) and the app's window uncovered, or the page doesn't draw a
+  frame and the game never leaves its loading screen. Ask him; check `requestAnimationFrame` fires before a test.
+- A script call is cut off at 45 s: poll in short calls. Set a size with `resize_window` (1280 x 720) and clear it after.
+- A level is set as the Gfx button does: `localStorage.setItem('gtc:rt-gfx-next','high'); location.reload()`. After a
+  Gfx reload the page comes back where it was (the Outfitter), not on the title.
+- First load there, Low: about 80 s of "Warming up the shaders 20 / 21 … (still on: land)", then the title. High:
+  about 165 s. Later loads: seconds.
+- A test that resets the card freezes his whole laptop for a while: ask first. Close the tab when done.
 
 ## Where things are on his laptop
 
