@@ -9,7 +9,7 @@ helpers (the plane's rt-test.js and rt-fly-test.js, Ground Truth's lr-test.js), 
     until: <seconds> | <an expression that turns true>     waits, printing how long it took
 
 usage: python3 tools/test/gtc-run.py <page.html> <TAG> l|m <steps file>
-env: SMP (salt-mini-plus, for the plane's test helpers; default combined/plane has none, so ../salt-mini-plus),
+env: GFX (a graphics level to start on: mobile, low, medium, high, ultra), SMP (salt-mini-plus, for the plane's test helpers; default combined/plane has none, so ../salt-mini-plus),
      SHOTS (default /tmp/gtc-shots/), CUT (default 400).
 Frame rates mean nothing here (no graphics card); distances, speeds, triangle counts and page errors do."""
 import asyncio, sys, time, json, os
@@ -29,6 +29,8 @@ async def main():
         br = await p.chromium.launch(executable_path='/usr/bin/google-chrome', args=['--use-angle=swiftshader', '--enable-unsafe-swiftshader', '--ignore-gpu-blocklist', '--autoplay-policy=no-user-gesture-required'])
         ctx = await br.new_context(viewport={'width': 915, 'height': 412} if MOBILE else {'width': 1280, 'height': 720}, device_scale_factor=1, has_touch=MOBILE)
         pg = await ctx.new_page(); logs = []
+        if os.environ.get('GFX'):   # start on a graphics level (mobile, low, medium, high, ultra), as the Gfx button would after its reload
+            await ctx.add_init_script("try{for(const p of ['gtc:','lr:','mudlab:'])localStorage.setItem(p+'rt-gfx-next','%s')}catch(e){}" % os.environ['GFX'])
         pg.on('console', lambda m: logs.append(m.type + ': ' + m.text[:300]) if m.type in ('error', 'warning') and 'ReadPixels' not in m.text else None)
         pg.on('pageerror', lambda e: logs.append('PAGEERR: ' + str(e)[:500]))
         t0 = time.time(); await pg.goto(URL); st = 'x'
