@@ -136,9 +136,12 @@ On High the 913,491-triangle truck at full sharpness, its shade being baked and 
 than the Intel card could do inside Windows' two-second limit, so Windows reset the card. The console showed the
 proof: hundreds of "object does not belong to this context" and "Studio 2 bake: left out … (0 of 501,264 corners
 seen)", then the engine's own handler started the page again (on Low). The test machine draws the same Outfitter on
-High correctly, slowly: it has no card to reset. **Not yet known: which card Edge itself uses on his laptop.** Build
-2's title says. If it says Intel: Windows Settings, System, Display, Graphics, Microsoft Edge, Options, High
-performance (his to change).
+High correctly, slowly: it has no card to reset. That was the Claude app's own browser pane.
+
+**What he then reported on build 2 in Edge** (11 Nov, 20:52): its title names the NVIDIA RTX 5060, so Edge is on the
+right card, and **High still went back to Low there.** So the Intel card explains the pane, not Edge. Why High will
+not hold in Edge on the RTX 5060 for this game was not found before the work was parked. Ground Truth has never held
+High on his laptop; Mud Lab does.
 
 **What build 2 does** (`combined/src/gtc-game.js`, `gtc_patch.py`; nothing in the physics):
 - The title's bottom left corner names the graphics card. On a built-in Intel card it adds how to give Edge the
