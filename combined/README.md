@@ -6,6 +6,16 @@
 the combined game; `main` stays Ground Truth 28. "Ground Truth Continued" is a working title only: he wants a new,
 short name.*
 
+> **Parked on 13 Nov 2026, by Christopher.** Builds 1 and 2 opened on his laptop on Low; High would not hold there,
+> on the RTX 5060 too, and why was never found. He decided that **Mud Lab goes on by itself** (improving the soil, a
+> bigger map, a deep pond, a river you have to read), that the fixes and cameras from the other two games go into
+> Mud Lab as a packet for its own session, and that **Salt & Sand and its Showroom stay their own project** for a
+> while. Joining them is still wanted, "further out". Nothing below has been taken further than build 2.
+> The packet: repo `mud-lab`, branch `packet-2026-11-13-handoff`, folder `handoff/`; notes in the project as
+> `claude/mud-lab-packet-notes.md` and `claude/mud-lab-map-brief.md`. One finding there matters to this branch too:
+> Ground Truth's rollover fix reads the ground's slope under each wheel, so on Mud Lab's soil it takes a rut's wall
+> for a truck on its side. Step 3 below (the soil in this world) needs the packet's version of it.
+
 **Read first, in the Salt Flats Plus project:** `claude/combined-game-feature-list.md` (every feature, fix and decision,
 each with a number: the checklist this game is built against) and `claude/ground-truth-combined-survey.md` (how the
 three pages fit and collide). Then this file. `README.md` and `HANDOFF.md` at the repo's top are Ground Truth's own.
